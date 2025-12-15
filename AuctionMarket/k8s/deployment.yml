@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment  # 쿠버네티스 안에서 부를 이름
+spec:
+  replicas: 1             # 파드(서버)를 1개 유지하겠다
+  selector:
+    matchLabels:
+      app: mysql-app
+  template:
+    metadata:
+      labels:
+        app: mysql-app    # 이 라벨이 붙은 녀석을 관리하겠다
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0  # 도커 이미지
+          env:              # 환경 변수 (비밀번호 설정)
+            - name: MYSQL_ROOT_PASSWORD
+              value: "1234"
+          ports:
+            - containerPort: 3306
+
+---
+
+# [Redis] Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-app
+  template:
+    metadata:
+      labels:
+        app: redis-app
+    spec:
+      containers:
+        - name: redis
+          image: redis:alpine
+          command: [ "redis-server", "--requirepass", "1234", "--appendonly", "yes" ]
+          ports:
+            - containerPort: 6379
+
+#---
+## -------------------------
+## 3. Backend Deployment
+## -------------------------
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: backend-deployment
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: backend-app
+#  template:
+#    metadata:
+#      labels:
+#        app: backend-app
+#    spec:
+#      containers:
+#        - name: backend
+#          # [수정 필요] 백엔드 전용 이미지 태그가 맞는지 확인하세요!
+#          image: jhh0101/portfolio:v
+#          ports:
+#            - containerPort: 8888
+#          env:
+#            - name: TZ
+#              value: "Asia/Seoul"
+#            - name: SPRING_PROFILES_ACTIVE
+#              value: "prod"
+#            # [중요] DB 주소를 'mysql-service'로 설정
+#            - name: MYSQL_URL
+#              value: "jdbc:mysql://mysql-service:3306/portfolio?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul"
+#            - name: SPRING_DATASOURCE_URL
+#              value: "jdbc:mysql://mysql-service:3306/portfolio?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul"
+#            - name: MYSQL_USER
+#              value: "root"
+#            - name: MYSQL_PASSWORD
+#              value: "1234"
+#            - name: JWT_SECRET_KEY
+#              value: "my_secret_key_change_me" # 본인 키로 변경
+#
+#            # OAuth 관련 (비워두면 에러날 수 있으니 더미 값이라도 넣거나 실제 값 입력)
+#            - name: NAVER_CLIENT_ID
+#              value: "입력필요"
+#            - name: NAVER_CLIENT_SECRET
+#              value: "입력필요"
+#            - name: KAKAO_CLIENT_ID
+#              value: "입력필요"
+#            - name: KAKAO_CLIENT_SECRET
+#              value: "입력필요"
+#            - name: APP_BASE_URL
+#              value: "http://localhost:30888"
+#            - name: FRONTEND_URL
+#              value: "http://localhost:30080"
+#
+#---
+## -------------------------
+## 4. Frontend Deployment
+## -------------------------
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: frontend-deployment
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: frontend-app
+#  template:
+#    metadata:
+#      labels:
+#        app: frontend-app
+#    spec:
+#      containers:
+#        - name: frontend
+#          # [수정 필요] 프론트엔드 이미지가 맞나요? (백엔드랑 같으면 안 될 수 있음)
+#          image: jhh0101/portfolio:v
+#          ports:
+#            - containerPort: 80
