@@ -12,7 +12,7 @@ WORKDIR /app
 RUN mkdir -p /app/logs
 
 # Copy the built JAR file
-COPY build/libs/AuctionMarket.jar AuctionMarket.jar
+COPY build/libs/*.jar app.jar
 
 
 ENTRYPOINT ["java", \
