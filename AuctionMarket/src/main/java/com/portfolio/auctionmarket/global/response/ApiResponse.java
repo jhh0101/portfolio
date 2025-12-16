@@ -18,6 +18,10 @@ public class ApiResponse<T> {
         return new ApiResponse<>(true, "C000", "성공", data);
     }
 
+    public static <T>ApiResponse<T> success(String message, T data){
+        return new ApiResponse<>(true, "C000", message, data);
+    }
+
     public static ApiResponse<Void> error(String code, String message){
         return new ApiResponse<>(false, code, message, null);
     }
