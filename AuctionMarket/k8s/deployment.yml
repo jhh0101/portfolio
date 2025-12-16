@@ -71,7 +71,7 @@ spec:
       containers:
         - name: backend
           # [수정 필요] 백엔드 전용 이미지 태그가 맞는지 확인하세요!
-          image: jhh0101/portfolio:v66
+          image: jhh0101/portfolio:v68
           imagePullPolicy: Always
           ports:
             - containerPort: 8888
@@ -127,6 +127,6 @@ spec:
 #      containers:
 #        - name: frontend
 #          # [수정 필요] 프론트엔드 이미지가 맞나요? (백엔드랑 같으면 안 될 수 있음)
-#          image: jhh0101/portfolio:v66
+#          image: jhh0101/portfolio:v68
 #          ports:
 #            - containerPort: 80
