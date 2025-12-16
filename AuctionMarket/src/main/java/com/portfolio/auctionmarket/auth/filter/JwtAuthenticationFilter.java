@@ -1,5 +1,6 @@
 package com.portfolio.auctionmarket.auth.filter;
 
+import com.portfolio.auctionmarket.auth.service.JwtService;
 import com.portfolio.auctionmarket.global.error.CustomException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
