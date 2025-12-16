@@ -18,6 +18,8 @@ spec:
           env:              # 환경 변수 (비밀번호 설정)
             - name: MYSQL_ROOT_PASSWORD
               value: "1234"
+            - name: MYSQL_DATABASE
+              value: "portfolio"
           ports:
             - containerPort: 3306
 
@@ -66,7 +68,7 @@ spec:
       containers:
         - name: backend
           # [수정 필요] 백엔드 전용 이미지 태그가 맞는지 확인하세요!
-          image: jhh0101/portfolio:v23
+          image: jhh0101/portfolio:v24
           ports:
             - containerPort: 8888
           env:

@@ -1,37 +1,37 @@
-services:
-  mysqldb:
-    container_name: mysqldb_container
-    image: mysql:8.0
-    ports:
-      # 로컬 PC의 13333 포트 -> 컨테이너의 3306 포트로 연결
-      - "13306:3306"
-    env_file:
-      - .env
-    command:
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
-      - --default-authentication-plugin=mysql_native_password
-    volumes:
-      - mysql_data:/var/lib/mysql
-    environment:
-      # .env 파일에서 직접 로드하거나 여기에 명시 (현재는 명시된 값 사용)
-      - TZ=Asia/Seoul
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-    networks:
-      - portfolio
-
-  redis:
-    container_name: redis_container
-    image: redis:alpine
-    # 중요: 비밀번호 설정(1234) 및 데이터 지속성 켜기(appendonly yes)
-    command: redis-server --requirepass "1234" --appendonly yes
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
+#services:
+#  mysqldb:
+#    container_name: mysqldb_container
+#    image: mysql:8.0
+#    ports:
+#      # 로컬 PC의 13333 포트 -> 컨테이너의 3306 포트로 연결
+#      - "13306:3306"
+#    env_file:
+#      - .env
+#    command:
+#      - --character-set-server=utf8mb4
+#      - --collation-server=utf8mb4_unicode_ci
+#      - --default-authentication-plugin=mysql_native_password
+#    volumes:
+#      - mysql_data:/var/lib/mysql
+#    environment:
+#      # .env 파일에서 직접 로드하거나 여기에 명시 (현재는 명시된 값 사용)
+#      - TZ=Asia/Seoul
+#      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+#      - MYSQL_DATABASE=${MYSQL_DATABASE}
+#      - MYSQL_USER=${MYSQL_USER}
+#      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+#    networks:
+#      - portfolio
+#
+#  redis:
+#    container_name: redis_container
+#    image: redis:alpine
+#    # 중요: 비밀번호 설정(1234) 및 데이터 지속성 켜기(appendonly yes)
+#    command: redis-server --requirepass "1234" --appendonly yes
+#    ports:
+#      - "6379:6379"
+#    volumes:
+#      - redis_data:/data
 
 
 
