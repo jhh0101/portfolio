@@ -31,7 +31,7 @@ public class User extends Base {
     private String nickname;
 
     @Column(name = "role")
-    private String role;
+    private Role role;
 
     @Column(name = "seller_status")
     private String sellerStatus;

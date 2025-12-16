@@ -1,6 +1,7 @@
 package com.portfolio.auctionmarket.domain.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.portfolio.auctionmarket.domain.user.entity.Role;
 import com.portfolio.auctionmarket.domain.user.entity.User;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ public class UserResponse {
     private String email;
     private String username;
     private String nickname;
-    private String role;
+    private Role role;
     private String sellerStatus;
     private Long point;
     private Double avgRating;
