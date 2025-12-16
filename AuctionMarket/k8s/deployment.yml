@@ -45,61 +45,61 @@ spec:
           ports:
             - containerPort: 6379
 
-#---
-## -------------------------
-## 3. Backend Deployment
-## -------------------------
-#apiVersion: apps/v1
-#kind: Deployment
-#metadata:
-#  name: backend-deployment
-#spec:
-#  replicas: 1
-#  selector:
-#    matchLabels:
-#      app: backend-app
-#  template:
-#    metadata:
-#      labels:
-#        app: backend-app
-#    spec:
-#      containers:
-#        - name: backend
-#          # [수정 필요] 백엔드 전용 이미지 태그가 맞는지 확인하세요!
-#          image: jhh0101/portfolio:v
-#          ports:
-#            - containerPort: 8888
-#          env:
-#            - name: TZ
-#              value: "Asia/Seoul"
-#            - name: SPRING_PROFILES_ACTIVE
-#              value: "prod"
-#            # [중요] DB 주소를 'mysql-service'로 설정
-#            - name: MYSQL_URL
-#              value: "jdbc:mysql://mysql-service:3306/portfolio?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul"
-#            - name: SPRING_DATASOURCE_URL
-#              value: "jdbc:mysql://mysql-service:3306/portfolio?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul"
-#            - name: MYSQL_USER
-#              value: "root"
-#            - name: MYSQL_PASSWORD
-#              value: "1234"
-#            - name: JWT_SECRET_KEY
-#              value: "my_secret_key_change_me" # 본인 키로 변경
-#
-#            # OAuth 관련 (비워두면 에러날 수 있으니 더미 값이라도 넣거나 실제 값 입력)
-#            - name: NAVER_CLIENT_ID
-#              value: "입력필요"
-#            - name: NAVER_CLIENT_SECRET
-#              value: "입력필요"
-#            - name: KAKAO_CLIENT_ID
-#              value: "입력필요"
-#            - name: KAKAO_CLIENT_SECRET
-#              value: "입력필요"
-#            - name: APP_BASE_URL
-#              value: "http://localhost:30888"
-#            - name: FRONTEND_URL
-#              value: "http://localhost:30080"
-#
+---
+# -------------------------
+# 3. Backend Deployment
+# -------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-app
+  template:
+    metadata:
+      labels:
+        app: backend-app
+    spec:
+      containers:
+        - name: backend
+          # [수정 필요] 백엔드 전용 이미지 태그가 맞는지 확인하세요!
+          image: jhh0101/portfolio:v${BUILD_NUMBER}
+          ports:
+            - containerPort: 8888
+          env:
+            - name: TZ
+              value: "Asia/Seoul"
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            # [중요] DB 주소를 'mysql-service'로 설정
+            - name: MYSQL_URL
+              value: "jdbc:mysql://mysql-service:3306/portfolio?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql-service:3306/portfolio?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul"
+            - name: MYSQL_USER
+              value: "root"
+            - name: MYSQL_PASSWORD
+              value: "1234"
+            - name: JWT_SECRET_KEY
+              value: "my_secret_key_change_me" # 본인 키로 변경
+
+            # OAuth 관련 (비워두면 에러날 수 있으니 더미 값이라도 넣거나 실제 값 입력)
+            - name: NAVER_CLIENT_ID
+              value: "입력필요"
+            - name: NAVER_CLIENT_SECRET
+              value: "입력필요"
+            - name: KAKAO_CLIENT_ID
+              value: "입력필요"
+            - name: KAKAO_CLIENT_SECRET
+              value: "입력필요"
+            - name: APP_BASE_URL
+              value: "http://localhost:30888"
+            - name: FRONTEND_URL
+              value: "http://localhost:30080"
+
 #---
 ## -------------------------
 ## 4. Frontend Deployment
