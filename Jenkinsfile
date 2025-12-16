@@ -15,8 +15,22 @@ pipeline {
     stages {
         stage('1. Git Checkout') {
             steps {
-                // 깃허브에서 소스 코드 가져오기
+                // 1. 소스 코드 가져오기
                 git branch: 'main', url: "https://${GIT_REPO_URL}"
+
+                // 2. ★ [무한 루프 방지] 커밋 메시지 확인 로직 추가
+                script {
+                    // git log 명령어로 마지막 커밋 메시지를 가져옵니다.
+                    def lastCommit = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim()
+                    echo "마지막 커밋 메시지: ${lastCommit}"
+
+                    // 메시지에 [skip ci]가 포함되어 있으면 빌드를 강제로 멈춥니다.
+                    if (lastCommit.contains("[skip ci]")) {
+                        echo "⛔ [skip ci] 태그가 발견되었습니다. 무한 루프 방지를 위해 빌드를 중단합니다."
+                        currentBuild.result = 'ABORTED' // 빌드 상태를 '중단됨'으로 표시
+                        error("Loop Prevention: [skip ci] tag found.") // 강제 에러 발생시켜 종료
+                    }
+                }
             }
         }
 
