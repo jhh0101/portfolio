@@ -1,20 +1,18 @@
 package com.portfolio.auctionmarket.domain.user.entity;
 
+import com.portfolio.auctionmarket.global.base.Base;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user")
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class User extends Base {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -26,11 +24,14 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "username")
+    private String username;
+
     @Column(name = "nickname")
     private String nickname;
 
     @Column(name = "role")
-    private String role;
+    private Role role;
 
     @Column(name = "seller_status")
     private String sellerStatus;
@@ -41,9 +42,4 @@ public class User {
     @Column(name = "avg_rating")
     private Double avgRating;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 }
