@@ -1,5 +1,11 @@
 SET FOREIGN_KEY_CHECKS = 0;
-
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS product_images;
+DROP TABLE IF EXISTS auctions;
+DROP TABLE IF EXISTS bids;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS seller_ratings;
 -- 1. 회원 (Users)
 CREATE TABLE users (
                        user_id         BIGINT AUTO_INCREMENT PRIMARY KEY,
