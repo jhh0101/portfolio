@@ -19,4 +19,4 @@ ENTRYPOINT ["java", \
   "-XX:+UseContainerSupport", \
   "-XX:MaxRAMPercentage=75.0", \
   "-jar", \
-  "AuctionMarket.jar"]
+  "app.jar"]
