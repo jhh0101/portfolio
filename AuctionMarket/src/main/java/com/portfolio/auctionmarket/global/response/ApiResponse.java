@@ -15,7 +15,7 @@ public class ApiResponse<T> {
     private final T data;
 
     public static <T>ApiResponse<T> success(T data){
-        return new ApiResponse<>(true, "C001", "성공", data);
+        return new ApiResponse<>(true, "C000", "성공", data);
     }
 
     public static ApiResponse<Void> error(String code, String message){
