@@ -9,17 +9,17 @@ spring:
     init:
       mode: always
       encoding: UTF-8
+  datasource:
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   data:
     redis:
       host: redis # ??? ?? ? 'redis' (???? ??)
       port: 6379
 
-  datasource:
-    url: ${MYSQL_URL}
-    username: ${MYSQL_USER}
-    password: ${MYSQL_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
 
   # JPA
   jpa:

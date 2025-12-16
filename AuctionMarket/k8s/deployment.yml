@@ -68,7 +68,7 @@ spec:
       containers:
         - name: backend
           # [수정 필요] 백엔드 전용 이미지 태그가 맞는지 확인하세요!
-          image: jhh0101/portfolio:v24
+          image: jhh0101/portfolio:v25
           ports:
             - containerPort: 8888
           env:
