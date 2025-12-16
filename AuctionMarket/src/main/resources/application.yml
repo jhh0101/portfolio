@@ -30,8 +30,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        # MySQL 8.0 ??? ?? Dialect ?? ??
-        dialect: org.hibernate.dialect.MySQL8Dialect
+
 
 # JWT
 jwt:
