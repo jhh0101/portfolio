@@ -1,0 +1,94 @@
+#services:
+#  mysqldb:
+#    container_name: mysqldb_container
+#    image: mysql:8.0
+#    ports:
+#      # 로컬 PC의 13333 포트 -> 컨테이너의 3306 포트로 연결
+#      - "13306:3306"
+#    env_file:
+#      - .env
+#    command:
+#      - --character-set-server=utf8mb4
+#      - --collation-server=utf8mb4_unicode_ci
+#      - --default-authentication-plugin=mysql_native_password
+#    volumes:
+#      - mysql_data:/var/lib/mysql
+#    environment:
+#      # .env 파일에서 직접 로드하거나 여기에 명시 (현재는 명시된 값 사용)
+#      - TZ=Asia/Seoul
+#      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+#      - MYSQL_DATABASE=${MYSQL_DATABASE}
+#      - MYSQL_USER=${MYSQL_USER}
+#      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+#    networks:
+#      - portfolio
+#
+#  redis:
+#    container_name: redis_container
+#    image: redis:alpine
+#    # 중요: 비밀번호 설정(1234) 및 데이터 지속성 켜기(appendonly yes)
+#    command: redis-server --requirepass "1234" --appendonly yes
+#    ports:
+#      - "6379:6379"
+#    volumes:
+#      - redis_data:/data
+
+
+
+#  back_end:
+#    image: jhh0101/portfolio:v
+#    container_name: back_end_container
+#    ports:
+#      # 로컬 PC의 18888 포트 -> 컨테이너의 8082 포트로 연결
+#      - "8888:8888"
+#    environment:
+#      - TZ=Asia/Seoul
+#      - SPRING_PROFILES_ACTIVE=prod
+#
+#      # 🎯 .env 값 주입 (application.yml의 Placeholder와 일치)
+#      - MYSQL_USER=${MYSQL_USER}
+#      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+#      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+#
+#      # 📧 이메일 설정 추가
+#      - SPRING_MAIL_USERNAME=${SPRING_MAIL_USERNAME}
+#      - SPRING_MAIL_PASSWORD=${SPRING_MAIL_PASSWORD}
+#
+#      # 🔐 OAuth2 설정
+#      - APP_BASE_URL=${APP_BASE_URL}
+#      - FRONTEND_URL=${FRONTEND_URL}
+#      - NAVER_CLIENT_ID=${NAVER_CLIENT_ID}
+#      - NAVER_CLIENT_SECRET=${NAVER_CLIENT_SECRET}
+#      - KAKAO_CLIENT_ID=${KAKAO_CLIENT_ID}
+#      - KAKAO_CLIENT_SECRET=${KAKAO_CLIENT_SECRET}
+#
+#      # DB 접속 URL (Host는 Docker 네트워크 상의 'mysql' 서비스 이름)
+#      - MYSQL_URL=jdbc:mysqldb://mysqldb:3306/portfolio?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+#      - SPRING_DATASOURCE_URL=jdbc:mysqldb://mysqldb:3306/portfolio?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+#      - SPRING_JPA_HIBERNATE_DDL_AUTO=none # application.yml의ddl-auto 설정을 따르기 위해 none으로 변경
+#      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect # 명시
+#    depends_on:
+#      - mysql
+#    networks:
+#      - portfolio
+
+#  front_end:
+#    image: jhh0101/portfolio:v
+#    build:
+#      context: .
+#
+#    container_name: front_end_container
+#    ports:
+#      - "8880:80"
+#    depends_on:
+#      - backend
+#    networks:
+#      - portfolio
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  portfolio:
+    driver: bridge

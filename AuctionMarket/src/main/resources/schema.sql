@@ -1,0 +1,93 @@
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS product_images;
+DROP TABLE IF EXISTS auctions;
+DROP TABLE IF EXISTS bids;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS seller_ratings;
+-- 1. 회원 (Users)
+CREATE TABLE users (
+                       user_id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+                       email           VARCHAR(100) NOT NULL UNIQUE, -- 로그인 ID
+                       password        VARCHAR(255) NOT NULL,
+                       nickname        VARCHAR(20) NOT NULL,
+                       username        VARCHAR(20) NOT NULL,
+                       role            VARCHAR(20) DEFAULT 'USER', -- USER, SELLER, ADMIN
+                       seller_status   VARCHAR(20) DEFAULT 'NONE', -- NONE, PENDING, APPROVED, REJECTED
+                       point           BIGINT DEFAULT 0, -- 가상 화폐
+                       avg_rating      DOUBLE DEFAULT 0.0, -- 평균 별점 (캐싱용)
+                       created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
+                       updated_at      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 2. 상품 (Products)
+CREATE TABLE products (
+                          product_id      BIGINT AUTO_INCREMENT PRIMARY KEY,
+                          seller_id       BIGINT NOT NULL,
+                          category        VARCHAR(50),
+                          title           VARCHAR(200) NOT NULL,
+                          description     TEXT,
+                          status          VARCHAR(20) DEFAULT 'ACTIVE', -- ACTIVE, SOLD, DELETED
+                          created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
+                          FOREIGN KEY (seller_id) REFERENCES users(user_id)
+);
+
+-- 3. 상품 이미지 (Product_Images)
+CREATE TABLE product_images (
+                                image_id        BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                product_id      BIGINT NOT NULL,
+                                image_url       VARCHAR(500) NOT NULL,
+                                image_order     INT DEFAULT 1, -- 대표 이미지는 1번
+                                FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE
+);
+
+-- 4. 경매 정보 (Auctions)
+CREATE TABLE auctions (
+                          auction_id      BIGINT AUTO_INCREMENT PRIMARY KEY,
+                          product_id      BIGINT NOT NULL UNIQUE, -- 상품 하나당 경매 하나
+                          start_price     INT NOT NULL,
+                          current_price   INT NOT NULL, -- 입찰 들어올 때마다 갱신
+                          start_time      DATETIME NOT NULL,
+                          end_time        DATETIME NOT NULL,
+                          status          VARCHAR(20) DEFAULT 'PROCEEDING', -- PROCEEDING, ENDED, CANCELED
+                          FOREIGN KEY (product_id) REFERENCES products(product_id)
+);
+
+-- 5. 입찰 내역 (Bids) - 로그 성격
+CREATE TABLE bids (
+                      bid_id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+                      auction_id      BIGINT NOT NULL,
+                      bidder_id       BIGINT NOT NULL, -- 입찰자
+                      bid_price       INT NOT NULL,
+                      bid_time        DATETIME DEFAULT CURRENT_TIMESTAMP,
+                      FOREIGN KEY (auction_id) REFERENCES auctions(auction_id),
+                      FOREIGN KEY (bidder_id) REFERENCES users(user_id)
+);
+
+-- 6. 주문/결제 (Orders) - 낙찰 후 최종 거래
+CREATE TABLE orders (
+                        order_id        BIGINT AUTO_INCREMENT PRIMARY KEY,
+                        auction_id      BIGINT NOT NULL,
+                        buyer_id        BIGINT NOT NULL,
+                        final_price     INT NOT NULL,
+                        payment_status  VARCHAR(20) DEFAULT 'WAITING', -- WAITING, COMPLETED
+                        created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        FOREIGN KEY (auction_id) REFERENCES auctions(auction_id),
+                        FOREIGN KEY (buyer_id) REFERENCES users(user_id)
+);
+
+-- 7. 판매자 평점 (Seller_Ratings)
+CREATE TABLE seller_ratings (
+                                rating_id       BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                to_user_id      BIGINT NOT NULL, -- 평가 받는 판매자
+                                from_user_id    BIGINT NOT NULL, -- 평가 하는 구매자
+                                order_id        BIGINT NOT NULL,
+                                score           INT NOT NULL CHECK (score BETWEEN 1 AND 5),
+                                created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
+                                FOREIGN KEY (to_user_id) REFERENCES users(user_id),
+                                FOREIGN KEY (from_user_id) REFERENCES users(user_id),
+                                FOREIGN KEY (order_id) REFERENCES orders(order_id)
+);
+
+SET FOREIGN_KEY_CHECKS = 1;
