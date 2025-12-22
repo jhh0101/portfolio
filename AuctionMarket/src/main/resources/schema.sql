@@ -1,11 +1,18 @@
 SET FOREIGN_KEY_CHECKS = 0;
-
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS product_images;
+DROP TABLE IF EXISTS auctions;
+DROP TABLE IF EXISTS bids;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS seller_ratings;
 -- 1. 회원 (Users)
 CREATE TABLE users (
                        user_id         BIGINT AUTO_INCREMENT PRIMARY KEY,
                        email           VARCHAR(100) NOT NULL UNIQUE, -- 로그인 ID
                        password        VARCHAR(255) NOT NULL,
-                       nickname        VARCHAR(50) NOT NULL,
+                       nickname        VARCHAR(20) NOT NULL,
+                       username        VARCHAR(20) NOT NULL,
                        role            VARCHAR(20) DEFAULT 'USER', -- USER, SELLER, ADMIN
                        seller_status   VARCHAR(20) DEFAULT 'NONE', -- NONE, PENDING, APPROVED, REJECTED
                        point           BIGINT DEFAULT 0, -- 가상 화폐
