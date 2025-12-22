@@ -9,6 +9,7 @@ import com.portfolio.auctionmarket.global.error.CustomException;
 import com.portfolio.auctionmarket.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserResponse signup(UserSingupRequest request){
@@ -31,6 +33,7 @@ public class UserService {
             .email(request.getEmail())
             .username(request.getUsername())
             .nickname(request.getNickname())
+            .password(passwordEncoder.encode(request.getPassword()))
             .role(Role.USER)
             .build();
 
