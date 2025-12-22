@@ -36,8 +36,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", // Swagger 문서 관련
-                                "/api/auth/**", "/api/users/signup", "/api/users/verify", // 로그인, 회원가입 관련
-                                "/api/users/reset-password"
+                                "/api/auth/**", "/api/user/signup", "/api/user/verify", // 로그인, 회원가입 관련
+                                "/api/user/reset-password"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/boards", "/api/boards/*").permitAll()
                         .anyRequest().authenticated()
