@@ -31,6 +31,7 @@ public class User extends Base {
     private String nickname;
 
     @Column(name = "role")
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Column(name = "seller_status")
