@@ -1,5 +1,6 @@
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS categories;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS product_images;
 DROP TABLE IF EXISTS auctions;
@@ -21,16 +22,26 @@ CREATE TABLE users (
                        updated_at      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- 카테고리 테이블 생성
+CREATE TABLE categories (
+                            category_id   BIGINT AUTO_INCREMENT PRIMARY KEY,
+                            category      VARCHAR(50) NOT NULL, -- 카테고리 이름 (예: 가전, 의류)
+                            parent_id     BIGINT NULL,           -- 부모 카테고리 ID (대분류일 경우 NULL)
+                            path          VARCHAR(100) NULL,  -- 경로 저장
+                            FOREIGN KEY (parent_id) REFERENCES categories(category_id)
+);
+
 -- 2. 상품 (Products)
 CREATE TABLE products (
                           product_id      BIGINT AUTO_INCREMENT PRIMARY KEY,
                           seller_id       BIGINT NOT NULL,
-                          category        VARCHAR(50),
+                          category_id     BIGINT NOT NULL,
                           title           VARCHAR(200) NOT NULL,
                           description     TEXT,
                           status          VARCHAR(20) DEFAULT 'ACTIVE', -- ACTIVE, SOLD, DELETED
                           created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
-                          FOREIGN KEY (seller_id) REFERENCES users(user_id)
+                          FOREIGN KEY (seller_id) REFERENCES users(user_id),
+                          FOREIGN KEY (category_id) REFERENCES categories(category_id)
 );
 
 -- 3. 상품 이미지 (Product_Images)

@@ -39,7 +39,7 @@ public enum ErrorCode {
     REPLY_NOT_FOUND("REPLY001", "댓글을 찾을 수 없습니다"),
 
     // Notice
-    NOTICE_NOT_FOUND("NOTICE001", "공지사항을 찾을 수 없습니다"),
+    CATEGORY_NOT_FOUND("CATEGORY001", "카테고리를 찾을 수 없습니다"),
 
     // BoardImage
     IMAGE_NOT_FOUND("IMAGE001", "이미지를 찾을 수 없습니다"),
