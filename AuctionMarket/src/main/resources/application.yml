@@ -4,37 +4,27 @@ server:
 spring:
   application:
     name: AuctionMarket
+  profiles:
+    active: local  # 기본값: local (배포 시 prod로 변경)
 
   sql:
     init:
       mode: always
       encoding: UTF-8
   datasource:
-    url: ${MYSQL_URL}
-    username: ${MYSQL_USER}
-    password: ${MYSQL_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
-
-  data:
-    redis:
-      host: localhost
-      port: 6379
-      password: 1234
-
 
   # JPA
   jpa:
     hibernate:
-      ddl-auto: none #none
+      ddl-auto: none
     defer-datasource-initialization: true
     show-sql: true
     properties:
       hibernate:
         format_sql: true
 
-
 # JWT
 jwt:
-  secret: ${JWT_SECRET_KEY}
   access-token-expiration: 900000
   refresh-token-expiration: 604800000
