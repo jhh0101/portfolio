@@ -10,9 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -45,18 +42,5 @@ public class CategoryService {
         category.setPath(path);
 
         return CategoryResponse.from(category);
-    }
-
-    @Transactional(readOnly = true)
-    public List<CategoryResponse> searchCategory(Long parentId){
-        List<Category> categories;
-        if (parentId == null) {
-            categories = categoryRepository.findByParentIsNull();
-        } else {
-            categories = categoryRepository.findByParent_CategoryId(parentId);
-        }
-        return categories.stream()
-                .map(CategoryResponse::from)
-                .collect(Collectors.toList());
     }
 }
