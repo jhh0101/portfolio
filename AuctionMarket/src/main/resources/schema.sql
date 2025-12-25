@@ -14,7 +14,7 @@ CREATE TABLE users (
                        password        VARCHAR(255) NOT NULL,
                        nickname        VARCHAR(20) NOT NULL,
                        username        VARCHAR(20) NOT NULL,
-                       role            VARCHAR(20) DEFAULT 'USER', -- USER, SELLER, ADMIN
+                       role            ENUM('USER', 'SELLER', 'ADMIN') DEFAULT 'USER', -- USER, SELLER, ADMIN
                        seller_status   VARCHAR(20) DEFAULT 'NONE', -- NONE, PENDING, APPROVED, REJECTED
                        point           BIGINT DEFAULT 0, -- 가상 화폐
                        avg_rating      DOUBLE DEFAULT 0.0, -- 평균 별점 (캐싱용)
