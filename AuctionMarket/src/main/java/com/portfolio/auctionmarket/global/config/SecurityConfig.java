@@ -44,7 +44,7 @@ public class SecurityConfig {
                                 "/api/user/reset-password"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/category").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/category").hasAuthority(Role.ADMIN.name())
+//                        .requestMatchers(HttpMethod.POST, "/api/category").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
