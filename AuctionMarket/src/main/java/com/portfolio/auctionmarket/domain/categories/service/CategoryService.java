@@ -89,4 +89,18 @@ public class CategoryService {
         return CategoryResponse.from(category);
     }
 
+    @Transactional
+    public void deleteCategory(Long id){
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
+
+        if (!category.getChildren().isEmpty()) {
+            throw new CustomException(ErrorCode.CATEGORY_HAS_CHILDREN);
+        }
+
+        // 연결 상품 존재 여푸 확인 로직
+
+        categoryRepository.delete(category);
+    }
+
 }

@@ -25,7 +25,7 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<CategoryResponse>>> searchCategory(@RequestParam(required = false) Long parentId){
+    public ResponseEntity<ApiResponse<List<CategoryResponse>>> searchCategory(@RequestParam(required = false) Long parentId) {
         List<CategoryResponse> response = categoryService.searchCategory(parentId);
         return ResponseEntity.ok(ApiResponse.success("카테고리 조회", response));
     }
@@ -35,5 +35,11 @@ public class CategoryController {
                                                                         @RequestBody CategoryRequest request) {
         CategoryResponse response = categoryService.updateCategory(id, request);
         return ResponseEntity.ok(ApiResponse.success("카테고리 수정", response));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteCategory(@PathVariable Long id) {
+        categoryService.deleteCategory(id);
+        return ResponseEntity.ok(ApiResponse.success("카테고리 삭제", null));
     }
 }
