@@ -38,8 +38,9 @@ public enum ErrorCode {
     // Reply
     REPLY_NOT_FOUND("REPLY001", "댓글을 찾을 수 없습니다"),
 
-    // Notice
+    // Category
     CATEGORY_NOT_FOUND("CATEGORY001", "카테고리를 찾을 수 없습니다"),
+    CATEGORY_HAS_CHILDREN("CATEGORY002", "하위 카테고리가 존재합니다"),
 
     // BoardImage
     IMAGE_NOT_FOUND("IMAGE001", "이미지를 찾을 수 없습니다"),
