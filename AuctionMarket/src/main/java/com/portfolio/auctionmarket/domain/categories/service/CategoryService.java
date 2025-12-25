@@ -59,4 +59,34 @@ public class CategoryService {
                 .map(CategoryResponse::from)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public CategoryResponse updateCategory(Long id, CategoryRequest request) {
+
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
+
+        String oldPath = category.getPath();
+        String newPath;
+
+        category.setCategory(request.getCategory());
+
+
+        if (request.getParentId() != null) {
+            Category parent = categoryRepository.findById(request.getParentId())
+                    .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
+            category.setParent(parent);
+            newPath = parent.getPath() + "/" + category.getCategoryId();
+        } else {
+            category.setParent(null);
+            newPath = String.valueOf(category.getCategoryId());
+        }
+        category.setPath(newPath);
+
+        categoryRepository.updatePathPrefix(oldPath + "/", newPath + "/");
+
+        category.setCategory(request.getCategory());
+        return CategoryResponse.from(category);
+    }
+
 }

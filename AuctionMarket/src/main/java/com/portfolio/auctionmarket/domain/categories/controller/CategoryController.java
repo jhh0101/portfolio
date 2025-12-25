@@ -29,4 +29,11 @@ public class CategoryController {
         List<CategoryResponse> response = categoryService.searchCategory(parentId);
         return ResponseEntity.ok(ApiResponse.success("카테고리 조회", response));
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<CategoryResponse>> updateCategory(@PathVariable Long id,
+                                                                        @RequestBody CategoryRequest request) {
+        CategoryResponse response = categoryService.updateCategory(id, request);
+        return ResponseEntity.ok(ApiResponse.success("카테고리 수정", response));
+    }
 }
