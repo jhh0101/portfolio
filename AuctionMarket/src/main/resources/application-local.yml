@@ -10,5 +10,16 @@ spring:
       port: 6379
       password: 1234
 
+cloud:
+  aws:
+    s3:
+      bucket: my-test-bucket
+    region:
+      static: us-east-1
+    credentials:
+      access-key: test  # LocalStack은 아무 값이나 넣어도 작동합니다.
+      secret-key: test
+    endpoint: http://localhost:4566 # 실제 S3 대신 로컬스택 주소 지정
+
 jwt:
   secret: MySecureJwtSecretKey1234567890ABCDEFGHIJKLMNOP
