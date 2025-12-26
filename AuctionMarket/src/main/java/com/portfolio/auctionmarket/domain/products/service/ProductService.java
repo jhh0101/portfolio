@@ -24,9 +24,11 @@ public class ProductService {
     @Transactional
     public List<ProductImageResponse> uploadImages(Long productId, List<MultipartFile> files) {
         List<ProductImageResponse> responses = new ArrayList<>();
-        
+
+        Integer lastOrder = productImageRepository.findMaxOrderByProductId(productId);
+
         for (int i = 0; i < files.size(); i++) {
-            int order = i + 1; // 0번 인덱스는 1번, 1번 인덱스는 2번...
+            int order = lastOrder + i + 1; // 0번 인덱스는 1번, 1번 인덱스는 2번...
             String url = s3Service.uploadFile(files.get(i), "products");
 
             ProductImage img = ProductImage.builder()
