@@ -10,12 +10,5 @@ spring:
       port: 6379
       password: ${REDIS_PASSWORD:1234}
 
-cloud:
-  aws:
-    s3:
-      bucket: my-auction-bucket
-    region:
-      static: ap-northeast-2
-
 jwt:
   secret: ${JWT_SECRET_KEY}
