@@ -22,5 +22,7 @@ public interface ProductImageRepository extends JpaRepository<ProductImage, Long
                      @Param("newOrder") Integer newOrder,
                      @Param("oldOrder") Integer oldOrder);
 
-    ProductImage findByProductId(Long productId);
+    @Query("SELECT COALESCE(MAX(p.imageOrder), 0) FROM ProductImage p " +
+            "WHERE p.productId = :productId")
+    Integer findMaxOrderByProductId(@Param("productId") Long productId);
 }
