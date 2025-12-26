@@ -29,7 +29,7 @@ public class ProductImage {
     @Column(name = "image_order")
     private Integer imageOrder;
 
-    public void updateOrder(int newOrder) {
+    public void updateOrder(Integer newOrder) {
         this.imageOrder = newOrder;
     }
 }

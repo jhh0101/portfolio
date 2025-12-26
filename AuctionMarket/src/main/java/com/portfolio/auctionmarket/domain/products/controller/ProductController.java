@@ -28,6 +28,12 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success("이미지 업로드", response));
     }
 
+    @PatchMapping("/{id}/images")
+    public ResponseEntity<ApiResponse<Void>> moveToMain(@PathVariable("id") Long id) {
+        productService.moveToMain(id);
+        return ResponseEntity.ok(ApiResponse.success("이미지 메인 변경", null));
+    }
+
     @DeleteMapping("/{id}/images")
     public ResponseEntity<ApiResponse<Void>> deleteImage(@PathVariable("id") Long imageId) {
         productService.deleteImage(imageId);

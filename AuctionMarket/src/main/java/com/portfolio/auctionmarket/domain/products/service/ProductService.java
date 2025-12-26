@@ -24,6 +24,7 @@ public class ProductService {
     @Transactional
     public List<ProductImageResponse> uploadImages(Long productId, List<MultipartFile> files) {
         List<ProductImageResponse> responses = new ArrayList<>();
+        
         for (int i = 0; i < files.size(); i++) {
             int order = i + 1; // 0번 인덱스는 1번, 1번 인덱스는 2번...
             String url = s3Service.uploadFile(files.get(i), "products");
@@ -40,6 +41,19 @@ public class ProductService {
             responses.add(ProductImageResponse.from(savedImg));
         }
         return responses;
+    }
+
+    @Transactional
+    public void moveToMain(Long imageId) {
+        ProductImage image = productImageRepository.findById(imageId)
+                .orElseThrow(() -> new CustomException(ErrorCode.IMAGE_NOT_FOUND));
+
+        Integer oldOrder = image.getImageOrder();
+        Integer newOrder = 1;
+
+        productImageRepository.shiftOrders(image.getProductId(), newOrder, oldOrder);
+
+        image.updateOrder(newOrder);
     }
 
     @Transactional
