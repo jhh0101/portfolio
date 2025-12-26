@@ -46,16 +46,25 @@ public class S3Service {
         }
     }
 
-    // 파일 삭제 기능 (상품 삭제 시 필요)
     public void deleteFile(String fileUrl) {
-        // URL에서 파일명(Key)만 추출 (https://버킷명.s3.리전.amazonaws.com/폴더/파일명 -> 폴더/파일명)
-        String key = fileUrl.substring(fileUrl.lastIndexOf(".com/") + 5);
 
-        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-                .bucket(bucket)
-                .key(key)
-                .build();
+        String key = extractKeyFromUrl(fileUrl); // URL에서 S3 Key(폴더명+파일명)만 추출하는 메서드
 
-        s3Client.deleteObject(deleteObjectRequest);
+        try {
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(key)
+                    .build();
+
+            s3Client.deleteObject(deleteObjectRequest);
+            System.out.println("S3 파일 삭제 완료: " + key);
+        } catch (Exception e) {
+            throw new RuntimeException("S3 파일 삭제 중 오류가 발생했습니다.", e);
+        }
+    }
+
+    private String extractKeyFromUrl(String fileUrl) {
+        // 버킷명 뒤의 경로만 남기도록 로직 작성 (프로젝트 설정에 따라 다름)
+        return fileUrl.substring(fileUrl.lastIndexOf(bucket) + bucket.length() + 1);
     }
 }
