@@ -9,6 +9,7 @@ import com.portfolio.auctionmarket.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,6 +33,9 @@ public class ProductController {
         ProductResponse response = productService.addProduct(userId, request);
         return ResponseEntity.ok(ApiResponse.success("상품 등록", response));
     }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<Page<ProductResponse>>> productList()
 
     // 이미지 메서드
     @PostMapping(value = "/{id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

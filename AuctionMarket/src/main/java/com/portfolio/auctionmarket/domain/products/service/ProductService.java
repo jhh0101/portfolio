@@ -16,6 +16,8 @@ import com.portfolio.auctionmarket.global.error.CustomException;
 import com.portfolio.auctionmarket.global.error.ErrorCode;
 import com.portfolio.auctionmarket.global.s3.service.S3Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,6 +56,13 @@ public class ProductService {
 
         return ProductResponse.from(productSave);
 
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> productList(String title, String path, Pageable pageable) {
+        Page<Product> product = productRepository.findByTitleAndCategory(title, path, pageable);
+
+        return product.map(ProductResponse::from);
     }
 
 
