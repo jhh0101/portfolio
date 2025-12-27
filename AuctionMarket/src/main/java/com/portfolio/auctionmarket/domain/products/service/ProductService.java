@@ -60,8 +60,12 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Page<ProductResponse> productList(String title, String path, Pageable pageable) {
-        Page<Product> product = productRepository.findByTitleAndCategory(title, path, pageable);
-
+        Page<Product> product;
+        if (path != null && !path.equals("")) {
+            product = productRepository.findByTitleAndCategory(title, path, pageable);
+        } else {
+            product = productRepository.findByTitle(title, pageable);
+        }
         return product.map(ProductResponse::from);
     }
 
