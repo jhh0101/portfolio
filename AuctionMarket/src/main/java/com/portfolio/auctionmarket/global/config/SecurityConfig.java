@@ -44,13 +44,14 @@ public class SecurityConfig {
                                 "/api/user/reset-password"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/category").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/api/category").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/product/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/category").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/product").hasRole("SELLER")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
