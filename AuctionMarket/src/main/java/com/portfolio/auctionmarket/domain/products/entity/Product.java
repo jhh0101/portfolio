@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "products")
+@Entity
+@Table(name = "products")
 @Builder
 public class Product extends BaseCreatedAt {
     @Id
