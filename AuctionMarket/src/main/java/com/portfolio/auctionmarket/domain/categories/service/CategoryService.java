@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -43,4 +46,61 @@ public class CategoryService {
 
         return CategoryResponse.from(category);
     }
+
+    @Transactional(readOnly = true)
+    public List<CategoryResponse> searchCategory(Long parentId){
+        List<Category> categories;
+        if (parentId == null) {
+            categories = categoryRepository.findByParentIsNull();
+        } else {
+            categories = categoryRepository.findByParent_CategoryId(parentId);
+        }
+        return categories.stream()
+                .map(CategoryResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public CategoryResponse updateCategory(Long id, CategoryRequest request) {
+
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
+
+        String oldPath = category.getPath();
+        String newPath;
+
+        category.setCategory(request.getCategory());
+
+
+        if (request.getParentId() != null) {
+            Category parent = categoryRepository.findById(request.getParentId())
+                    .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
+            category.setParent(parent);
+            newPath = parent.getPath() + "/" + category.getCategoryId();
+        } else {
+            category.setParent(null);
+            newPath = String.valueOf(category.getCategoryId());
+        }
+        category.setPath(newPath);
+
+        categoryRepository.updatePathPrefix(oldPath + "/", newPath + "/");
+
+        category.setCategory(request.getCategory());
+        return CategoryResponse.from(category);
+    }
+
+    @Transactional
+    public void deleteCategory(Long id){
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
+
+        if (!category.getChildren().isEmpty()) {
+            throw new CustomException(ErrorCode.CATEGORY_HAS_CHILDREN);
+        }
+
+        // 연결 상품 존재 여푸 확인 로직
+
+        categoryRepository.delete(category);
+    }
+
 }

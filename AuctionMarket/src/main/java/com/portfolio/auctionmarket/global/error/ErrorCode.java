@@ -38,23 +38,22 @@ public enum ErrorCode {
     // Reply
     REPLY_NOT_FOUND("REPLY001", "댓글을 찾을 수 없습니다"),
 
-    // Notice
+    // Category
     CATEGORY_NOT_FOUND("CATEGORY001", "카테고리를 찾을 수 없습니다"),
+    CATEGORY_HAS_CHILDREN("CATEGORY002", "하위 카테고리가 존재합니다"),
 
     // BoardImage
     IMAGE_NOT_FOUND("IMAGE001", "이미지를 찾을 수 없습니다"),
-    IMAGE_UPLOAD_FAILED("IMAGE002", "이미지 업로드에 실패했습니다"),
-    INVALID_IMAGE_FORMAT("IMAGE003", "지원하지 않는 이미지 형식입니다"),
+    IMAGE_IS_MAIN("IMAGE002", "이미 메인 이미지입니다"),
+    IMAGE_UPLOAD_FAILED("IMAGE003", "이미지 업로드에 실패했습니다"),
+    INVALID_IMAGE_FORMAT("IMAGE004", "지원하지 않는 이미지 형식입니다"),
 
-    // Child
-    CHILD_NOT_FOUND("CHILD001", "자녀를 찾을 수 없습니다"),
-    CHILD_ID_MISMATCH("CHILD002", "자녀와 ID가 일치하지 않습니다."),
 
     // Book
     BOOK_NOT_FOUND("BOOK001","도서를 찾을 수 없습니다."),
 
     // BookDetails
-    BOOKDETAILS_NOT_FOUND("BOOKDETAILS001","도서 상세를 찾을 수 없습니다."),
+    BOOK_DETAILS_NOT_FOUND("BOOKDETAILS001","도서 상세를 찾을 수 없습니다."),
 
     // Reader
     READER_NOT_FOUND("READER001","독자를 찾을 수 없습니다."),

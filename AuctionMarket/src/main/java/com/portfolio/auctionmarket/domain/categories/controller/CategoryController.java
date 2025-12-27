@@ -7,10 +7,9 @@ import com.portfolio.auctionmarket.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,5 +22,24 @@ public class CategoryController {
     public ResponseEntity<ApiResponse<CategoryResponse>> addCategory(@Valid @RequestBody CategoryRequest request) {
         CategoryResponse response = categoryService.addCategory(request);
         return ResponseEntity.ok(ApiResponse.success("카테고리 생성", response));
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<CategoryResponse>>> searchCategory(@RequestParam(required = false) Long parentId) {
+        List<CategoryResponse> response = categoryService.searchCategory(parentId);
+        return ResponseEntity.ok(ApiResponse.success("카테고리 조회", response));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<CategoryResponse>> updateCategory(@PathVariable Long id,
+                                                                        @RequestBody CategoryRequest request) {
+        CategoryResponse response = categoryService.updateCategory(id, request);
+        return ResponseEntity.ok(ApiResponse.success("카테고리 수정", response));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteCategory(@PathVariable Long id) {
+        categoryService.deleteCategory(id);
+        return ResponseEntity.ok(ApiResponse.success("카테고리 삭제", null));
     }
 }

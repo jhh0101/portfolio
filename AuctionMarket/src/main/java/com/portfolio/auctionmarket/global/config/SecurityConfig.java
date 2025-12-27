@@ -2,6 +2,7 @@ package com.portfolio.auctionmarket.global.config;
 
 import com.portfolio.auctionmarket.auth.filter.JwtAuthenticationFilter;
 import com.portfolio.auctionmarket.auth.service.JwtService;
+import com.portfolio.auctionmarket.domain.user.entity.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -39,12 +43,27 @@ public class SecurityConfig {
                                 "/api/auth/**", "/api/user/signup", "/api/user/verify", // 로그인, 회원가입 관련
                                 "/api/user/reset-password"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/boards", "/api/boards/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/category").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/api/category").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOriginPattern("*"); // 로컬/운영에 따라 조절
+        configuration.addAllowedMethod("*"); // GET, POST, OPTIONS 등을 모두 허용
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         // 비밀번호를 그대로 DB에 저장하면 안 되므로, 안전하게 암호화(Hash)해주는 BCryptPasswordEncoder를 등록합니다.
