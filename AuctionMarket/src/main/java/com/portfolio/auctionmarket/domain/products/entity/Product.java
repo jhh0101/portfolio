@@ -22,11 +22,11 @@ public class Product extends BaseCreatedAt {
 
     @ManyToOne
     @JoinColumn(name = "seller_id", nullable = false)
-    private User sellerId;
+    private User seller;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    private Category categoryId;
+    private Category category;
 
     @Column(name = "title")
     private String title;
@@ -35,6 +35,7 @@ public class Product extends BaseCreatedAt {
     private String description;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
 }
