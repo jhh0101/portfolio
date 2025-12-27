@@ -34,7 +34,7 @@ public class AuthService {
             throw new CustomException(ErrorCode.INVALID_CREDENTIALS);
         }
 
-        String accessToken = jwtService.generateAccessToken(user.getUserId(), user.getEmail());
+        String accessToken = jwtService.generateAccessToken(user.getUserId(), user.getEmail(), user.getRole().name());
         String refreshToken = jwtService.generateRefreshToken(user.getUserId());
 
         refreshTokenService.saveRefreshTokenBidirectional(user.getUserId(), refreshToken);
@@ -58,7 +58,7 @@ public class AuthService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        String newAccessToken = jwtService.generateAccessToken(user.getUserId(), user.getEmail());
+        String newAccessToken = jwtService.generateAccessToken(user.getUserId(), user.getEmail(), user.getRole().name());
         String newRefreshToken = jwtService.generateRefreshToken(user.getUserId());
 
         refreshTokenService.saveRefreshTokenBidirectional(user.getUserId(), newRefreshToken);
