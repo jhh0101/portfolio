@@ -2,7 +2,7 @@ package com.portfolio.auctionmarket.domain.products.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.portfolio.auctionmarket.domain.products.entity.Product;
-import com.portfolio.auctionmarket.domain.products.entity.Status;
+import com.portfolio.auctionmarket.domain.products.entity.ProductStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class ProductResponse {
     private String category;
     private String title;
     private String description;
-    private Status status;
+    private ProductStatus productStatus;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
@@ -33,7 +33,7 @@ public class ProductResponse {
                 .category(entity.getCategory().getCategory())
                 .title(entity.getTitle())
                 .description(entity.getDescription())
-                .status(entity.getStatus())
+                .productStatus(entity.getProductStatus())
                 .createdAt(entity.getCreatedAt())
                 .build();
     }
