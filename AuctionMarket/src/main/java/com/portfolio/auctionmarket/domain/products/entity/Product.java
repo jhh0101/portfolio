@@ -37,6 +37,6 @@ public class Product extends BaseCreatedAt {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private ProductStatus productStatus;
 
 }

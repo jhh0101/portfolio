@@ -1,5 +1,7 @@
 package com.portfolio.auctionmarket.domain.products.controller;
 
+import com.portfolio.auctionmarket.domain.auctions.dto.AuctionRequest;
+import com.portfolio.auctionmarket.domain.products.dto.ProductCreateRequest;
 import com.portfolio.auctionmarket.domain.products.dto.ProductImageResponse;
 import com.portfolio.auctionmarket.domain.products.dto.ProductRequest;
 import com.portfolio.auctionmarket.domain.products.dto.ProductResponse;
@@ -29,9 +31,9 @@ public class ProductController {
 
     // 상품 메서드
     @PostMapping
-    public ResponseEntity<ApiResponse<ProductResponse>> addProduct(@Valid @RequestBody ProductRequest request,
+    public ResponseEntity<ApiResponse<ProductResponse>> addProduct(@Valid @RequestBody ProductCreateRequest request,
                                                                    @AuthenticationPrincipal Long userId) {
-        ProductResponse response = productService.addProduct(userId, request);
+        ProductResponse response = productService.addProduct(userId, request.getProductRequest(), request.getAuctionRequest());
         return ResponseEntity.ok(ApiResponse.success("상품 등록", response));
     }
 

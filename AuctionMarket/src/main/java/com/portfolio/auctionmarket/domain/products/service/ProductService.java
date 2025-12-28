@@ -1,5 +1,9 @@
 package com.portfolio.auctionmarket.domain.products.service;
 
+import com.portfolio.auctionmarket.domain.auctions.dto.AuctionRequest;
+import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
+import com.portfolio.auctionmarket.domain.auctions.entity.AuctionStatus;
+import com.portfolio.auctionmarket.domain.auctions.repository.AuctionRepository;
 import com.portfolio.auctionmarket.domain.categories.entity.Category;
 import com.portfolio.auctionmarket.domain.categories.repository.CategoryRepository;
 import com.portfolio.auctionmarket.domain.products.dto.ProductImageResponse;
@@ -7,7 +11,7 @@ import com.portfolio.auctionmarket.domain.products.dto.ProductRequest;
 import com.portfolio.auctionmarket.domain.products.dto.ProductResponse;
 import com.portfolio.auctionmarket.domain.products.entity.Product;
 import com.portfolio.auctionmarket.domain.products.entity.ProductImage;
-import com.portfolio.auctionmarket.domain.products.entity.Status;
+import com.portfolio.auctionmarket.domain.products.entity.ProductStatus;
 import com.portfolio.auctionmarket.domain.products.repository.ProductImageRepository;
 import com.portfolio.auctionmarket.domain.products.repository.ProductRepository;
 import com.portfolio.auctionmarket.domain.user.entity.User;
@@ -33,26 +37,38 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final AuctionRepository auctionRepository;
     private final S3Service s3Service;
 
     // 상품 메서드
     @Transactional
-    public ProductResponse addProduct(Long userId, ProductRequest request) {
+    public ProductResponse addProduct(Long userId, ProductRequest productRequest, AuctionRequest auctionRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        Category category = categoryRepository.findById(request.getCategoryId())
+        Category category = categoryRepository.findById(productRequest.getCategoryId())
                 .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
 
         Product product = Product.builder()
                 .seller(user)
                 .category(category)
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .status(Status.ACTIVE)
+                .title(productRequest.getTitle())
+                .description(productRequest.getDescription())
+                .productStatus(ProductStatus.ACTIVE)
                 .build();
 
         Product productSave = productRepository.save(product);
+
+        Auction auction = Auction.builder()
+                .product(productSave)
+                .startPrice(auctionRequest.getStartPrice())
+                .currentPrice(auctionRequest.getStartPrice())
+                .startTime(auctionRequest.getStartTime())
+                .endTime(auctionRequest.getEndTime())
+                .status(AuctionStatus.PROCEEDING)
+                .build();
+
+        auctionRepository.save(auction);
 
         return ProductResponse.from(productSave);
 
@@ -61,7 +77,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public Page<ProductResponse> productList(String title, String path, Pageable pageable) {
         Page<Product> product;
-        if (path != null && !path.equals("")) {
+        if (path != null && !path.isEmpty()) {
             product = productRepository.findByTitleAndCategory(title, path, pageable);
         } else {
             product = productRepository.findByTitle(title, pageable);
