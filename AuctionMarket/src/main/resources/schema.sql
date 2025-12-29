@@ -16,8 +16,8 @@ CREATE TABLE users (
                        username        VARCHAR(20) NOT NULL,
                        role            ENUM('USER', 'SELLER', 'ADMIN') DEFAULT 'USER', -- USER, SELLER, ADMIN
                        seller_status   VARCHAR(20) DEFAULT 'NONE', -- NONE, PENDING, APPROVED, REJECTED
-                       point           BIGINT DEFAULT 0, -- 가상 화폐
-                       avg_rating      DOUBLE DEFAULT 0.0, -- 평균 별점 (캐싱용)
+                       point           BIGINT NOT NULL DEFAULT 0, -- 가상 화폐
+                       avg_rating      DOUBLE NOT NULL DEFAULT 0.0, -- 평균 별점 (캐싱용)
                        created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
                        updated_at      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

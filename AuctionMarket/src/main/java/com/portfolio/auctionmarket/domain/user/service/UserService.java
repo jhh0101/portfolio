@@ -34,6 +34,8 @@ public class UserService {
             .username(request.getUsername())
             .nickname(request.getNickname())
             .password(passwordEncoder.encode(request.getPassword()))
+            .point(0L)
+            .avgRating(0.0)
             .role(Role.USER)
             .build();
 
