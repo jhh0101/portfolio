@@ -28,67 +28,24 @@ public enum ErrorCode {
     PASSWORD_MISMATCH("USER005", "비밀번호가 일치하지 않습니다"),
     SOCIAL_USER_CANNOT_CHANGE_PASSWORD("USER006", "소셜 로그인 사용자는 비밀번호를 변경할 수 없습니다"),
 
-    // Board
-    BOARD_NOT_FOUND("BOARD001", "게시글을 찾을 수 없습니다"),
-    FORBIDDEN("BOARD002", "권한이 없습니다"),
-
-    // Share Board
-    SHARE_NOT_FOUND("SHARE001", "나눔 게시글을 찾을 수 없습니다"),
-
-    // Reply
-    REPLY_NOT_FOUND("REPLY001", "댓글을 찾을 수 없습니다"),
-
     // Category
     CATEGORY_NOT_FOUND("CATEGORY001", "카테고리를 찾을 수 없습니다"),
     CATEGORY_HAS_CHILDREN("CATEGORY002", "하위 카테고리가 존재합니다"),
 
-    // BoardImage
+    // Image
     IMAGE_NOT_FOUND("IMAGE001", "이미지를 찾을 수 없습니다"),
     IMAGE_IS_MAIN("IMAGE002", "이미 메인 이미지입니다"),
     IMAGE_UPLOAD_FAILED("IMAGE003", "이미지 업로드에 실패했습니다"),
     INVALID_IMAGE_FORMAT("IMAGE004", "지원하지 않는 이미지 형식입니다"),
 
+    // Auction
+    AUCTION_NOT_FOUND("A001", "경매를 찾을 수 없습니다"),
+    AUCTION_ENDED("A002", "이미 종료된 경매입니다"),
 
-    // Book
-    BOOK_NOT_FOUND("BOOK001","도서를 찾을 수 없습니다."),
-
-    // BookDetails
-    BOOK_DETAILS_NOT_FOUND("BOOKDETAILS001","도서 상세를 찾을 수 없습니다."),
-
-    // Reader
-    READER_NOT_FOUND("READER001","독자를 찾을 수 없습니다."),
-    UNAUTHORIZED_READER_OWNERSHIP("READER002", "reader에 해당 user가 속해있지 않습니다."),
-    READER_CHILD_MISMATCH("READER003","reader와 child가 일치하지 않습니다."),
-    READER_ALREADY_EXISTS("READER003","해당 자녀에 연결된 독자 정보가 이미 존재합니다."),
-
-    //contest
-    CONTEST_NOT_FOUND("CONTEST001","대회를 찾을 수 없습니다."),
-
-    //contestDetails
-    CONTEST_DETAILS_NOT_FOUND("CONTEST_DETAILS001","대회 상세를 찾을 수 없습니다."),
-
-    //story
-    STORY_NOT_FOUND("STORY001", "이어쓰기를 찾을 수 없습니다."),
-
-    //Vote
-    ALREADY_VOTED("VOTE001","이미 투표하였습니다."),
-    ALREADY_EXISTS("VOTE002","자신에게 투표할 수 없습니다."),
-
-    // packaze
-
-    NOT_FOUND("PACK001","패키지를 찾을수 없습니다"),
-    EXIST("PACK002","이미 존재하는 ~~"),
-
-    // Subscription
-    SUBSCRIPTION_NOT_FOUND("SUB001", "구독을 찾을 수 없습니다"),
-    SUBSCRIPTION_ALREADY_EXISTS("SUB002", "이미 활성화된 구독이 존재합니다"),
-    SUBSCRIPTION_ALREADY_CANCELLED("SUB003", "이미 취소된 구독입니다"),
-    SUBSCRIPTION_NOT_ACTIVE("SUB004", "활성 상태의 구독이 아닙니다"),
-
-    // Dialogue
-    DIALOGUE_NOT_FOUND("DIA001", "대화 기록을 찾을 수 없습니다"),
-    DIALOGUE_FORBIDDEN("DIA002", "해당 대화 기록에 대한 권한이 없습니다"),
-    INVALID_EMOTION_TYPE("DIA003", "유효하지 않은 감정 타입입니다"),
+    // Bids
+    BID_PRICE_TOO_LOW("B001", "입찰가는 현재가보다 높아야 합니다"),
+    SELF_BID_NOT_ALLOWED("B002", "자신의 상품에는 입찰할 수 없습니다"),
+    NOT_ENOUGH_POINTS("B003", "포인트가 부족합니다"),
 
     // Common
     BAD_REQUEST("C002", "잘못된 요청입니다"),

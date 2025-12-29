@@ -2,15 +2,12 @@ package com.portfolio.auctionmarket.domain.auctions.entity;
 
 import com.portfolio.auctionmarket.domain.products.entity.Product;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @Entity
@@ -40,5 +37,9 @@ public class Auction {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private AuctionStatus status;
+
+    public void updateCurrentPrice(Integer currentPrice) {
+        this.currentPrice = currentPrice;
+    }
 
 }
