@@ -13,5 +13,5 @@ public class BidRequest {
     private Long auctionId;
 
     @NotNull(message = "입찰가를 입력해주세요.")
-    private Integer bidPrice;
+    private Long bidPrice;
 }

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class AuctionRequest {
 
     @NotNull(message = "시작가를 입력해주세요.")
-    private Integer startPrice;
+    private Long startPrice;
 
     @NotNull(message = "시작 기간을 입력해주세요.")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")

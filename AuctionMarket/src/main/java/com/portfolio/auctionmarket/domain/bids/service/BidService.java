@@ -1,6 +1,7 @@
 package com.portfolio.auctionmarket.domain.bids.service;
 
 import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
+import com.portfolio.auctionmarket.domain.auctions.entity.AuctionStatus;
 import com.portfolio.auctionmarket.domain.auctions.repository.AuctionRepository;
 import com.portfolio.auctionmarket.domain.bids.dto.BidRequest;
 import com.portfolio.auctionmarket.domain.bids.dto.BidResponse;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +34,7 @@ public class BidService {
                 .orElseThrow(() -> new CustomException(ErrorCode.AUCTION_NOT_FOUND));
 
         // 경매 상태 체크
-        if (!"PROCEEDING".equals(auction.getStatus()) || LocalDateTime.now().isAfter(auction.getEndTime())) {
+        if (!AuctionStatus.PROCEEDING.equals(auction.getStatus()) || LocalDateTime.now().isAfter(auction.getEndTime())) {
             throw new CustomException(ErrorCode.BAD_REQUEST, "현재 진행중인 경매가 아닙니다.");
         }
 
@@ -47,17 +49,30 @@ public class BidService {
         }
 
         // 입찰가 체크
-        Boolean hasBid = bidRepository.existsByAuction(auction);
+        Optional<Bid> lastBid = bidRepository.findTopByAuctionOrderByBidIdDesc(auction);
 
-        if (!hasBid) {
+        if (lastBid.isEmpty()) {
             if (auction.getStartPrice() > request.getBidPrice()) {
                 throw new CustomException(ErrorCode.BID_PRICE_TOO_LOW, "시작가보다 높아야 합니다.");
             }
         } else {
+            Bid lastBidOpt = lastBid.get();
+            if (lastBidOpt.getBidder().getUserId().equals(userId)) {
+                throw new CustomException(ErrorCode.BAD_REQUEST, "이미 입찰중입니다.");
+            }
+
             if (auction.getCurrentPrice() >= request.getBidPrice()) {
                 throw new CustomException(ErrorCode.BID_PRICE_TOO_LOW, "현재 입찰가보다 높아야 합니다.");
             }
         }
+
+        bidRepository.findTopByAuctionOrderByBidIdDesc(auction)
+                .ifPresent(lastBidder -> {
+                    User bidder = lastBidder.getBidder();
+                    bidder.addPoint(lastBidder.getBidPrice());
+                });
+
+        user.subPoint(request.getBidPrice());
 
         Bid bid = Bid.builder()
                 .auction(auction)

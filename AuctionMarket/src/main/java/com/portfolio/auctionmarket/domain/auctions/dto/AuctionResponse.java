@@ -22,9 +22,9 @@ public class AuctionResponse {
 
     private Product product;
 
-    private Integer startPrice;
+    private Long startPrice;
 
-    private Integer currentPrice;
+    private Long currentPrice;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime startTime;

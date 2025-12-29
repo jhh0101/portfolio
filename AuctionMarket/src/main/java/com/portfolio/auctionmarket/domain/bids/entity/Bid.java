@@ -31,6 +31,6 @@ public class Bid extends BaseCreatedAt {
     private User bidder;
 
     @Column(name = "bid_price", nullable = false)
-    private Integer bidPrice;
+    private Long bidPrice;
 
 }

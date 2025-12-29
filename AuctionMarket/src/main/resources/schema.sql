@@ -57,8 +57,8 @@ CREATE TABLE product_images (
 CREATE TABLE auctions (
                           auction_id      BIGINT AUTO_INCREMENT PRIMARY KEY,
                           product_id      BIGINT NOT NULL UNIQUE, -- 상품 하나당 경매 하나
-                          start_price     INT NOT NULL,
-                          current_price   INT NOT NULL, -- 입찰 들어올 때마다 갱신
+                          start_price     BIGINT NOT NULL,
+                          current_price   BIGINT NOT NULL, -- 입찰 들어올 때마다 갱신
                           start_time      DATETIME NOT NULL,
                           end_time        DATETIME NOT NULL,
                           status          VARCHAR(20) DEFAULT 'PROCEEDING', -- PROCEEDING, ENDED, CANCELED
@@ -70,7 +70,7 @@ CREATE TABLE bids (
                       bid_id          BIGINT AUTO_INCREMENT PRIMARY KEY,
                       auction_id      BIGINT NOT NULL,
                       bidder_id       BIGINT NOT NULL, -- 입찰자
-                      bid_price       INT NOT NULL,
+                      bid_price       BIGINT NOT NULL,
                       bid_time        DATETIME DEFAULT CURRENT_TIMESTAMP,
                       FOREIGN KEY (auction_id) REFERENCES auctions(auction_id),
                       FOREIGN KEY (bidder_id) REFERENCES users(user_id)
@@ -81,7 +81,7 @@ CREATE TABLE orders (
                         order_id        BIGINT AUTO_INCREMENT PRIMARY KEY,
                         auction_id      BIGINT NOT NULL,
                         buyer_id        BIGINT NOT NULL,
-                        final_price     INT NOT NULL,
+                        final_price     BIGINT NOT NULL,
                         payment_status  VARCHAR(20) DEFAULT 'WAITING', -- WAITING, COMPLETED
                         created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
                         FOREIGN KEY (auction_id) REFERENCES auctions(auction_id),
