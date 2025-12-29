@@ -12,7 +12,7 @@ public class BidResponse {
     private Long bidId;
     private String auction;
     private String nickname;
-    private Integer bidPrice;
+    private Long bidPrice;
 
     public static BidResponse from(Bid entity) {
         return BidResponse.builder()

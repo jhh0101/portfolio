@@ -1,6 +1,8 @@
 package com.portfolio.auctionmarket.domain.user.entity;
 
 import com.portfolio.auctionmarket.global.base.Base;
+import com.portfolio.auctionmarket.global.error.CustomException;
+import com.portfolio.auctionmarket.global.error.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -43,4 +45,14 @@ public class User extends Base {
     @Column(name = "avg_rating")
     private Double avgRating;
 
+    public void subPoint(Long point) {
+        if (this.point < point) {
+            throw new CustomException(ErrorCode.NOT_ENOUGH_POINTS);
+        }
+        this.point -= point;
+    }
+
+    public void addPoint(Long point) {
+        this.point += point;
+    }
 }

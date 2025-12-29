@@ -5,7 +5,11 @@ import com.portfolio.auctionmarket.domain.bids.entity.Bid;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface BidRepository extends JpaRepository<Bid, Long> {
     Boolean existsByAuction(Auction auction);
+
+    Optional<Bid> findTopByAuctionOrderByBidIdDesc(Auction auction);
 }

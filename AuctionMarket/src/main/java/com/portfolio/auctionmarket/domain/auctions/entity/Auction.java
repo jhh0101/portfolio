@@ -23,10 +23,10 @@ public class Auction {
     private Product product;
 
     @Column(name = "start_price")
-    private Integer startPrice;
+    private Long startPrice;
 
     @Column(name = "current_price")
-    private Integer currentPrice;
+    private Long currentPrice;
 
     @Column(name = "start_time")
     private LocalDateTime startTime;
@@ -38,7 +38,7 @@ public class Auction {
     @Enumerated(EnumType.STRING)
     private AuctionStatus status;
 
-    public void updateCurrentPrice(Integer currentPrice) {
+    public void updateCurrentPrice(Long currentPrice) {
         this.currentPrice = currentPrice;
     }
 
