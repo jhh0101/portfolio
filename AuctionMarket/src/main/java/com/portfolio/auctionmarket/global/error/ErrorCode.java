@@ -31,6 +31,7 @@ public enum ErrorCode {
     // Category
     CATEGORY_NOT_FOUND("CATEGORY001", "카테고리를 찾을 수 없습니다"),
     CATEGORY_HAS_CHILDREN("CATEGORY002", "하위 카테고리가 존재합니다"),
+    CATEGORY_HAS_PRODUCT("CATEGORY003", "등록된 상품이 존재합니다"),
 
     // Image
     IMAGE_NOT_FOUND("IMAGE001", "이미지를 찾을 수 없습니다"),

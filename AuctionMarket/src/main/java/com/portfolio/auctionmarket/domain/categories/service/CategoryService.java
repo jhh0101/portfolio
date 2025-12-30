@@ -1,9 +1,13 @@
 package com.portfolio.auctionmarket.domain.categories.service;
 
+import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
+import com.portfolio.auctionmarket.domain.auctions.repository.AuctionRepository;
 import com.portfolio.auctionmarket.domain.categories.dto.CategoryRequest;
 import com.portfolio.auctionmarket.domain.categories.dto.CategoryResponse;
 import com.portfolio.auctionmarket.domain.categories.entity.Category;
 import com.portfolio.auctionmarket.domain.categories.repository.CategoryRepository;
+import com.portfolio.auctionmarket.domain.products.entity.Product;
+import com.portfolio.auctionmarket.domain.products.repository.ProductRepository;
 import com.portfolio.auctionmarket.global.error.CustomException;
 import com.portfolio.auctionmarket.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +22,7 @@ import java.util.stream.Collectors;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
     @Transactional
     public CategoryResponse addCategory(CategoryRequest request) {
@@ -98,7 +103,12 @@ public class CategoryService {
             throw new CustomException(ErrorCode.CATEGORY_HAS_CHILDREN);
         }
 
-        // 연결 상품 존재 여푸 확인 로직
+        // 연결 상품 존재 여부 확인 로직
+        Product product = productRepository.findByCategory_CategoryId(id);
+
+        if (product != null) {
+            throw new CustomException(ErrorCode.CATEGORY_HAS_PRODUCT);
+        }
 
         categoryRepository.delete(category);
     }
