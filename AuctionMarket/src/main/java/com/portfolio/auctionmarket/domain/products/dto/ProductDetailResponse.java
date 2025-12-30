@@ -14,23 +14,25 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductResponse {
+public class ProductDetailResponse {
 
     private Long productId;
     private String seller;
     private String category;
     private String title;
+    private String description;
     private ProductStatus productStatus;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
 
-    public static ProductResponse from(Product entity) {
-        return ProductResponse.builder()
+    public static ProductDetailResponse from(Product entity) {
+        return ProductDetailResponse.builder()
                 .productId(entity.getProductId())
                 .seller(entity.getSeller().getNickname())
                 .category(entity.getCategory().getCategory())
                 .title(entity.getTitle())
+                .description(entity.getDescription())
                 .productStatus(entity.getProductStatus())
                 .createdAt(entity.getCreatedAt())
                 .build();

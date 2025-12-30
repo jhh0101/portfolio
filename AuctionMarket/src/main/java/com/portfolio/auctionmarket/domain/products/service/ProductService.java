@@ -6,10 +6,7 @@ import com.portfolio.auctionmarket.domain.auctions.entity.AuctionStatus;
 import com.portfolio.auctionmarket.domain.auctions.repository.AuctionRepository;
 import com.portfolio.auctionmarket.domain.categories.entity.Category;
 import com.portfolio.auctionmarket.domain.categories.repository.CategoryRepository;
-import com.portfolio.auctionmarket.domain.products.dto.ProductAndAuctionResponse;
-import com.portfolio.auctionmarket.domain.products.dto.ProductImageResponse;
-import com.portfolio.auctionmarket.domain.products.dto.ProductRequest;
-import com.portfolio.auctionmarket.domain.products.dto.ProductResponse;
+import com.portfolio.auctionmarket.domain.products.dto.*;
 import com.portfolio.auctionmarket.domain.products.entity.Product;
 import com.portfolio.auctionmarket.domain.products.entity.ProductImage;
 import com.portfolio.auctionmarket.domain.products.entity.ProductStatus;
@@ -86,6 +83,11 @@ public class ProductService {
         return auctions.map(ProductAndAuctionResponse::from);
     }
 
+    @Transactional(readOnly = true)
+    public ProductDetailAndAuctionResponse findProductDetail(Long productId) {
+        return productRepository.findByProductId(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+    }
 
     // 이미지 메서드
     @Transactional
