@@ -8,6 +8,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -41,4 +43,13 @@ public class Product extends BaseCreatedAt {
     @OneToOne(mappedBy = "product", fetch = FetchType.LAZY)
     private Auction auction;
 
+    public void updateProduct(Category category, String title, String description, Long startPrice, LocalDateTime startTime, LocalDateTime endTime) {
+        this.category = category;
+        this.title = title;
+        this.description = description;
+
+        if (auction != null) {
+            this.auction.updateAuction(startPrice, startTime, endTime);
+        }
+    }
 }

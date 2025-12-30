@@ -42,4 +42,10 @@ public class Auction {
         this.currentPrice = currentPrice;
     }
 
+    public void updateAuction(Long startPrice, LocalDateTime startTime, LocalDateTime endTime) {
+        this.startPrice = startPrice;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
 }

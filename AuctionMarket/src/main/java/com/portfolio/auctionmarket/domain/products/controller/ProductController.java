@@ -1,8 +1,6 @@
 package com.portfolio.auctionmarket.domain.products.controller;
 
-import com.portfolio.auctionmarket.domain.auctions.dto.AuctionRequest;
 import com.portfolio.auctionmarket.domain.products.dto.*;
-import com.portfolio.auctionmarket.domain.products.entity.ProductImage;
 import com.portfolio.auctionmarket.domain.products.service.ProductService;
 import com.portfolio.auctionmarket.global.response.ApiResponse;
 import jakarta.validation.Valid;
@@ -28,7 +26,7 @@ public class ProductController {
 
     // 상품 추가
     @PostMapping
-    public ResponseEntity<ApiResponse<ProductResponse>> addProduct(@Valid @RequestBody ProductCreateRequest request,
+    public ResponseEntity<ApiResponse<ProductResponse>> addProduct(@Valid @RequestBody ProductAndAuctionRequest request,
                                                                    @AuthenticationPrincipal Long userId) {
         ProductResponse response = productService.addProduct(userId, request.getProductRequest(), request.getAuctionRequest());
         return ResponseEntity.ok(ApiResponse.success("상품 등록", response));
@@ -44,10 +42,19 @@ public class ProductController {
     }
 
     // 상품 상세 조회
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ProductDetailAndAuctionResponse>> findProductDetail(@PathVariable Long id) {
-        ProductDetailAndAuctionResponse response = productService.findProductDetail(id);
+    @GetMapping("/{productId}")
+    public ResponseEntity<ApiResponse<ProductDetailAndAuctionResponse>> findProductDetail(@PathVariable Long productId) {
+        ProductDetailAndAuctionResponse response = productService.findProductDetail(productId);
         return ResponseEntity.ok(ApiResponse.success("상품 단건 조회", response));
+    }
+
+    // 상품 상세 수정
+    @PatchMapping("/{productId}")
+    public ResponseEntity<ApiResponse<ProductDetailAndAuctionResponse>> updateProduct(@AuthenticationPrincipal Long userId,
+                                                                                      @PathVariable Long productId,
+                                                                                      @Valid @RequestBody ProductAndAuctionRequest request) {
+        ProductDetailAndAuctionResponse response = productService.updateProductDetail(userId, productId, request.getProductRequest(), request.getAuctionRequest());
+        return ResponseEntity.ok(ApiResponse.success("상품 상세 수정", response));
     }
 
     // 이미지 메서드

@@ -4,6 +4,7 @@ import com.portfolio.auctionmarket.domain.auctions.dto.AuctionRequest;
 import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
 import com.portfolio.auctionmarket.domain.auctions.entity.AuctionStatus;
 import com.portfolio.auctionmarket.domain.auctions.repository.AuctionRepository;
+import com.portfolio.auctionmarket.domain.bids.repository.BidRepository;
 import com.portfolio.auctionmarket.domain.categories.entity.Category;
 import com.portfolio.auctionmarket.domain.categories.repository.CategoryRepository;
 import com.portfolio.auctionmarket.domain.products.dto.*;
@@ -36,6 +37,7 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final AuctionRepository auctionRepository;
+    private final BidRepository bidRepository;
     private final S3Service s3Service;
 
     // 상품 메서드
@@ -85,8 +87,37 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductDetailAndAuctionResponse findProductDetail(Long productId) {
-        return productRepository.findByProductId(productId)
+        Product product = productRepository.findWithAuctionById(productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+        return ProductDetailAndAuctionResponse.from(product);
+    }
+
+    @Transactional
+    public ProductDetailAndAuctionResponse updateProductDetail(Long userId, Long productId, ProductRequest productRequest, AuctionRequest auctionRequest) {
+
+        Product product = productRepository.findWithAuctionById(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        if (!userId.equals(product.getSeller().getUserId())) {
+            throw new CustomException(ErrorCode.BAD_REQUEST, "사용자가 일치하지 않습니다.");
+        }
+
+        if (bidRepository.existsByAuction(product.getAuction())) {
+            throw new CustomException(ErrorCode.CANNOT_MODIFY_AFTER_BID, "입찰한 상품은 수정할 수 없습니다.");
+        }
+
+        Category category = categoryRepository.findById(productRequest.getCategoryId())
+                .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_NOT_FOUND));
+
+        product.updateProduct(
+                category,
+                productRequest.getTitle(),
+                productRequest.getDescription(),
+                auctionRequest.getStartPrice(),
+                auctionRequest.getStartTime(),
+                auctionRequest.getEndTime()
+        );
+        return ProductDetailAndAuctionResponse.from(product);
     }
 
     // 이미지 메서드
