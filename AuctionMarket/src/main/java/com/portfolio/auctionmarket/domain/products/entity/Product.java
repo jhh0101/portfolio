@@ -1,10 +1,12 @@
 package com.portfolio.auctionmarket.domain.products.entity;
 
+import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
 import com.portfolio.auctionmarket.domain.categories.entity.Category;
 import com.portfolio.auctionmarket.domain.user.entity.User;
 import com.portfolio.auctionmarket.global.base.BaseCreatedAt;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,11 +20,11 @@ public class Product extends BaseCreatedAt {
     @Column(name = "product_id")
     private Long productId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id", nullable = false)
     private User seller;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
@@ -35,5 +37,8 @@ public class Product extends BaseCreatedAt {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
+
+    @OneToOne(mappedBy = "product", fetch = FetchType.LAZY)
+    private Auction auction;
 
 }

@@ -18,7 +18,7 @@ public class Auction {
     @Column(name = "auction_id")
     private Long auctionId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 

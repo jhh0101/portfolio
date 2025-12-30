@@ -1,5 +1,6 @@
 package com.portfolio.auctionmarket.domain.products.repository;
 
+import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
 import com.portfolio.auctionmarket.domain.products.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p " +
+            "JOIN FETCH p.auction a " +
             "LEFT JOIN p.category c " + // 객체 그래프 탐색 방식 권장
             "WHERE p.title LIKE CONCAT('%', :title, '%') " +
             "AND c.path LIKE CONCAT(:path, '/%')")
@@ -19,6 +21,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 
     @Query("SELECT p FROM Product p " +
+            "JOIN FETCH p.auction a " +
             "LEFT JOIN p.category c " + // 객체 그래프 탐색 방식 권장
             "WHERE p.title LIKE CONCAT('%', :title, '%')")
     Page<Product> findByTitle(@Param("title") String title, Pageable pageable);
