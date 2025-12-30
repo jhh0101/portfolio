@@ -26,7 +26,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    // 상품 메서드
+    // 상품 추가
     @PostMapping
     public ResponseEntity<ApiResponse<ProductResponse>> addProduct(@Valid @RequestBody ProductCreateRequest request,
                                                                    @AuthenticationPrincipal Long userId) {
@@ -34,12 +34,20 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success("상품 등록", response));
     }
 
+    // 상품 전체 리스트 조회
     @GetMapping
     public ResponseEntity<ApiResponse<Page<ProductAndAuctionResponse>>> productList(@RequestParam(required = false, defaultValue = "") String title,
                                                                                     @RequestParam(required = false, defaultValue = "") String path,
                                                                                     Pageable pageable) {
         Page<ProductAndAuctionResponse> responses = productService.productList(title, path, pageable);
         return ResponseEntity.ok(ApiResponse.success("상품 리스트 조회", responses));
+    }
+
+    // 상품 상세 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<ProductDetailAndAuctionResponse>> findProductDetail(@PathVariable Long id) {
+        ProductDetailAndAuctionResponse response = productService.findProductDetail(id);
+        return ResponseEntity.ok(ApiResponse.success("상품 단건 조회", response));
     }
 
     // 이미지 메서드

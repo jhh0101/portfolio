@@ -39,6 +39,9 @@ public enum ErrorCode {
     IMAGE_UPLOAD_FAILED("IMAGE003", "이미지 업로드에 실패했습니다"),
     INVALID_IMAGE_FORMAT("IMAGE004", "지원하지 않는 이미지 형식입니다"),
 
+    // Product
+    PRODUCT_NOT_FOUND("PRODUCT001", "상품을 찾을 수 없습니다"),
+
     // Auction
     AUCTION_NOT_FOUND("A001", "경매를 찾을 수 없습니다"),
     AUCTION_ENDED("A002", "이미 종료된 경매입니다"),
