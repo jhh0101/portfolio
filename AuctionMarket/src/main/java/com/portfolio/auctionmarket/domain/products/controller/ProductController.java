@@ -1,10 +1,7 @@
 package com.portfolio.auctionmarket.domain.products.controller;
 
 import com.portfolio.auctionmarket.domain.auctions.dto.AuctionRequest;
-import com.portfolio.auctionmarket.domain.products.dto.ProductCreateRequest;
-import com.portfolio.auctionmarket.domain.products.dto.ProductImageResponse;
-import com.portfolio.auctionmarket.domain.products.dto.ProductRequest;
-import com.portfolio.auctionmarket.domain.products.dto.ProductResponse;
+import com.portfolio.auctionmarket.domain.products.dto.*;
 import com.portfolio.auctionmarket.domain.products.entity.ProductImage;
 import com.portfolio.auctionmarket.domain.products.service.ProductService;
 import com.portfolio.auctionmarket.global.response.ApiResponse;
@@ -38,10 +35,10 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<ProductResponse>>> productList(@RequestParam(required = false, defaultValue = "") String title,
-                                                                          @RequestParam(required = false, defaultValue = "") String path,
-                                                                          Pageable pageable) {
-        Page<ProductResponse> responses = productService.productList(title, path, pageable);
+    public ResponseEntity<ApiResponse<Page<ProductAndAuctionResponse>>> productList(@RequestParam(required = false, defaultValue = "") String title,
+                                                                                    @RequestParam(required = false, defaultValue = "") String path,
+                                                                                    Pageable pageable) {
+        Page<ProductAndAuctionResponse> responses = productService.productList(title, path, pageable);
         return ResponseEntity.ok(ApiResponse.success("상품 리스트 조회", responses));
     }
 

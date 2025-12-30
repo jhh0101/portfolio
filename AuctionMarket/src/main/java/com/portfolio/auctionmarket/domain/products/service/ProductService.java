@@ -6,6 +6,7 @@ import com.portfolio.auctionmarket.domain.auctions.entity.AuctionStatus;
 import com.portfolio.auctionmarket.domain.auctions.repository.AuctionRepository;
 import com.portfolio.auctionmarket.domain.categories.entity.Category;
 import com.portfolio.auctionmarket.domain.categories.repository.CategoryRepository;
+import com.portfolio.auctionmarket.domain.products.dto.ProductAndAuctionResponse;
 import com.portfolio.auctionmarket.domain.products.dto.ProductImageResponse;
 import com.portfolio.auctionmarket.domain.products.dto.ProductRequest;
 import com.portfolio.auctionmarket.domain.products.dto.ProductResponse;
@@ -75,14 +76,14 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductResponse> productList(String title, String path, Pageable pageable) {
-        Page<Product> product;
+    public Page<ProductAndAuctionResponse> productList(String title, String path, Pageable pageable) {
+        Page<Product> auctions;
         if (path != null && !path.isEmpty()) {
-            product = productRepository.findByTitleAndCategory(title, path, pageable);
+            auctions = productRepository.findByTitleAndCategory(title, path, pageable);
         } else {
-            product = productRepository.findByTitle(title, pageable);
+            auctions = productRepository.findByTitle(title, pageable);
         }
-        return product.map(ProductResponse::from);
+        return auctions.map(ProductAndAuctionResponse::from);
     }
 
 
