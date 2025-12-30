@@ -20,8 +20,6 @@ public class AuctionResponse {
 
     private Long auctionId;
 
-    private Product product;
-
     private Long startPrice;
 
     private Long currentPrice;
@@ -37,7 +35,6 @@ public class AuctionResponse {
     public static AuctionResponse from(Auction entity) {
         return AuctionResponse.builder()
                 .auctionId(entity.getAuctionId())
-                .product(entity.getProduct())
                 .startPrice(entity.getStartPrice())
                 .currentPrice(entity.getCurrentPrice())
                 .startTime(entity.getStartTime())
