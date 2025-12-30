@@ -34,5 +34,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p " +
             "JOIN FETCH p.auction a " +
             "WHERE p.productId = :productId")
-    Optional<ProductDetailAndAuctionResponse> findByProductId(@Param("productId") Long productId);
+    Optional<Product> findWithAuctionById(@Param("productId") Long productId);
 }
