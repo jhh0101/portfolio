@@ -3,9 +3,11 @@ package com.portfolio.auctionmarket.domain.bids.service;
 import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
 import com.portfolio.auctionmarket.domain.auctions.entity.AuctionStatus;
 import com.portfolio.auctionmarket.domain.auctions.repository.AuctionRepository;
+import com.portfolio.auctionmarket.domain.bids.dto.BidCancelResponse;
 import com.portfolio.auctionmarket.domain.bids.dto.BidRequest;
 import com.portfolio.auctionmarket.domain.bids.dto.BidResponse;
 import com.portfolio.auctionmarket.domain.bids.entity.Bid;
+import com.portfolio.auctionmarket.domain.bids.entity.BidStatus;
 import com.portfolio.auctionmarket.domain.bids.repository.BidRepository;
 import com.portfolio.auctionmarket.domain.user.entity.User;
 import com.portfolio.auctionmarket.domain.user.repository.UserRepository;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -78,6 +81,7 @@ public class BidService {
                 .auction(auction)
                 .bidder(user)
                 .bidPrice(request.getBidPrice())
+                .status(BidStatus.ACTIVE)
                 .build();
 
         Bid bidSave = bidRepository.save(bid);
@@ -85,6 +89,51 @@ public class BidService {
         auction.updateCurrentPrice(request.getBidPrice());
 
         return BidResponse.from(bidSave);
+    }
+
+    // 입찰 취소(비즈니스 관점에선 필요 없음)
+    @Transactional
+    public BidCancelResponse cancelBid(Long userId, Long bidId) {
+        Bid bid = bidRepository.findById(bidId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BID_NOT_FOUND));
+
+        if (!userId.equals(bid.getBidder().getUserId())) {
+            throw new CustomException(ErrorCode.BAD_REQUEST, "사용자 정보가 일치하지 않습니다.");
+        }
+        // 포인트 환불
+        bid.getBidder().addPoint(bid.getBidPrice());
+
+        // 입찰 취소
+        bid.cancelBid();
+
+        // 입찰자 리스트
+        List<Bid> bidList = bidRepository.findAllByAuctionOrderByBidPriceDesc(bid.getAuction());
+
+        boolean bidFound = false;
+
+        // 입찰자 포인트 검사 & 최고입찰자 데이터 삽입
+        for (Bid lastBidder : bidList) {
+            User bidder = lastBidder.getBidder();
+            if (bidder.getPoint() >= lastBidder.getBidPrice()) {
+                bid.getAuction().updateCurrentPrice(lastBidder.getBidPrice());
+                Bid bidAdd = Bid.builder()
+                        .bidder(lastBidder.getBidder())
+                        .bidPrice(lastBidder.getBidPrice())
+                        .status(BidStatus.ACTIVE)
+                        .auction(lastBidder.getAuction())
+                        .build();
+                bidRepository.save(bidAdd);
+                bidFound = true;
+                break;
+            } else {
+                lastBidder.invalidBid();
+            }
+        }
+        if (!bidFound) {
+            bid.getAuction().updateCurrentPrice(bid.getAuction().getStartPrice());
+        }
+
+        return BidCancelResponse.from(bid);
     }
 
 }

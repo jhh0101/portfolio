@@ -1,5 +1,6 @@
 package com.portfolio.auctionmarket.domain.bids.controller;
 
+import com.portfolio.auctionmarket.domain.bids.dto.BidCancelResponse;
 import com.portfolio.auctionmarket.domain.bids.dto.BidRequest;
 import com.portfolio.auctionmarket.domain.bids.dto.BidResponse;
 import com.portfolio.auctionmarket.domain.bids.service.BidService;
@@ -8,10 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,5 +23,12 @@ public class BidController {
                                                            @AuthenticationPrincipal Long userId) {
         BidResponse response = bidService.addBid(userId, request);
         return ResponseEntity.ok(ApiResponse.success("입찰 성공", response));
+    }
+
+    @PostMapping("/{bidId}")
+    public ResponseEntity<ApiResponse<BidCancelResponse>> cancelBid(@AuthenticationPrincipal Long userId,
+                                                                    @PathVariable Long bidId) {
+        BidCancelResponse response = bidService.cancelBid(userId, bidId);
+        return ResponseEntity.ok(ApiResponse.success("입찰 취소", response));
     }
 }

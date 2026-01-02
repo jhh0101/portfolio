@@ -5,6 +5,8 @@ import com.portfolio.auctionmarket.domain.user.entity.User;
 import com.portfolio.auctionmarket.global.base.BaseCreatedAt;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "bids")
+@SQLRestriction("status != 'INVALID' AND status != 'CANCELED'")
 @AttributeOverride(name = "createdAt", column = @Column(name = "bid_time",updatable = false))
 public class Bid extends BaseCreatedAt {
 
@@ -33,4 +36,15 @@ public class Bid extends BaseCreatedAt {
     @Column(name = "bid_price", nullable = false)
     private Long bidPrice;
 
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private BidStatus status;
+
+    public void cancelBid() {
+        this.status = BidStatus.CANCELED;
+    }
+
+    public void invalidBid() {
+        this.status = BidStatus.INVALID;
+    }
 }

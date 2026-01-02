@@ -49,9 +49,11 @@ public enum ErrorCode {
     AUCTION_ENDED("A002", "이미 종료된 경매입니다"),
 
     // Bids
-    BID_PRICE_TOO_LOW("B001", "입찰가는 현재가보다 높아야 합니다"),
-    SELF_BID_NOT_ALLOWED("B002", "자신의 상품에는 입찰할 수 없습니다"),
-    NOT_ENOUGH_POINTS("B003", "포인트가 부족합니다"),
+    BID_NOT_FOUND("B001", "입찰 내역을 찾을 수 없습니다"),
+    BID_PRICE_TOO_LOW("B002", "입찰가는 현재가보다 높아야 합니다"),
+    SELF_BID_NOT_ALLOWED("B003", "자신의 상품에는 입찰할 수 없습니다"),
+    NOT_ENOUGH_POINTS("B004", "포인트가 부족합니다"),
+
 
     // Common
     BAD_REQUEST("C002", "잘못된 요청입니다"),
