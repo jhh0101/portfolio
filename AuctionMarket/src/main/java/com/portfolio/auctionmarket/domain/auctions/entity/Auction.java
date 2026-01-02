@@ -3,6 +3,8 @@ package com.portfolio.auctionmarket.domain.auctions.entity;
 import com.portfolio.auctionmarket.domain.products.entity.Product;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
+@SQLDelete(sql = "UPDATE auctions SET status = 'CANCELED' WHERE auction_id = ?")
+@SQLRestriction("status != 'CANCELED'")
 @Table(name = "auctions")
 public class Auction {
     @Id
