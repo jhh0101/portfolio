@@ -7,6 +7,10 @@ import com.portfolio.auctionmarket.domain.bids.service.BidService;
 import com.portfolio.auctionmarket.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +29,13 @@ public class BidController {
         return ResponseEntity.ok(ApiResponse.success("입찰 성공", response));
     }
 
+    @GetMapping("/{auctionId}/bid")
+    public ResponseEntity<ApiResponse<Page<BidResponse>>> findBidList(@PathVariable Long auctionId,
+                                                                      @PageableDefault(sort = "bidId", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<BidResponse> responses = bidService.findBid(auctionId, pageable);
+        return ResponseEntity.ok(ApiResponse.success("입찰인 리스트 조회", responses));
+    }
+
     @PostMapping("/{bidId}")
     public ResponseEntity<ApiResponse<BidCancelResponse>> cancelBid(@AuthenticationPrincipal Long userId,
                                                                     @PathVariable Long bidId) {
@@ -32,3 +43,4 @@ public class BidController {
         return ResponseEntity.ok(ApiResponse.success("입찰 취소", response));
     }
 }
+

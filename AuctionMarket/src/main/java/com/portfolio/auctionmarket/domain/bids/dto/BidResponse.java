@@ -10,14 +10,12 @@ import lombok.*;
 public class BidResponse {
 
     private Long bidId;
-    private String title;
     private String nickname;
     private Long bidPrice;
 
     public static BidResponse from(Bid entity) {
         return BidResponse.builder()
                 .bidId(entity.getBidId())
-                .title(entity.getAuction().getProduct().getTitle())
                 .nickname(entity.getBidder().getNickname())
                 .bidPrice(entity.getBidPrice())
                 .build();
