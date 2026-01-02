@@ -14,6 +14,8 @@ import com.portfolio.auctionmarket.domain.user.repository.UserRepository;
 import com.portfolio.auctionmarket.global.error.CustomException;
 import com.portfolio.auctionmarket.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,6 +91,12 @@ public class BidService {
         auction.updateCurrentPrice(request.getBidPrice());
 
         return BidResponse.from(bidSave);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BidResponse> findBid(Long auctionId, Pageable pageable) {
+        Page<Bid> bids = bidRepository.findAllByAuction_AuctionId(auctionId, pageable);
+        return bids.map(BidResponse::from);
     }
 
     // 입찰 취소(비즈니스 관점에선 필요 없음)
