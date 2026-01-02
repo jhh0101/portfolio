@@ -39,7 +39,7 @@ CREATE TABLE products (
                           category_id     BIGINT NOT NULL,
                           title           VARCHAR(200) NOT NULL,
                           description     TEXT,
-                          status          VARCHAR(20) DEFAULT 'ACTIVE', -- ACTIVE, SOLD, DELETED
+                          status          ENUM('ACTIVE', 'SOLD', 'DELETED') DEFAULT 'ACTIVE', -- ACTIVE, SOLD, DELETED
                           created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
                           FOREIGN KEY (seller_id) REFERENCES users(user_id),
                           FOREIGN KEY (category_id) REFERENCES categories(category_id)
@@ -73,6 +73,7 @@ CREATE TABLE bids (
                       bidder_id       BIGINT NOT NULL, -- 입찰자
                       bid_price       BIGINT NOT NULL,
                       bid_time        DATETIME DEFAULT CURRENT_TIMESTAMP,
+                      status          ENUM('ACTIVE', 'INVALID', 'CANCELED') DEFAULT 'ACTIVE',
                       FOREIGN KEY (auction_id) REFERENCES auctions(auction_id),
                       FOREIGN KEY (bidder_id) REFERENCES users(user_id)
 );
