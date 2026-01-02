@@ -2,7 +2,8 @@ package com.portfolio.auctionmarket.domain.categories.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "categories")
+@SQLDelete(sql = "UPDATE categories SET is_deleted = true WHERE category_id = ?")
+@SQLRestriction("is_deleted = false")
 @Builder
 public class Category {
 
@@ -36,5 +39,4 @@ public class Category {
         this.children.add(children);
         children.setParent(this);
     }
-
 }

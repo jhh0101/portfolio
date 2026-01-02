@@ -28,6 +28,7 @@ CREATE TABLE categories (
                             category      VARCHAR(50) NOT NULL, -- 카테고리 이름 (예: 가전, 의류)
                             parent_id     BIGINT NULL,           -- 부모 카테고리 ID (대분류일 경우 NULL)
                             path          VARCHAR(100) NULL,  -- 경로 저장
+                            is_deleted    TINYINT(1) DEFAULT 0,  -- 경로 저장
                             FOREIGN KEY (parent_id) REFERENCES categories(category_id)
 );
 
