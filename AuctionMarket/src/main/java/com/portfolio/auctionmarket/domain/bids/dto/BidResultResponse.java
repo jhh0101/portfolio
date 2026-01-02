@@ -10,18 +10,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BidCancelResponse {
+public class BidResultResponse {
 
     private Long auctionId;
     private String title;
-    private Long bidPrice;
+    private Long price;
     private Long currentPoint;
 
-    public static BidCancelResponse from(Bid entity) {
-        return BidCancelResponse.builder()
+    public static BidResultResponse from(Bid entity) {
+        return BidResultResponse.builder()
                 .auctionId(entity.getAuction().getAuctionId())
                 .title(entity.getAuction().getProduct().getTitle())
-                .bidPrice(entity.getBidPrice())
+                .price(entity.getBidPrice())
                 .currentPoint(entity.getBidder().getPoint())
                 .build();
     }

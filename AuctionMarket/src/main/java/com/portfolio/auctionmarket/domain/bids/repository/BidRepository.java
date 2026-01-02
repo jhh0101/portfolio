@@ -20,5 +20,5 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
     List<Bid> findAllByAuctionOrderByBidPriceDesc(Auction auction);
 
     @EntityGraph(attributePaths = {"bidder"})
-    Page<Bid> findAllByAuction_AuctionId(Long auctionAuctionId, Pageable pageable);
+    Page<Bid> findAllByAuction_AuctionId(Long auctionId, Pageable pageable);
 }

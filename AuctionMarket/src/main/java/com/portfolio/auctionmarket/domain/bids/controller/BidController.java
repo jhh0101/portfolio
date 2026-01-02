@@ -1,6 +1,6 @@
 package com.portfolio.auctionmarket.domain.bids.controller;
 
-import com.portfolio.auctionmarket.domain.bids.dto.BidCancelResponse;
+import com.portfolio.auctionmarket.domain.bids.dto.BidResultResponse;
 import com.portfolio.auctionmarket.domain.bids.dto.BidRequest;
 import com.portfolio.auctionmarket.domain.bids.dto.BidResponse;
 import com.portfolio.auctionmarket.domain.bids.service.BidService;
@@ -17,15 +17,16 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/bid")
+@RequestMapping("/api/auction")
 public class BidController {
 
     private final BidService bidService;
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<BidResponse>> addBid(@Valid @RequestBody BidRequest request,
+    @PostMapping("/{auctionId}")
+    public ResponseEntity<ApiResponse<BidResultResponse>> addBid(@Valid @RequestBody BidRequest request,
+                                                           @PathVariable Long auctionId,
                                                            @AuthenticationPrincipal Long userId) {
-        BidResponse response = bidService.addBid(userId, request);
+        BidResultResponse response = bidService.addBid(userId, auctionId, request);
         return ResponseEntity.ok(ApiResponse.success("입찰 성공", response));
     }
 
@@ -36,10 +37,11 @@ public class BidController {
         return ResponseEntity.ok(ApiResponse.success("입찰인 리스트 조회", responses));
     }
 
-    @PostMapping("/{bidId}")
-    public ResponseEntity<ApiResponse<BidCancelResponse>> cancelBid(@AuthenticationPrincipal Long userId,
-                                                                    @PathVariable Long bidId) {
-        BidCancelResponse response = bidService.cancelBid(userId, bidId);
+    @PostMapping("/{auctionId}/bid/{bidId}")
+    public ResponseEntity<ApiResponse<BidResultResponse>> cancelBid(@AuthenticationPrincipal Long userId,
+                                                                    @PathVariable Long bidId,
+                                                                    @PathVariable Long auctionId) {
+        BidResultResponse response = bidService.cancelBid(userId, bidId, auctionId);
         return ResponseEntity.ok(ApiResponse.success("입찰 취소", response));
     }
 }
