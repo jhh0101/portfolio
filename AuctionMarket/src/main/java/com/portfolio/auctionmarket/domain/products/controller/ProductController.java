@@ -57,6 +57,14 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success("상품 상세 수정", response));
     }
 
+    // 상품 삭제
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<ApiResponse<Void>> deleteProduct(@AuthenticationPrincipal Long userId,
+                                                           @PathVariable Long productId) {
+        productService.deleteProduct(userId, productId);
+        return ResponseEntity.ok(ApiResponse.success("상품 삭제", null));
+    }
+
     // 이미지 메서드
     @PostMapping(value = "/{id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<List<ProductImageResponse>>> uploadImages(@PathVariable("id") Long productId, // 경로에서 상품 ID 추출

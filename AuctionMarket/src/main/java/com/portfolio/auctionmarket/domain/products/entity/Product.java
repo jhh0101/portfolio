@@ -6,7 +6,8 @@ import com.portfolio.auctionmarket.domain.user.entity.User;
 import com.portfolio.auctionmarket.global.base.BaseCreatedAt;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +15,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
+@SQLRestriction("status != 'DELETED'")
+@SQLDelete(sql = "UPDATE products SET status = 'DELETED' WHERE product_id = ?")
 @Table(name = "products")
 @Builder
 public class Product extends BaseCreatedAt {
@@ -40,7 +43,7 @@ public class Product extends BaseCreatedAt {
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
 
-    @OneToOne(mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Auction auction;
 
     public void updateProduct(Category category, String title, String description, Long startPrice, LocalDateTime startTime, LocalDateTime endTime) {

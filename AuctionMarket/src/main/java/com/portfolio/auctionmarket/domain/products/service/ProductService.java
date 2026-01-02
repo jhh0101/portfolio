@@ -88,7 +88,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ProductDetailAndAuctionResponse findProductDetail(Long productId) {
         Product product = productRepository.findWithAuctionById(productId)
-                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND, "상품을 찾을 수 없습니다."));
         return ProductDetailAndAuctionResponse.from(product);
     }
 
@@ -96,7 +96,7 @@ public class ProductService {
     public ProductDetailAndAuctionResponse updateProductDetail(Long userId, Long productId, ProductRequest productRequest, AuctionRequest auctionRequest) {
 
         Product product = productRepository.findWithAuctionById(productId)
-                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND, "상품을 찾을 수 없습니다."));
 
         if (!userId.equals(product.getSeller().getUserId())) {
             throw new CustomException(ErrorCode.BAD_REQUEST, "사용자가 일치하지 않습니다.");
@@ -118,6 +118,24 @@ public class ProductService {
                 auctionRequest.getEndTime()
         );
         return ProductDetailAndAuctionResponse.from(product);
+    }
+
+    // 상품 삭제
+    @Transactional
+    public void deleteProduct(Long userId, Long productId) {
+
+        Product product = productRepository.findWithAuctionById(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND, "상품을 찾을 수 없습니다."));
+
+        if (!userId.equals(product.getSeller().getUserId())) {
+            throw new CustomException(ErrorCode.BAD_REQUEST, "사용자가 일치하지 않습니다.");
+        }
+
+        if (bidRepository.existsByAuction(product.getAuction())) {
+            throw new CustomException(ErrorCode.CANNOT_DELETE_AFTER_BID, "입찰한 상품은 삭제할 수 없습니다.");
+        }
+
+        productRepository.delete(product);
     }
 
     // 이미지 메서드
