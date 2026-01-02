@@ -3,7 +3,7 @@ package com.portfolio.auctionmarket.domain.bids.service;
 import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
 import com.portfolio.auctionmarket.domain.auctions.entity.AuctionStatus;
 import com.portfolio.auctionmarket.domain.auctions.repository.AuctionRepository;
-import com.portfolio.auctionmarket.domain.bids.dto.BidCancelResponse;
+import com.portfolio.auctionmarket.domain.bids.dto.BidResultResponse;
 import com.portfolio.auctionmarket.domain.bids.dto.BidRequest;
 import com.portfolio.auctionmarket.domain.bids.dto.BidResponse;
 import com.portfolio.auctionmarket.domain.bids.entity.Bid;
@@ -31,11 +31,11 @@ public class BidService {
     private final AuctionRepository auctionRepository;
 
     @Transactional
-    public BidResponse addBid(Long userId, BidRequest request) {
+    public BidResultResponse addBid(Long userId, Long auctionId, BidRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        Auction auction = auctionRepository.findById(request.getAuctionId())
+        Auction auction = auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.AUCTION_NOT_FOUND));
 
         // 경매 상태 체크
@@ -90,7 +90,7 @@ public class BidService {
 
         auction.updateCurrentPrice(request.getBidPrice());
 
-        return BidResponse.from(bidSave);
+        return BidResultResponse.from(bidSave);
     }
 
     @Transactional(readOnly = true)
@@ -101,13 +101,18 @@ public class BidService {
 
     // 입찰 취소(비즈니스 관점에선 필요 없음)
     @Transactional
-    public BidCancelResponse cancelBid(Long userId, Long bidId) {
+    public BidResultResponse cancelBid(Long userId, Long bidId, Long auctionId) {
         Bid bid = bidRepository.findById(bidId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BID_NOT_FOUND));
 
         if (!userId.equals(bid.getBidder().getUserId())) {
             throw new CustomException(ErrorCode.BAD_REQUEST, "사용자 정보가 일치하지 않습니다.");
         }
+
+        if (!bid.getAuction().getAuctionId().equals(auctionId)) {
+            throw new CustomException(ErrorCode.BAD_REQUEST, "경매 정보가 올바르지 않습니다.");
+        }
+
         // 포인트 환불
         bid.getBidder().addPoint(bid.getBidPrice());
 
@@ -141,7 +146,7 @@ public class BidService {
             bid.getAuction().updateCurrentPrice(bid.getAuction().getStartPrice());
         }
 
-        return BidCancelResponse.from(bid);
+        return BidResultResponse.from(bid);
     }
 
 }
