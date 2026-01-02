@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,6 +21,11 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
 
     List<Bid> findAllByAuctionOrderByBidPriceDesc(Auction auction);
 
-    @EntityGraph(attributePaths = {"bidder"})
-    Page<Bid> findAllByAuction_AuctionId(Long auctionId, Pageable pageable);
+    @Query(value = "SELECT b.bid_id AS bidId, b.nickname, b.bid_price AS bidPrice FROM bids b " +
+            "LEFT JOIN user u " +
+            "ON b.bidder_id = a.user_id " +
+            "WHERE b.auction_id = :auctionId",
+            countQuery = "SELECT COUNT(*) FROM bids b WHERE b.auction_id = :auctionId",
+            nativeQuery = true)
+    Page<Bid> findAllByAuction_AuctionId(@Param("auctionId") Long auctionId, Pageable pageable);
 }
