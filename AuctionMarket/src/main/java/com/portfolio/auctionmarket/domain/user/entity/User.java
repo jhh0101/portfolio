@@ -75,6 +75,7 @@ public class User extends Base {
         this.point = 0L;
         this.avgRating = 0.0;
         this.suspensionReason = null;
+
         this.sellerStatus = SellerStatus.NONE;
         this.status = UserStatus.WITHDRAWN;
         this.role = Role.USER;
@@ -90,5 +91,4 @@ public class User extends Base {
         this.status = UserStatus.SUSPENDED;
         this.role = Role.USER;
     }
-
 }
