@@ -9,17 +9,20 @@ DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS seller_ratings;
 -- 1. 회원 (Users)
 CREATE TABLE users (
-                       user_id         BIGINT AUTO_INCREMENT PRIMARY KEY,
-                       email           VARCHAR(100) NOT NULL UNIQUE, -- 로그인 ID
-                       password        VARCHAR(255) NOT NULL,
-                       nickname        VARCHAR(20) NOT NULL,
-                       username        VARCHAR(20) NOT NULL,
-                       role            ENUM('USER', 'SELLER', 'ADMIN') DEFAULT 'USER', -- USER, SELLER, ADMIN
-                       seller_status   VARCHAR(20) DEFAULT 'NONE', -- NONE, PENDING, APPROVED, REJECTED
-                       point           BIGINT NOT NULL DEFAULT 0, -- 가상 화폐
-                       avg_rating      DOUBLE NOT NULL DEFAULT 0.0, -- 평균 별점 (캐싱용)
-                       created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
-                       updated_at      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                       user_id            BIGINT AUTO_INCREMENT PRIMARY KEY,
+                       email              VARCHAR(100) NOT NULL UNIQUE, -- 로그인 ID
+                       password           VARCHAR(255) NULL,
+                       nickname           VARCHAR(20) NOT NULL,
+                       username           VARCHAR(20) NOT NULL,
+                       phone              VARCHAR(15) NOT NULL,
+                       role               ENUM('USER', 'SELLER', 'ADMIN') DEFAULT 'USER', -- USER, SELLER, ADMIN
+                       seller_status      VARCHAR(20) DEFAULT 'NONE', -- NONE, PENDING, APPROVED, REJECTED
+                       point              BIGINT NOT NULL DEFAULT 0, -- 가상 화폐
+                       avg_rating         DOUBLE NOT NULL DEFAULT 0.0, -- 평균 별점 (캐싱용)
+                       status             ENUM('NORMAL', 'SUSPENDED', 'WITHDRAWN') DEFAULT 'NORMAL',
+                       suspension_reason  VARCHAR(255) NOT NULL, -- 정지 사유
+                       created_at         DATETIME DEFAULT CURRENT_TIMESTAMP,
+                       updated_at         DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- 카테고리 테이블 생성

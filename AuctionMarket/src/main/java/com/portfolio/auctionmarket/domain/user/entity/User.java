@@ -37,13 +37,20 @@ public class User extends Base {
     private Role role;
 
     @Column(name = "seller_status")
-    private String sellerStatus;
+    @Enumerated(EnumType.STRING)
+    private SellerStatus sellerStatus;
 
     @Column(name = "point")
     private Long point;
 
     @Column(name = "avg_rating")
     private Double avgRating;
+
+    @Column(name = "status")
+    private UserStatus status;
+
+    @Column(name = "phone")
+    private String phone;
 
     public void subPoint(Long point) {
         if (this.point < point) {
@@ -55,4 +62,19 @@ public class User extends Base {
     public void addPoint(Long point) {
         this.point += point;
     }
+
+    public void withdraw(String maskedEmail, String maskedUsername, String maskedPhone, Long userId) {
+        this.email = maskedEmail + "_" + userId;
+        this.username = maskedUsername;
+        this.phone = maskedPhone;
+        this.nickname = "탈퇴된 사용자" + userId;
+        this.password = null;
+        this.point = 0L;
+        this.avgRating = 0.0;
+        this.sellerStatus = SellerStatus.NONE;
+        this.status = UserStatus.WITHDRAWN;
+        this.role = Role.USER;
+    }
+
+
 }
