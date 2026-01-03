@@ -2,7 +2,9 @@ package com.portfolio.auctionmarket.domain.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.portfolio.auctionmarket.domain.user.entity.Role;
+import com.portfolio.auctionmarket.domain.user.entity.SellerStatus;
 import com.portfolio.auctionmarket.domain.user.entity.User;
+import com.portfolio.auctionmarket.global.util.MaskingUtil;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,9 +21,10 @@ public class UserResponse {
     private Long userId;
     private String email;
     private String username;
+    private String phone;
     private String nickname;
     private Role role;
-    private String sellerStatus;
+    private SellerStatus sellerStatus;
     private Long point;
     private Double avgRating;
 
@@ -29,10 +32,13 @@ public class UserResponse {
     private LocalDateTime createdAt;
 
     public static UserResponse from(User user){
+        String formatPhone = MaskingUtil.formatPhone(user.getPhone());
+
         return UserResponse.builder()
                 .userId(user.getUserId())
                 .email(user.getEmail())
                 .username(user.getUsername())
+                .phone(formatPhone)
                 .nickname(user.getNickname())
                 .role(user.getRole())
                 .sellerStatus(user.getSellerStatus())

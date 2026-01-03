@@ -27,6 +27,9 @@ public class UserSingupRequest {
     @Size(min = 5, max = 20, message = "닉네임은 5~20자 입니다.")
     private String nickname;
 
+    @NotBlank(message = "전화번호를 입력해주세요.")
+    private String phone;
+
     @NotBlank(message = "비밀번호를 입력해주세요")
     @Size(min = 8, message = "비밀번호는 최소 8자 이상이어야 합니다")
     private String password;
