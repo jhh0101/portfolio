@@ -20,7 +20,7 @@ CREATE TABLE users (
                        point              BIGINT NOT NULL DEFAULT 0, -- 가상 화폐
                        avg_rating         DOUBLE NOT NULL DEFAULT 0.0, -- 평균 별점 (캐싱용)
                        status             ENUM('NORMAL', 'SUSPENDED', 'WITHDRAWN') DEFAULT 'NORMAL',
-                       suspension_reason  VARCHAR(255) NOT NULL, -- 정지 사유
+                       suspension_reason  VARCHAR(255) NULL, -- 정지 사유
                        created_at         DATETIME DEFAULT CURRENT_TIMESTAMP,
                        updated_at         DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

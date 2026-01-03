@@ -52,6 +52,9 @@ public class User extends Base {
     @Column(name = "phone")
     private String phone;
 
+    @Column(name = "suspension_reason")
+    private String suspensionReason;
+
     public void subPoint(Long point) {
         if (this.point < point) {
             throw new CustomException(ErrorCode.NOT_ENOUGH_POINTS);
@@ -71,10 +74,21 @@ public class User extends Base {
         this.password = null;
         this.point = 0L;
         this.avgRating = 0.0;
+        this.suspensionReason = null;
+
         this.sellerStatus = SellerStatus.NONE;
         this.status = UserStatus.WITHDRAWN;
         this.role = Role.USER;
     }
 
-
+    public void  suspend(Long userId, String suspensionReason) {
+        this.nickname = "정지된 사용자" + userId;
+        this.password = null;
+        this.point = 0L;
+        this.avgRating = 0.0;
+        this.suspensionReason = suspensionReason;
+        this.sellerStatus = SellerStatus.NONE;
+        this.status = UserStatus.SUSPENDED;
+        this.role = Role.USER;
+    }
 }
