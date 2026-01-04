@@ -2,7 +2,7 @@ package com.portfolio.auctionmarket.domain.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.portfolio.auctionmarket.domain.user.entity.Role;
-import com.portfolio.auctionmarket.domain.user.entity.SellerStatus;
+import com.portfolio.auctionmarket.domain.sellers.entity.SellerStatus;
 import com.portfolio.auctionmarket.domain.user.entity.User;
 import com.portfolio.auctionmarket.domain.user.entity.UserStatus;
 import com.portfolio.auctionmarket.global.util.MaskingUtil;

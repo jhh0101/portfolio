@@ -1,5 +1,6 @@
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS sellers;
 DROP TABLE IF EXISTS categories;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS product_images;
@@ -16,13 +17,26 @@ CREATE TABLE users (
                        username           VARCHAR(20) NOT NULL,
                        phone              VARCHAR(15) NOT NULL UNIQUE,
                        role               ENUM('USER', 'SELLER', 'ADMIN') DEFAULT 'USER', -- USER, SELLER, ADMIN
-                       seller_status      VARCHAR(20) DEFAULT 'NONE', -- NONE, PENDING, APPROVED, REJECTED
                        point              BIGINT NOT NULL DEFAULT 0, -- 가상 화폐
                        avg_rating         DOUBLE NOT NULL DEFAULT 0.0, -- 평균 별점 (캐싱용)
                        status             ENUM('NORMAL', 'SUSPENDED', 'WITHDRAWN') DEFAULT 'NORMAL',
                        suspension_reason  VARCHAR(255) NULL, -- 정지 사유
                        created_at         DATETIME DEFAULT CURRENT_TIMESTAMP,
                        updated_at         DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE sellers (
+                         seller_id       BIGINT AUTO_INCREMENT PRIMARY KEY,
+                         user_id         BIGINT NOT NULL UNIQUE,          -- 신청한 사용자 (1:1 관계)
+                         store_name      VARCHAR(50) NOT NULL,            -- 스토어 이름
+                         bank_name       VARCHAR(20) NOT NULL,            -- 은행명
+                         account_number  VARCHAR(30) NOT NULL,            -- 계좌번호
+                         account_holder  VARCHAR(20) NOT NULL,            -- 예금주
+                         status          ENUM('PENDING', 'APPROVED', 'REJECTED') DEFAULT 'PENDING',
+                         reject_reason   VARCHAR(255),                    -- 반려 사유
+                         applied_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+                         FOREIGN KEY (user_id) REFERENCES users(user_id)  -- users 테이블의 PK와 연결
 );
 
 -- 카테고리 테이블 생성
