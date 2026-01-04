@@ -6,7 +6,7 @@ import com.portfolio.auctionmarket.domain.user.dto.UserResponse;
 import com.portfolio.auctionmarket.domain.user.dto.UserSingupRequest;
 import com.portfolio.auctionmarket.domain.user.dto.UserSuspensionRequest;
 import com.portfolio.auctionmarket.domain.user.entity.Role;
-import com.portfolio.auctionmarket.domain.user.entity.SellerStatus;
+import com.portfolio.auctionmarket.domain.sellers.entity.SellerStatus;
 import com.portfolio.auctionmarket.domain.user.entity.User;
 import com.portfolio.auctionmarket.domain.user.entity.UserStatus;
 import com.portfolio.auctionmarket.domain.user.repository.UserQueryRepository;

@@ -7,8 +7,6 @@ import com.portfolio.auctionmarket.global.error.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "users")
 @Getter
@@ -36,10 +34,6 @@ public class User extends Base {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    @Column(name = "seller_status")
-    @Enumerated(EnumType.STRING)
-    private SellerStatus sellerStatus;
 
     @Column(name = "point")
     private Long point;
@@ -77,7 +71,6 @@ public class User extends Base {
         this.point = 0L;
         this.avgRating = 0.0;
         this.suspensionReason = null;
-        this.sellerStatus = SellerStatus.NONE;
         this.status = UserStatus.WITHDRAWN;
         this.role = Role.USER;
     }
@@ -88,7 +81,6 @@ public class User extends Base {
         this.point = 0L;
         this.avgRating = 0.0;
         this.suspensionReason = suspensionReason;
-        this.sellerStatus = SellerStatus.NONE;
         this.status = UserStatus.SUSPENDED;
         this.role = Role.USER;
     }
