@@ -12,9 +12,9 @@ CREATE TABLE users (
                        user_id            BIGINT AUTO_INCREMENT PRIMARY KEY,
                        email              VARCHAR(100) NOT NULL UNIQUE, -- 로그인 ID
                        password           VARCHAR(255) NULL,
-                       nickname           VARCHAR(20) NOT NULL,
+                       nickname           VARCHAR(20) NOT NULL UNIQUE,
                        username           VARCHAR(20) NOT NULL,
-                       phone              VARCHAR(15) NOT NULL,
+                       phone              VARCHAR(15) NOT NULL UNIQUE,
                        role               ENUM('USER', 'SELLER', 'ADMIN') DEFAULT 'USER', -- USER, SELLER, ADMIN
                        seller_status      VARCHAR(20) DEFAULT 'NONE', -- NONE, PENDING, APPROVED, REJECTED
                        point              BIGINT NOT NULL DEFAULT 0, -- 가상 화폐
