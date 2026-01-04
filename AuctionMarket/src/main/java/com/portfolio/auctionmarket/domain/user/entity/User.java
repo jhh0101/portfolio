@@ -47,6 +47,7 @@ public class User extends Base {
     private Double avgRating;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private UserStatus status;
 
     @Column(name = "phone")
