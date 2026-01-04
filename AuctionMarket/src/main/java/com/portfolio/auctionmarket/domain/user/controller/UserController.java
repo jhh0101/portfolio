@@ -55,4 +55,10 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success("프로필 조회", response));
     }
 
+    @PatchMapping("/{userId}/profile")
+    public ResponseEntity<ApiResponse<UserProfileResponse>> updateUser(@PathVariable Long userId,@Valid @RequestBody UserUpdateRequest request) {
+        UserProfileResponse response = userService.updateUser(userId, request);
+        return ResponseEntity.ok(ApiResponse.success("회원 수정", response));
+    }
+
 }

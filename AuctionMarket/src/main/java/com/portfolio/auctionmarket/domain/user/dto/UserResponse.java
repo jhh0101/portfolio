@@ -6,7 +6,6 @@ import com.portfolio.auctionmarket.domain.user.entity.SellerStatus;
 import com.portfolio.auctionmarket.domain.user.entity.User;
 import com.portfolio.auctionmarket.domain.user.entity.UserStatus;
 import com.portfolio.auctionmarket.global.util.MaskingUtil;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
