@@ -2,6 +2,9 @@ package com.portfolio.auctionmarket.domain.user.service;
 
 import com.portfolio.auctionmarket.auth.service.RefreshTokenService;
 import com.portfolio.auctionmarket.domain.user.dto.*;
+import com.portfolio.auctionmarket.domain.user.dto.UserResponse;
+import com.portfolio.auctionmarket.domain.user.dto.UserSingupRequest;
+import com.portfolio.auctionmarket.domain.user.dto.UserSuspensionRequest;
 import com.portfolio.auctionmarket.domain.user.entity.Role;
 import com.portfolio.auctionmarket.domain.user.entity.SellerStatus;
 import com.portfolio.auctionmarket.domain.user.entity.User;
@@ -85,5 +88,13 @@ public class UserService {
 
         user.suspend(userId, request.getSuspensionReason());
         return UserDeleteResponse.from(user);
+    }
+
+    @Transactional
+    public void suspend(Long userId, UserSuspensionRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND, "사용자를 찾을 수 없습니다."));
+
+        user.suspend(userId, request.getSuspensionReason());
     }
 }
