@@ -50,10 +50,10 @@ public class UserQueryRepository {
     }
 
     private BooleanExpression emailContain(String email) {
-        return StringUtils.hasText(email) ? user.email.contains(email) : null;
+        return StringUtils.hasText(email) ? user.email.startsWith(email) : null;
     }
     private BooleanExpression nicknameContain(String nickname) {
-        return StringUtils.hasText(nickname) ? user.email.contains(nickname) : null;
+        return StringUtils.hasText(nickname) ? user.nickname.contains(nickname) : null;
     }
     private BooleanExpression statusContain(UserStatus status) {
         return status != null ? user.status.eq(status) : null;
