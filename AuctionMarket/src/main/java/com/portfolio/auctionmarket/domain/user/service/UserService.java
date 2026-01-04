@@ -9,12 +9,15 @@ import com.portfolio.auctionmarket.domain.user.entity.Role;
 import com.portfolio.auctionmarket.domain.user.entity.SellerStatus;
 import com.portfolio.auctionmarket.domain.user.entity.User;
 import com.portfolio.auctionmarket.domain.user.entity.UserStatus;
+import com.portfolio.auctionmarket.domain.user.repository.UserQueryRepository;
 import com.portfolio.auctionmarket.domain.user.repository.UserRepository;
 import com.portfolio.auctionmarket.global.error.CustomException;
 import com.portfolio.auctionmarket.global.error.ErrorCode;
 import com.portfolio.auctionmarket.global.util.MaskingUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserQueryRepository userQueryRepository;
     private final RefreshTokenService refreshTokenService;
     private final PasswordEncoder passwordEncoder;
 
@@ -88,5 +92,11 @@ public class UserService {
 
         user.suspend(userId, request.getSuspensionReason());
         return UserDeleteResponse.from(user);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<UserResponse> userList(UserListCondition condition, Pageable pageable) {
+        Page<User> users = userQueryRepository.userList(condition, pageable);
+        return users.map(UserResponse::from);
     }
 }

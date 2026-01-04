@@ -8,6 +8,8 @@ import com.portfolio.auctionmarket.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +40,12 @@ public class UserController {
     public ResponseEntity<ApiResponse<UserDeleteResponse>> suspend(@PathVariable Long userId, @RequestBody UserSuspensionRequest request) {
         UserDeleteResponse response = userService.suspend(userId, request);
         return ResponseEntity.ok(ApiResponse.success("회원 정지", response));
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<ApiResponse<Page<UserResponse>>> userList(UserListCondition condition, Pageable pageable) {
+        Page<UserResponse> responses = userService.userList(condition, pageable);
+        return ResponseEntity.ok(ApiResponse.success("회원 리스트 조회", responses));
     }
 
 }
