@@ -38,10 +38,10 @@ public class UserService {
             if (UserStatus.SUSPENDED.equals(user.getStatus())) {
                 throw new CustomException(ErrorCode.SUSPENDED_USER, "정지된 사용자입니다.");
             }
-            throw new CustomException(ErrorCode.DUPLICATE_EMAIL, "이미 사용중인 이메일입니다.");
+            throw new CustomException(ErrorCode.DUPLICATE_EMAIL, "이미 사용 중인 이메일입니다.");
         });
         if (userRepository.existsByNickname(request.getNickname())) {
-            throw new CustomException(ErrorCode.DUPLICATE_NICKNAME, "이미 사용중인 닉네임입니다.");
+            throw new CustomException(ErrorCode.DUPLICATE_NICKNAME, "이미 사용 중인 닉네임입니다.");
         }
         User user = User.builder()
             .email(request.getEmail())
@@ -104,6 +104,22 @@ public class UserService {
     public UserProfileResponse profile(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND, "사용자를 찾을 수 없습니다."));
+
+        return UserProfileResponse.from(user);
+    }
+
+    @Transactional
+    public UserProfileResponse updateUser(Long userId, UserUpdateRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND, "사용자를 찾을 수 없습니다."));
+
+        if (!user.getNickname().equals(request.getNickname())) {
+            if (userRepository.existsByNickname(request.getNickname())) {
+                throw new CustomException(ErrorCode.DUPLICATE_NICKNAME, "이미 사용 중인 닉네임입니다.");
+            }
+        }
+
+        user.updateUser(request);
 
         return UserProfileResponse.from(user);
     }

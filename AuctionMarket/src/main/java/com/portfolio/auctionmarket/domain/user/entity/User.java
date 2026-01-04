@@ -1,5 +1,6 @@
 package com.portfolio.auctionmarket.domain.user.entity;
 
+import com.portfolio.auctionmarket.domain.user.dto.UserUpdateRequest;
 import com.portfolio.auctionmarket.global.base.Base;
 import com.portfolio.auctionmarket.global.error.CustomException;
 import com.portfolio.auctionmarket.global.error.ErrorCode;
@@ -90,5 +91,10 @@ public class User extends Base {
         this.sellerStatus = SellerStatus.NONE;
         this.status = UserStatus.SUSPENDED;
         this.role = Role.USER;
+    }
+
+    public void updateUser(UserUpdateRequest request) {
+        this.phone = request.getPhone();
+        this.nickname = request.getNickname();
     }
 }
