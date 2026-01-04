@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.portfolio.auctionmarket.domain.user.entity.Role;
 import com.portfolio.auctionmarket.domain.user.entity.SellerStatus;
 import com.portfolio.auctionmarket.domain.user.entity.User;
+import com.portfolio.auctionmarket.domain.user.entity.UserStatus;
 import com.portfolio.auctionmarket.global.util.MaskingUtil;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ public class UserResponse {
     private String nickname;
     private Role role;
     private SellerStatus sellerStatus;
+    private UserStatus userStatus;
     private Long point;
     private Double avgRating;
 
@@ -41,6 +43,7 @@ public class UserResponse {
                 .phone(formatPhone)
                 .nickname(user.getNickname())
                 .role(user.getRole())
+                .userStatus(user.getStatus())
                 .sellerStatus(user.getSellerStatus())
                 .point(user.getPoint())
                 .avgRating(user.getAvgRating())

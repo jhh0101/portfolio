@@ -20,7 +20,7 @@ public class User extends Base {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "password")
@@ -29,7 +29,7 @@ public class User extends Base {
     @Column(name = "username")
     private String username;
 
-    @Column(name = "nickname")
+    @Column(name = "nickname", unique = true)
     private String nickname;
 
     @Column(name = "role")
