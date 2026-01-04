@@ -50,7 +50,7 @@ public class User extends Base {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    @Column(name = "phone")
+    @Column(name = "phone", unique = true)
     private String phone;
 
     @Column(name = "suspension_reason")
@@ -76,7 +76,6 @@ public class User extends Base {
         this.point = 0L;
         this.avgRating = 0.0;
         this.suspensionReason = null;
-
         this.sellerStatus = SellerStatus.NONE;
         this.status = UserStatus.WITHDRAWN;
         this.role = Role.USER;

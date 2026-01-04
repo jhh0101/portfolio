@@ -99,4 +99,12 @@ public class UserService {
         Page<User> users = userQueryRepository.userList(condition, pageable);
         return users.map(UserResponse::from);
     }
+
+    @Transactional(readOnly = true)
+    public UserProfileResponse profile(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND, "사용자를 찾을 수 없습니다."));
+
+        return UserProfileResponse.from(user);
+    }
 }

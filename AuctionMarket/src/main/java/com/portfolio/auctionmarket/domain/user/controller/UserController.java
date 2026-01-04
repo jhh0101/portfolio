@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -46,6 +47,12 @@ public class UserController {
     public ResponseEntity<ApiResponse<Page<UserResponse>>> userList(UserListCondition condition, Pageable pageable) {
         Page<UserResponse> responses = userService.userList(condition, pageable);
         return ResponseEntity.ok(ApiResponse.success("회원 리스트 조회", responses));
+    }
+
+    @GetMapping("/{userId}/profile")
+    public ResponseEntity<ApiResponse<UserProfileResponse>> profile(@AuthenticationPrincipal Long userId) {
+        UserProfileResponse response = userService.profile(userId);
+        return ResponseEntity.ok(ApiResponse.success("프로필 조회", response));
     }
 
 }
