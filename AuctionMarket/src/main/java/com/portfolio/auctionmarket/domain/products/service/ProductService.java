@@ -156,6 +156,11 @@ public class ProductService {
         }
         product.getAuction().changeStatus(AuctionStatus.CANCELED);
         productRepository.delete(product);
+
+        Long auctionId = product.getAuction().getAuctionId();
+        RScoredSortedSet<Long> closingQueue = redissonClient.getScoredSortedSet("auction:closing");
+        boolean removed = closingQueue.remove(auctionId);
+
     }
 
     // 이미지 메서드
