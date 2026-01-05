@@ -1,6 +1,7 @@
 package com.portfolio.auctionmarket.domain.sellers.controller;
 
 import com.portfolio.auctionmarket.domain.sellers.dto.SellerApplyRequest;
+import com.portfolio.auctionmarket.domain.sellers.dto.SellerRejectRequest;
 import com.portfolio.auctionmarket.domain.sellers.dto.SellerResponse;
 import com.portfolio.auctionmarket.domain.sellers.service.SellerService;
 import com.portfolio.auctionmarket.global.response.ApiResponse;
@@ -24,15 +25,22 @@ public class SellerController {
     }
 
     @PatchMapping("/{sellerId}/cancel")
-    public ResponseEntity<ApiResponse<SellerResponse>> sellerApply(@AuthenticationPrincipal Long userId,
+    public ResponseEntity<ApiResponse<SellerResponse>> sellerCancel(@AuthenticationPrincipal Long userId,
                                                                    @PathVariable Long sellerId) {
         SellerResponse response = sellerService.sellerCancel(sellerId, userId);
         return ResponseEntity.ok(ApiResponse.success("판매자 등록 취소", response));
     }
 
     @PatchMapping("/{sellerId}/approve")
-    public ResponseEntity<ApiResponse<SellerResponse>> sellerApply(@PathVariable Long sellerId) {
+    public ResponseEntity<ApiResponse<SellerResponse>> sellerApprove(@PathVariable Long sellerId) {
         SellerResponse response = sellerService.approveSeller(sellerId);
+        return ResponseEntity.ok(ApiResponse.success("판매자 등록 승인", response));
+    }
+
+    @PatchMapping("/{sellerId}/reject")
+    public ResponseEntity<ApiResponse<SellerResponse>> sellerReject(@PathVariable Long sellerId,
+                                                                    @Valid @RequestBody SellerRejectRequest request) {
+        SellerResponse response = sellerService.rejectSeller(sellerId, request);
         return ResponseEntity.ok(ApiResponse.success("판매자 등록 승인", response));
     }
 }
