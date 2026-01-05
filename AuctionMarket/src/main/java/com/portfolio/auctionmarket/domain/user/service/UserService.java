@@ -51,7 +51,6 @@ public class UserService {
             .password(passwordEncoder.encode(request.getPassword()))
             .point(0L)
             .avgRating(0.0)
-            .sellerStatus(SellerStatus.NONE)
             .status(UserStatus.NORMAL)
             .role(Role.USER)
             .build();

@@ -32,7 +32,7 @@ public class SellerService {
 
         if (optionalSeller.isPresent()) {
             seller = optionalSeller.get();
-            if (seller.getStatus() != SellerStatus.REJECTED) {
+            if (seller.getStatus() != SellerStatus.REJECTED && seller.getStatus() != SellerStatus.CANCELED) {
                 throw new CustomException(ErrorCode.DUPLICATE_SELLER, "이미 신청 중...");
             }
             seller.updateApply(user, request);
@@ -48,6 +48,24 @@ public class SellerService {
         }
 
         sellerRepository.save(seller);
+
+        return SellerResponse.from(seller);
+    }
+
+    @Transactional
+    public SellerResponse sellerCancel(Long sellerId, Long userId){
+        Seller seller = sellerRepository.findById(sellerId)
+                .orElseThrow(() -> new CustomException(ErrorCode.SELLER_NOT_FOUND));
+
+        if (!userId.equals(seller.getUser().getUserId())) {
+            throw new CustomException(ErrorCode.BAD_REQUEST, "사용자 정보가 일치하지 않습니다.");
+        }
+
+        if (seller.getStatus() == SellerStatus.CANCELED || seller.getStatus() == SellerStatus.REJECTED) {
+            throw new CustomException(ErrorCode.BAD_REQUEST, "취소할 수 없는 상태입니다. (이미 취소 또는 반려됨)");
+        }
+
+        seller.cancelSeller();
 
         return SellerResponse.from(seller);
     }

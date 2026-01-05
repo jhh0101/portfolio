@@ -8,10 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,5 +21,12 @@ public class SellerController {
                                                                    @Valid @RequestBody SellerApplyRequest request) {
         SellerResponse response = sellerService.sellerApply(userId, request);
         return ResponseEntity.ok(ApiResponse.success("판매자 등록 신청", response));
+    }
+
+    @PatchMapping("/{sellerId}/cancel")
+    public ResponseEntity<ApiResponse<SellerResponse>> sellerApply(@AuthenticationPrincipal Long userId,
+                                                                   @PathVariable Long sellerId) {
+        SellerResponse response = sellerService.sellerCancel(sellerId, userId);
+        return ResponseEntity.ok(ApiResponse.success("판매자 등록 취소", response));
     }
 }

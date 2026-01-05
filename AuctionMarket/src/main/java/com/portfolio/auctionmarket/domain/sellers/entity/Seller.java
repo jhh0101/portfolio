@@ -24,13 +24,13 @@ public class Seller extends BaseCreatedAt {
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     private User user;
 
-    @Column(name = "store_name", nullable = false, length = 50)
+    @Column(name = "store_name", length = 50)
     private String storeName;
 
     @Column(name = "bank_name")
     private String bankName;
 
-    @Column(name = "account_number", nullable = false, length = 20)
+    @Column(name = "account_number", length = 20)
     private String accountNumber;
 
     @Column(name = "account_holder")
@@ -51,6 +51,19 @@ public class Seller extends BaseCreatedAt {
         this.accountHolder = request.getAccountHolder();
         this.status = SellerStatus.PENDING;
         this.rejectReason = null;
+    }
+
+    public void cancelSeller() {
+        this.storeName = null;
+        this.bankName = null;
+        this.accountNumber = null;
+        this.accountHolder = null;
+        this.status = SellerStatus.CANCELED;
+        this.rejectReason = "사용자에 의한 신청 취소";
+
+        if (this.user != null) {
+            this.user.cancelSeller();
+        }
     }
 
 }

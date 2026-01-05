@@ -30,7 +30,8 @@ public enum ErrorCode {
     SUSPENDED_USER("USER007", "정지된 사용자입니다"),
 
     // Seller
-    DUPLICATE_SELLER("SELLER001", "이미 신청 중인 사용자입니다."),
+    SELLER_NOT_FOUND("SELLER001", "판매자를 찾을 수 없습니다."),
+    DUPLICATE_SELLER("SELLER002", "이미 신청 중인 사용자입니다."),
 
     // Category
     CATEGORY_NOT_FOUND("CATEGORY001", "카테고리를 찾을 수 없습니다"),
