@@ -130,6 +130,13 @@ public class ProductService {
                 auctionRequest.getStartTime(),
                 auctionRequest.getEndTime()
         );
+
+        RScoredSortedSet<Long> closingQueue = redissonClient.getScoredSortedSet("auction:closing");
+
+        Long newScore = auctionRequest.getEndTime().atZone(ZoneId.systemDefault()).toEpochSecond();
+
+        closingQueue.add(newScore, product.getAuction().getAuctionId());
+
         return ProductDetailAndAuctionResponse.from(product);
     }
 
