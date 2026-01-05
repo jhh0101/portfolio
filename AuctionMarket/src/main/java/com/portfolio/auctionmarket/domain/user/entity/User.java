@@ -90,7 +90,7 @@ public class User extends Base {
         this.nickname = request.getNickname();
     }
 
-    public void cancelSeller(){
-        this.role = Role.USER;
+    public void updateRole(Role role){
+        this.role = role;
     }
 }

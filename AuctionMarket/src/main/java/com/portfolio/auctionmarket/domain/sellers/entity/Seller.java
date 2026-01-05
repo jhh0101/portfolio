@@ -1,6 +1,7 @@
 package com.portfolio.auctionmarket.domain.sellers.entity;
 
 import com.portfolio.auctionmarket.domain.sellers.dto.SellerApplyRequest;
+import com.portfolio.auctionmarket.domain.user.entity.Role;
 import com.portfolio.auctionmarket.domain.user.entity.User;
 import com.portfolio.auctionmarket.global.base.BaseCreatedAt;
 import jakarta.persistence.*;
@@ -62,7 +63,16 @@ public class Seller extends BaseCreatedAt {
         this.rejectReason = "사용자에 의한 신청 취소";
 
         if (this.user != null) {
-            this.user.cancelSeller();
+            this.user.updateRole(Role.USER);
+        }
+    }
+
+    public void approveSeller() {
+        this.status = SellerStatus.APPROVED;
+        this.rejectReason = null;
+
+        if (this.user != null) {
+            this.user.updateRole(Role.SELLER);
         }
     }
 

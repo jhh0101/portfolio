@@ -29,4 +29,10 @@ public class SellerController {
         SellerResponse response = sellerService.sellerCancel(sellerId, userId);
         return ResponseEntity.ok(ApiResponse.success("판매자 등록 취소", response));
     }
+
+    @PatchMapping("/{sellerId}/approve")
+    public ResponseEntity<ApiResponse<SellerResponse>> sellerApply(@PathVariable Long sellerId) {
+        SellerResponse response = sellerService.approveSeller(sellerId);
+        return ResponseEntity.ok(ApiResponse.success("판매자 등록 승인", response));
+    }
 }
