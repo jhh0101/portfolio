@@ -56,7 +56,7 @@ CREATE TABLE products (
                           category_id     BIGINT NOT NULL,
                           title           VARCHAR(200) NOT NULL,
                           description     TEXT,
-                          status          ENUM('ACTIVE', 'SOLD', 'DELETED') DEFAULT 'ACTIVE', -- ACTIVE, SOLD, DELETED
+                          status          ENUM('ACTIVE', 'SOLD', 'FAILED', 'DELETED') DEFAULT 'ACTIVE', -- ACTIVE, SOLD, FAILED, DELETED
                           created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
                           FOREIGN KEY (seller_id) REFERENCES users(user_id),
                           FOREIGN KEY (category_id) REFERENCES categories(category_id)
