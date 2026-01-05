@@ -76,4 +76,9 @@ public class Seller extends BaseCreatedAt {
         }
     }
 
+    public void rejectSeller(String rejectReason) {
+        this.status = SellerStatus.REJECTED;
+        this.rejectReason = rejectReason;
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.portfolio.auctionmarket.domain.sellers.service;
 
 import com.portfolio.auctionmarket.domain.sellers.dto.SellerApplyRequest;
+import com.portfolio.auctionmarket.domain.sellers.dto.SellerRejectRequest;
 import com.portfolio.auctionmarket.domain.sellers.dto.SellerResponse;
 import com.portfolio.auctionmarket.domain.sellers.entity.Seller;
 import com.portfolio.auctionmarket.domain.sellers.entity.SellerStatus;
@@ -81,6 +82,21 @@ public class SellerService {
         }
 
         seller.approveSeller();
+
+        return SellerResponse.from(seller);
+    }
+
+    @Transactional
+    public SellerResponse rejectSeller(Long sellerId, SellerRejectRequest request) {
+        Seller seller = sellerRepository.findById(sellerId)
+                .orElseThrow(() -> new CustomException(ErrorCode.SELLER_NOT_FOUND, "판매자를 찾을 수 없습니다."));
+
+        if (seller.getStatus() != SellerStatus.PENDING) {
+            throw new CustomException(ErrorCode.BAD_REQUEST,
+                    "현재 상태(" + seller.getStatus() + ")에서는 거절할 수 없습니다.");
+        }
+
+        seller.rejectSeller(request.getRejectReason());
 
         return SellerResponse.from(seller);
     }
