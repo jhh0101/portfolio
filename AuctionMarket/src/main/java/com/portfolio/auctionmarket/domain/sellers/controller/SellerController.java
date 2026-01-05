@@ -41,6 +41,6 @@ public class SellerController {
     public ResponseEntity<ApiResponse<SellerResponse>> sellerReject(@PathVariable Long sellerId,
                                                                     @Valid @RequestBody SellerRejectRequest request) {
         SellerResponse response = sellerService.rejectSeller(sellerId, request);
-        return ResponseEntity.ok(ApiResponse.success("판매자 등록 승인", response));
+        return ResponseEntity.ok(ApiResponse.success("판매자 등록 거절", response));
     }
 }
