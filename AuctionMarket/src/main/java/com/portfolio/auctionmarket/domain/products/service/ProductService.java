@@ -19,6 +19,7 @@ import com.portfolio.auctionmarket.global.error.CustomException;
 import com.portfolio.auctionmarket.global.error.ErrorCode;
 import com.portfolio.auctionmarket.global.s3.service.S3Service;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RScoredSortedSet;
 import org.redisson.api.RedissonClient;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductService {
 
     private final ProductImageRepository productImageRepository;
@@ -161,6 +163,9 @@ public class ProductService {
         RScoredSortedSet<Long> closingQueue = redissonClient.getScoredSortedSet("auction:closing");
         boolean removed = closingQueue.remove(auctionId);
 
+        if (removed) {
+            log.info("경매 삭제로 인한 Redis 스케줄 제거 완료 - Auction ID: {}", auctionId);
+        }
     }
 
     // 이미지 메서드
