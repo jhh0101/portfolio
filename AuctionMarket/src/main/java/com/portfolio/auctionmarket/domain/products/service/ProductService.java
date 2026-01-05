@@ -19,6 +19,7 @@ import com.portfolio.auctionmarket.global.error.CustomException;
 import com.portfolio.auctionmarket.global.error.ErrorCode;
 import com.portfolio.auctionmarket.global.s3.service.S3Service;
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,7 @@ public class ProductService {
     private final AuctionRepository auctionRepository;
     private final BidRepository bidRepository;
     private final S3Service s3Service;
+    private final RedissonClient redissonClient;
 
     // 상품 메서드
     @Transactional
