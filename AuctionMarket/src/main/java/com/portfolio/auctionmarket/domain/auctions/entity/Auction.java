@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @SQLDelete(sql = "UPDATE auctions SET status = 'CANCELED' WHERE auction_id = ?")
-@SQLRestriction("status != 'CANCELED'")
+@SQLRestriction("status != 'CANCELED' AND status != 'ENDED'")
 @Table(name = "auctions")
 public class Auction {
     @Id
@@ -50,6 +50,10 @@ public class Auction {
         this.startPrice = startPrice;
         this.startTime = startTime;
         this.endTime = endTime;
+    }
+
+    public void changeStatus(AuctionStatus status) {
+        this.status = status;
     }
 
 }

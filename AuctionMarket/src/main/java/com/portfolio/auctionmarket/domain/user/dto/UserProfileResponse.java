@@ -23,7 +23,6 @@ public class UserProfileResponse {
     private String phone;
     private String nickname;
     private Role role;
-    private SellerStatus sellerStatus;
     private Long point;
     private Double avgRating;
 
@@ -40,7 +39,6 @@ public class UserProfileResponse {
                 .phone(formatPhone)
                 .nickname(user.getNickname())
                 .role(user.getRole())
-                .sellerStatus(user.getSellerStatus())
                 .point(user.getPoint())
                 .avgRating(user.getAvgRating())
                 .createdAt(user.getCreatedAt())

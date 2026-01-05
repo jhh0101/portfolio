@@ -19,6 +19,7 @@ import com.portfolio.auctionmarket.global.error.CustomException;
 import com.portfolio.auctionmarket.global.error.ErrorCode;
 import com.portfolio.auctionmarket.global.s3.service.S3Service;
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RScoredSortedSet;
 import org.redisson.api.RedissonClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +72,16 @@ public class ProductService {
                 .status(AuctionStatus.PROCEEDING)
                 .build();
 
-        auctionRepository.save(auction);
+        Auction auctionSave = auctionRepository.save(auction);
+
+
+        RScoredSortedSet<Long> closingQueue = redissonClient.getScoredSortedSet("auction:closing");
+
+        Long closingTimestamp = auctionSave.getEndTime()
+                .atZone(ZoneId.systemDefault())
+                .toEpochSecond();
+
+        closingQueue.add(closingTimestamp, auctionSave.getAuctionId());
 
         return ProductResponse.from(productSave);
 
