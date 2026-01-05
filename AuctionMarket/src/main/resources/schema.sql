@@ -32,7 +32,7 @@ CREATE TABLE sellers (
                          bank_name       VARCHAR(20) NOT NULL,            -- 은행명
                          account_number  VARCHAR(30) NOT NULL,            -- 계좌번호
                          account_holder  VARCHAR(20) NOT NULL,            -- 예금주
-                         status          ENUM('PENDING', 'APPROVED', 'REJECTED') DEFAULT 'PENDING',
+                         status          ENUM('PENDING', 'APPROVED', 'REJECTED', 'CANCELED') DEFAULT 'PENDING',
                          reject_reason   VARCHAR(255),                    -- 반려 사유
                          applied_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
 

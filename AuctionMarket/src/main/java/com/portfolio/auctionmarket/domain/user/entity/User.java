@@ -89,4 +89,8 @@ public class User extends Base {
         this.phone = request.getPhone();
         this.nickname = request.getNickname();
     }
+
+    public void cancelSeller(){
+        this.role = Role.USER;
+    }
 }
