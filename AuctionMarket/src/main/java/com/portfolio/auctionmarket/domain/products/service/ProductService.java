@@ -133,7 +133,7 @@ public class ProductService {
 
         RScoredSortedSet<Long> closingQueue = redissonClient.getScoredSortedSet("auction:closing");
 
-        Long newScore = auctionRequest.getEndTime().atZone(ZoneId.systemDefault()).toEpochSecond();
+        long newScore = auctionRequest.getEndTime().atZone(ZoneId.systemDefault()).toEpochSecond();
 
         closingQueue.add(newScore, product.getAuction().getAuctionId());
 
@@ -154,7 +154,7 @@ public class ProductService {
         if (bidRepository.existsByAuction(product.getAuction())) {
             throw new CustomException(ErrorCode.CANNOT_DELETE_AFTER_BID, "입찰한 상품은 삭제할 수 없습니다.");
         }
-
+        product.getAuction().changeStatus(AuctionStatus.CANCELED);
         productRepository.delete(product);
     }
 
