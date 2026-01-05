@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-@SQLRestriction("status != 'DELETED'")
+@SQLRestriction("status != 'DELETED' AND status != 'SOLD'")
 @SQLDelete(sql = "UPDATE products SET status = 'DELETED' WHERE product_id = ?")
 @Table(name = "products")
 @Builder
@@ -54,5 +54,9 @@ public class Product extends BaseCreatedAt {
         if (auction != null) {
             this.auction.updateAuction(startPrice, startTime, endTime);
         }
+    }
+
+    public void changeStatus(ProductStatus status) {
+        this.productStatus = status;
     }
 }

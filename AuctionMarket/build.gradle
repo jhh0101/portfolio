@@ -33,7 +33,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     // redis
-    implementation 'org.redisson:redisson-spring-boot-starter:3.24.3'
+    implementation 'org.redisson:redisson:3.42.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     // QueryDSL

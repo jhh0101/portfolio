@@ -101,7 +101,6 @@ CREATE TABLE orders (
                         auction_id      BIGINT NOT NULL,
                         buyer_id        BIGINT NOT NULL,
                         final_price     BIGINT NOT NULL,
-                        payment_status  VARCHAR(20) DEFAULT 'WAITING', -- WAITING, COMPLETED
                         created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
                         FOREIGN KEY (auction_id) REFERENCES auctions(auction_id),
                         FOREIGN KEY (buyer_id) REFERENCES users(user_id)

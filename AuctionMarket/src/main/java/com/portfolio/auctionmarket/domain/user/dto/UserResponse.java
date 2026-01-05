@@ -43,7 +43,6 @@ public class UserResponse {
                 .nickname(user.getNickname())
                 .role(user.getRole())
                 .userStatus(user.getStatus())
-                .sellerStatus(user.getSellerStatus())
                 .point(user.getPoint())
                 .avgRating(user.getAvgRating())
                 .createdAt(user.getCreatedAt())
