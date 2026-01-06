@@ -50,6 +50,9 @@ public class RatingService {
 
         Rating ratingSave = ratingRepository.save(rating);
 
+        Double ratingAvg = ratingQueryRepository.avgRating(ratingSave.getToUser().getUserId());
+        ratingSave.getToUser().updateRating(ratingAvg);
+
         return RatingResponse.from(ratingSave);
     }
 
@@ -67,6 +70,9 @@ public class RatingService {
         }
 
         rating.updateRating(request);
+
+        Double ratingAvg = ratingQueryRepository.avgRating(rating.getToUser().getUserId());
+        rating.getToUser().updateRating(ratingAvg);
 
         return RatingResponse.from(rating);
     }

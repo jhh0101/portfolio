@@ -3,6 +3,7 @@ package com.portfolio.auctionmarket.domain.ratings.repository;
 import com.portfolio.auctionmarket.domain.ratings.entity.Rating;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.dialect.function.AvgFunction;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -29,5 +30,15 @@ public class RatingQueryRepository {
                 .where(rating.ratingId.eq(ratingId))
                 .fetchOne()
         );
+    }
+
+    public Double avgRating(Long userId) {
+        Double result = jpaQueryFactory
+                .select(rating.score.avg())
+                .from(rating)
+                .where(rating.toUser.userId.eq(userId))
+                .fetchOne();
+
+        return result != null ? result : 0.0;
     }
 }
