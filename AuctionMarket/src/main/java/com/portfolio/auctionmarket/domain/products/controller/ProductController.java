@@ -50,7 +50,7 @@ public class ProductController {
     }
 
     // 판매자(자신) 상품 리스트 조회
-    @GetMapping
+    @GetMapping("/my-product")
     public ResponseEntity<ApiResponse<Page<ProductAndAuctionResponse>>> myProductList(@AuthenticationPrincipal Long userId,
                                                                                       ProductListCondition condition,
                                                                                       @PageableDefault(size = 10) Pageable pageable) {
