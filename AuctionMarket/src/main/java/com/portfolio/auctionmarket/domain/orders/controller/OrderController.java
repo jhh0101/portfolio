@@ -12,6 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,4 +31,12 @@ public class OrderController {
         log.info("[Order] 사용자 {}의 낙찰 리스트 조회 요청 (page: {})", userId, pageable.getPageNumber());
         return ResponseEntity.ok(ApiResponse.success("낙찰 리스트 조회", responses));
     }
+
+    @GetMapping("/{auctionId}/auction")
+    public ResponseEntity<ApiResponse<OrderResponse>> auctionOrder(@PathVariable Long auctionId) {
+        OrderResponse response = orderService.auctionOrder(auctionId);
+        log.info("[Auction] 옥션 {}의 낙찰 조회 요청", auctionId);
+        return ResponseEntity.ok(ApiResponse.success("낙찰자 조회", response));
+    }
+
 }

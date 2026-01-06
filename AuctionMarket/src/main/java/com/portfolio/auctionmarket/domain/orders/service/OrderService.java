@@ -22,4 +22,11 @@ public class OrderService {
         log.info("사용자 {}의 낙찰 내역 조회 요청", userId);
         return orders.map(OrderResponse::from);
     }
+
+    @Transactional(readOnly = true)
+    public OrderResponse auctionOrder(Long auctionId) {
+        Order order = orderRepository.findAllByAuction_AuctionId(auctionId);
+        log.info("옥션 {}의 낙찰자 조회", auctionId);
+        return OrderResponse.from(order);
+    }
 }
