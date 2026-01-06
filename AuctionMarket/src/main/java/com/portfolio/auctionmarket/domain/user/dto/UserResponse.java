@@ -27,7 +27,7 @@ public class UserResponse {
     private SellerStatus sellerStatus;
     private UserStatus userStatus;
     private Long point;
-    private Double avgRating;
+    private String avgRating;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
@@ -44,7 +44,7 @@ public class UserResponse {
                 .role(user.getRole())
                 .userStatus(user.getStatus())
                 .point(user.getPoint())
-                .avgRating(user.getAvgRating())
+                .avgRating(String.format("%.1f", user.getAvgRating()))
                 .createdAt(user.getCreatedAt())
                 .build();
     }

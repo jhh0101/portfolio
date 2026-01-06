@@ -93,4 +93,8 @@ public class User extends Base {
     public void updateRole(Role role){
         this.role = role;
     }
+
+    public void updateRating(Double avgRating) {
+        this.avgRating = avgRating;
+    }
 }
