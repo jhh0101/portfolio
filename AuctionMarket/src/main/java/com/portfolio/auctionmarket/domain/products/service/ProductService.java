@@ -12,6 +12,7 @@ import com.portfolio.auctionmarket.domain.products.entity.Product;
 import com.portfolio.auctionmarket.domain.products.entity.ProductImage;
 import com.portfolio.auctionmarket.domain.products.entity.ProductStatus;
 import com.portfolio.auctionmarket.domain.products.repository.ProductImageRepository;
+import com.portfolio.auctionmarket.domain.products.repository.ProductQueryRepository;
 import com.portfolio.auctionmarket.domain.products.repository.ProductRepository;
 import com.portfolio.auctionmarket.domain.user.entity.User;
 import com.portfolio.auctionmarket.domain.user.repository.UserRepository;
@@ -39,6 +40,7 @@ public class ProductService {
 
     private final ProductImageRepository productImageRepository;
     private final ProductRepository productRepository;
+    private final ProductQueryRepository productQueryRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final AuctionRepository auctionRepository;
@@ -90,13 +92,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductAndAuctionResponse> productList(String title, String path, Pageable pageable) {
-        Page<Product> auctions;
-        if (path != null && !path.isEmpty()) {
-            auctions = productRepository.findByTitleAndCategory(title, path, pageable);
-        } else {
-            auctions = productRepository.findByTitle(title, pageable);
-        }
+    public Page<ProductAndAuctionResponse> productList(ProductListCondition condition, Pageable pageable) {
+        Page<Product> auctions = productQueryRepository.productList(condition, pageable);
+
         return auctions.map(ProductAndAuctionResponse::from);
     }
 

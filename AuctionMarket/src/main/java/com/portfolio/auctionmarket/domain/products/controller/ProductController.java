@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -34,10 +36,9 @@ public class ProductController {
 
     // 상품 전체 리스트 조회
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<ProductAndAuctionResponse>>> productList(@RequestParam(required = false, defaultValue = "") String title,
-                                                                                    @RequestParam(required = false, defaultValue = "") String path,
-                                                                                    Pageable pageable) {
-        Page<ProductAndAuctionResponse> responses = productService.productList(title, path, pageable);
+    public ResponseEntity<ApiResponse<Page<ProductAndAuctionResponse>>> productList(ProductListCondition condition,
+                                                                                    @PageableDefault(size = 10) Pageable pageable) {
+        Page<ProductAndAuctionResponse> responses = productService.productList(condition, pageable);
         return ResponseEntity.ok(ApiResponse.success("상품 리스트 조회", responses));
     }
 
