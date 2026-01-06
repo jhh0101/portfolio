@@ -2,11 +2,14 @@ package com.portfolio.auctionmarket.domain.ratings.service;
 
 import com.portfolio.auctionmarket.domain.orders.entity.Order;
 import com.portfolio.auctionmarket.domain.orders.repository.OrderQueryRepository;
+import com.portfolio.auctionmarket.domain.ratings.dto.RatingDeleteResponse;
 import com.portfolio.auctionmarket.domain.ratings.dto.RatingRequest;
 import com.portfolio.auctionmarket.domain.ratings.dto.RatingResponse;
 import com.portfolio.auctionmarket.domain.ratings.entity.Rating;
+import com.portfolio.auctionmarket.domain.ratings.entity.RatingStatus;
 import com.portfolio.auctionmarket.domain.ratings.repository.RatingQueryRepository;
 import com.portfolio.auctionmarket.domain.ratings.repository.RatingRepository;
+import com.portfolio.auctionmarket.domain.user.entity.Role;
 import com.portfolio.auctionmarket.domain.user.entity.User;
 import com.portfolio.auctionmarket.domain.user.repository.UserRepository;
 import com.portfolio.auctionmarket.global.error.CustomException;
@@ -46,6 +49,7 @@ public class RatingService {
                 .fromUser(user)
                 .score(request.getScore())
                 .comment(request.getComment())
+                .status(RatingStatus.NORMAL)
                 .build();
 
         Rating ratingSave = ratingRepository.save(rating);
@@ -75,5 +79,27 @@ public class RatingService {
         rating.getToUser().updateRating(ratingAvg);
 
         return RatingResponse.from(rating);
+    }
+
+    @Transactional
+    public RatingDeleteResponse deleteRating(Long userId, Long ratingId) {
+        Rating rating = ratingQueryRepository.findById(ratingId)
+                .orElseThrow(() -> new CustomException(ErrorCode.RATING_NOT_FOUND, "평가를 찾을 수 없습니다."));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND, "사용자를 찾을 수 없습니다."));
+
+        if (!rating.getFromUser().getUserId().equals(userId) && !user.getRole().equals(Role.ADMIN)) {
+            throw new CustomException(ErrorCode.BAD_REQUEST, "삭제 권한이 없습니다.");
+        }
+
+        rating.deleteRating();
+
+        Double ratingAvg = ratingQueryRepository.avgRating(rating.getToUser().getUserId());
+        rating.getToUser().updateRating(ratingAvg);
+
+        ratingRepository.delete(rating);
+
+        return RatingDeleteResponse.from(rating);
     }
 }
