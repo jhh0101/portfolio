@@ -1,8 +1,6 @@
 package com.portfolio.auctionmarket.domain.orders.dto;
 
-import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
 import com.portfolio.auctionmarket.domain.orders.entity.Order;
-import com.portfolio.auctionmarket.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +17,9 @@ public class OrderResponse {
     private Long finalPrice;
 
     public static OrderResponse from(Order entity) {
+        if (entity == null) {
+            return null;
+        }
         return OrderResponse.builder()
                 .orderId(entity.getOrderId())
                 .title(entity.getAuction().getProduct().getTitle())

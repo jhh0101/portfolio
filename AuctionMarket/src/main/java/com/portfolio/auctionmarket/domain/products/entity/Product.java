@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-@SQLRestriction("status != 'DELETED' AND status != 'SOLD'")
+@SQLRestriction("status != 'DELETED'")
 @SQLDelete(sql = "UPDATE products SET status = 'DELETED' WHERE product_id = ?")
 @Table(name = "products")
 @Builder
