@@ -36,6 +36,10 @@ public class RatingService {
             throw new CustomException(ErrorCode.BAD_REQUEST, "구매자가 일치하지 않습니다.");
         }
 
+        if (ratingRepository.existsByOrder(order)) {
+            throw new CustomException(ErrorCode.BAD_REQUEST, "이미 주문에 대한 평가가 존재합니다.");
+        }
+
         Rating rating = Rating.builder()
                 .order(order)
                 .toUser(order.getSeller())
