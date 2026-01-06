@@ -1,6 +1,7 @@
 package com.portfolio.auctionmarket.domain.ratings.entity;
 
 import com.portfolio.auctionmarket.domain.orders.entity.Order;
+import com.portfolio.auctionmarket.domain.ratings.dto.RatingRequest;
 import com.portfolio.auctionmarket.domain.user.entity.User;
 import com.portfolio.auctionmarket.global.base.BaseCreatedAt;
 import jakarta.persistence.*;
@@ -35,4 +36,9 @@ public class Rating extends BaseCreatedAt {
 
     @Column(name = "comment", length = 100)
     private String comment;
+
+    public void updateRating(RatingRequest request) {
+        this.score = request.getScore();
+        this.comment = request.getComment();
+    }
 }

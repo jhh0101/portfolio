@@ -5,6 +5,7 @@ import com.portfolio.auctionmarket.domain.orders.repository.OrderQueryRepository
 import com.portfolio.auctionmarket.domain.ratings.dto.RatingRequest;
 import com.portfolio.auctionmarket.domain.ratings.dto.RatingResponse;
 import com.portfolio.auctionmarket.domain.ratings.entity.Rating;
+import com.portfolio.auctionmarket.domain.ratings.repository.RatingQueryRepository;
 import com.portfolio.auctionmarket.domain.ratings.repository.RatingRepository;
 import com.portfolio.auctionmarket.domain.user.entity.User;
 import com.portfolio.auctionmarket.domain.user.repository.UserRepository;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RatingService {
 
     private final RatingRepository ratingRepository;
+    private final RatingQueryRepository ratingQueryRepository;
     private final OrderQueryRepository orderQueryRepository;
     private final UserRepository userRepository;
 
@@ -45,5 +47,23 @@ public class RatingService {
         Rating ratingSave = ratingRepository.save(rating);
 
         return RatingResponse.from(ratingSave);
+    }
+
+    @Transactional
+    public RatingResponse updateRating(Long userId, Long orderId, Long ratingId, RatingRequest request) {
+        Rating rating = ratingQueryRepository.findById(ratingId)
+                .orElseThrow(() -> new CustomException(ErrorCode.RATING_NOT_FOUND, "평가를 찾을 수 없습니다."));
+
+        if (!rating.getFromUser().getUserId().equals(userId)) {
+            throw new CustomException(ErrorCode.BAD_REQUEST, "작성자가 일치하지 않습니다.");
+        }
+
+        if (!rating.getOrder().getOrderId().equals(orderId)) {
+            throw new CustomException(ErrorCode.BAD_REQUEST, "잘못된 주문 경로입니다.");
+        }
+
+        rating.updateRating(request);
+
+        return RatingResponse.from(rating);
     }
 }

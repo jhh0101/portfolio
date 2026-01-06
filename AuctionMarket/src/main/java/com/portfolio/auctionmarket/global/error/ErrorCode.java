@@ -62,6 +62,9 @@ public enum ErrorCode {
     // Orders
     ORDER_NOT_FOUND("ORDER001", "주문 내역을 찾을 수 없습니다"),
 
+    // Rating
+    RATING_NOT_FOUND("RATING001", "평가를 찾을 수 없습니다"),
+
     // Common
     BAD_REQUEST("C002", "잘못된 요청입니다"),
     RESOURCE_NOT_FOUND("C003", "리소스를 찾을 수 없습니다");
