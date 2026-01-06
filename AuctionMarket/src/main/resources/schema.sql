@@ -114,6 +114,7 @@ CREATE TABLE seller_ratings (
                                 order_id        BIGINT NOT NULL,
                                 score           INT NOT NULL CHECK (score BETWEEN 1 AND 5),
                                 comment         VARCHAR(100) NULL,
+                                status          ENUM('NORMAL', 'DELETED') DEFAULT 'NORMAL',
                                 created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
                                 FOREIGN KEY (to_user_id) REFERENCES users(user_id),
                                 FOREIGN KEY (from_user_id) REFERENCES users(user_id),
