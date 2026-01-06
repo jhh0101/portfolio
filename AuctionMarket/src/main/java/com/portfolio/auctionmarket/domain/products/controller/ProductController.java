@@ -49,6 +49,15 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success("상품 단건 조회", response));
     }
 
+    // 판매자(자신) 상품 리스트 조회
+    @GetMapping
+    public ResponseEntity<ApiResponse<Page<ProductAndAuctionResponse>>> myProductList(@AuthenticationPrincipal Long userId,
+                                                                                      ProductListCondition condition,
+                                                                                      @PageableDefault(size = 10) Pageable pageable) {
+        Page<ProductAndAuctionResponse> responses = productService.myProductList(userId, condition, pageable);
+        return ResponseEntity.ok(ApiResponse.success("상품 리스트 조회", responses));
+    }
+
     // 상품 상세 수정
     @PatchMapping("/{productId}")
     public ResponseEntity<ApiResponse<ProductDetailAndAuctionResponse>> updateProduct(@AuthenticationPrincipal Long userId,
