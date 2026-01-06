@@ -1,6 +1,7 @@
 package com.portfolio.auctionmarket.domain.orders.entity;
 
 import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
+import com.portfolio.auctionmarket.domain.products.entity.Product;
 import com.portfolio.auctionmarket.domain.user.entity.User;
 import com.portfolio.auctionmarket.global.base.BaseCreatedAt;
 import jakarta.persistence.*;
@@ -28,5 +29,13 @@ public class Order extends BaseCreatedAt {
 
     @Column(name = "final_price")
     private Long finalPrice;
+
+    public User getSeller() {
+        return auction.getProduct().getSeller();
+    }
+
+    public String getTitle() {
+        return auction.getProduct().getTitle();
+    }
 
 }

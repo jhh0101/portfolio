@@ -1,0 +1,38 @@
+package com.portfolio.auctionmarket.domain.ratings.entity;
+
+import com.portfolio.auctionmarket.domain.orders.entity.Order;
+import com.portfolio.auctionmarket.domain.user.entity.User;
+import com.portfolio.auctionmarket.global.base.BaseCreatedAt;
+import jakarta.persistence.*;
+import lombok.*;
+
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+@Table(name = "seller_ratings")
+@Builder
+public class Rating extends BaseCreatedAt {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "rating_id")
+    private Long ratingId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "to_user_id")
+    private User toUser;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "from_user_id")
+    private User fromUser;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
+
+    @Column(name = "score", nullable = false)
+    private Integer score;
+
+    @Column(name = "comment", length = 100)
+    private String comment;
+}

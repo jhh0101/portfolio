@@ -113,6 +113,7 @@ CREATE TABLE seller_ratings (
                                 from_user_id    BIGINT NOT NULL, -- 평가 하는 구매자
                                 order_id        BIGINT NOT NULL,
                                 score           INT NOT NULL CHECK (score BETWEEN 1 AND 5),
+                                comment         VARCHAR(100) NULL,
                                 created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
                                 FOREIGN KEY (to_user_id) REFERENCES users(user_id),
                                 FOREIGN KEY (from_user_id) REFERENCES users(user_id),
