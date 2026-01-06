@@ -93,7 +93,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Page<ProductAndAuctionResponse> productList(ProductListCondition condition, Pageable pageable) {
-        Page<Product> auctions = productQueryRepository.productList(condition, pageable);
+        Page<Product> auctions = productQueryRepository.productList(null, condition, pageable);
 
         return auctions.map(ProductAndAuctionResponse::from);
     }
@@ -103,6 +103,13 @@ public class ProductService {
         Product product = productRepository.findWithAuctionById(productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND, "상품을 찾을 수 없습니다."));
         return ProductDetailAndAuctionResponse.from(product);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductAndAuctionResponse> myProductList(Long userId, ProductListCondition condition, Pageable pageable) {
+        Page<Product> auctions = productQueryRepository.productList(userId, condition, pageable);
+
+        return auctions.map(ProductAndAuctionResponse::from);
     }
 
     @Transactional

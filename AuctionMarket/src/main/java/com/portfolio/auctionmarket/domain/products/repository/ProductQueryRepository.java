@@ -29,17 +29,17 @@ public class ProductQueryRepository {
 
     private final JPAQueryFactory jpaQueryFactory;;
 
-    public Page<Product> productList(ProductListCondition condition, Pageable pageable) {
+    public Page<Product> productList(Long userId, ProductListCondition condition, Pageable pageable) {
         List<Product> content = jpaQueryFactory
                 .selectFrom(product)
                 .innerJoin(product.seller, user).fetchJoin()
                 .innerJoin(product.auction, auction).fetchJoin()
                 .leftJoin(product.category, category1).fetchJoin()
                 .where(
-                        isMyAuction(condition.userId()),
+                        isMyAuction(userId),
                         titleContain(condition.title()),
                         pathStartWith(condition.path()),
-                        statusFilter(condition.userId())
+                        statusFilter(userId)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -51,10 +51,10 @@ public class ProductQueryRepository {
                 .from(product)
                 .leftJoin(product.category, category1)
                 .where(
-                        isMyAuction(condition.userId()),
+                        isMyAuction(userId),
                         titleContain(condition.title()),
                         pathStartWith(condition.path()),
-                        statusFilter(condition.userId())
+                        statusFilter(userId)
                 );
 
         return PageableExecutionUtils.getPage(content, pageable, count::fetchOne);
