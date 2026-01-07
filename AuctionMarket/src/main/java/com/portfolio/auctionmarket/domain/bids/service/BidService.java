@@ -32,10 +32,15 @@ public class BidService {
 
     @Transactional
     public BidResultResponse addBid(Long userId, Long auctionId, BidRequest request) {
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByIdWithPessimisticLock(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        Auction auction = auctionRepository.findById(auctionId)
+        // 사용자 포인트 체크
+        if (user.getPoint() < request.getBidPrice()) {
+            throw new CustomException(ErrorCode.NOT_ENOUGH_POINTS, "소지중인 포인트가 부족합니다.");
+        }
+
+        Auction auction = auctionRepository.findByIdWithPessimisticLock(auctionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.AUCTION_NOT_FOUND));
 
         // 경매 상태 체크
@@ -46,11 +51,6 @@ public class BidService {
         // 본인 경매 입찰 금지
         if (auction.getProduct().getSeller().getUserId().equals(userId)) {
             throw new CustomException(ErrorCode.SELF_BID_NOT_ALLOWED, "본인 상품은 입찰할 수 없습니다.");
-        }
-
-        // 사용자 포인트 체크
-        if (user.getPoint() < request.getBidPrice()) {
-            throw new CustomException(ErrorCode.NOT_ENOUGH_POINTS, "소지중인 포인트가 부족합니다.");
         }
 
         // 입찰가 체크
