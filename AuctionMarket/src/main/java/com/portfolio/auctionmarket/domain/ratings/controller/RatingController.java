@@ -7,6 +7,10 @@ import com.portfolio.auctionmarket.domain.ratings.service.RatingService;
 import com.portfolio.auctionmarket.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -44,5 +48,12 @@ public class RatingController {
         RatingDeleteResponse response = ratingService.deleteRating(userId, ratingId);
         log.info("평가 수정 시도 - 사용자ID: {}, 평가ID: {}", userId, ratingId);
         return ResponseEntity.ok(ApiResponse.success("판매자 평가 삭제", response));
+    }
+
+    @GetMapping("/{toUserId}")
+    public ResponseEntity<ApiResponse<Page<RatingResponse>>> findRatingList(@PathVariable Long toUserId,
+                                                                            @PageableDefault(size = 10, sort = "order.id", direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<RatingResponse> responses = ratingService.findRatingList(toUserId, pageable);
+        return ResponseEntity.ok(ApiResponse.success("판매자 평가 리스트 조회", responses));
     }
 }
