@@ -15,6 +15,8 @@ import com.portfolio.auctionmarket.domain.user.repository.UserRepository;
 import com.portfolio.auctionmarket.global.error.CustomException;
 import com.portfolio.auctionmarket.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -101,5 +103,11 @@ public class RatingService {
         ratingRepository.delete(rating);
 
         return RatingDeleteResponse.from(rating);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<RatingResponse> findRatingList(Long toUserId, Pageable pageable) {
+        Page<Rating> ratings = ratingRepository.findAllByToUser_UserId(toUserId, pageable);
+        return ratings.map(RatingResponse::from);
     }
 }
