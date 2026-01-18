@@ -41,6 +41,9 @@ public class Product extends BaseCreatedAt {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "view_count")
+    private Integer viewCount;
+
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;

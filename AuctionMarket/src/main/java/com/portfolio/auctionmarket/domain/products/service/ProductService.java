@@ -19,6 +19,9 @@ import com.portfolio.auctionmarket.domain.user.repository.UserRepository;
 import com.portfolio.auctionmarket.global.error.CustomException;
 import com.portfolio.auctionmarket.global.error.ErrorCode;
 import com.portfolio.auctionmarket.global.s3.service.S3Service;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RScoredSortedSet;
@@ -63,6 +66,7 @@ public class ProductService {
                 .category(category)
                 .title(productRequest.getTitle())
                 .description(productRequest.getDescription())
+                .viewCount(0)
                 .productStatus(ProductStatus.ACTIVE)
                 .image(new ArrayList<>())
                 .build();
@@ -100,10 +104,49 @@ public class ProductService {
         return auctions.map(ProductAndAuctionResponse::from);
     }
 
-    @Transactional(readOnly = true)
-    public ProductDetailAndAuctionResponse findProductDetail(Long productId) {
+    @Transactional
+    public ProductDetailAndAuctionResponse findProductDetail(Long productId, HttpServletRequest request, HttpServletResponse response, Long userId) {
+
         Product product = productRepository.findWithAuctionById(productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND, "상품을 찾을 수 없습니다."));
+
+        Cookie[] cookies = request.getCookies();
+        boolean isViewed = false;
+        Cookie viewCookie = null;
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("viewed_products")) {
+                    viewCookie = cookie;
+                    if (cookie.getValue().contains("[" + productId + "]")) {
+                        isViewed = true;
+                    }
+                    break;
+                }
+            }
+        }
+
+        boolean isNotSeller = (userId == null) || !product.getSeller().getUserId().equals(userId);
+
+        // 2. 조회수 증가 조건 체크 (이미 본 적이 없고, 판매자 본인이 아닐 때)
+        if (!isViewed && isNotSeller) {
+            // DB 조회수 증가 쿼리 실행
+            productRepository.viewCount(productId);
+
+            // 3. 쿠키 갱신 또는 생성
+            if (viewCookie != null) {
+                viewCookie.setValue(viewCookie.getValue() + "_[" + productId + "]");
+            } else {
+                viewCookie = new Cookie("viewed_products", "[" + productId + "]");
+            }
+
+            viewCookie.setPath("/");
+            viewCookie.setMaxAge(60 * 60 * 24); // 24시간 유지
+            viewCookie.setHttpOnly(true); // 보안 설정
+            response.addCookie(viewCookie);
+        }
+
+
         return ProductDetailAndAuctionResponse.from(product);
     }
 
