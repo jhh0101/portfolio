@@ -22,6 +22,7 @@ public class ProductDetailResponse {
     private Long categoryId;
     private String title;
     private String description;
+    private Integer viewCount;
     private ProductStatus productStatus;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
@@ -35,6 +36,7 @@ public class ProductDetailResponse {
                 .categoryId(entity.getCategory().getCategoryId())
                 .title(entity.getTitle())
                 .description(entity.getDescription())
+                .viewCount(entity.getViewCount())
                 .productStatus(entity.getProductStatus())
                 .createdAt(entity.getCreatedAt())
                 .build();

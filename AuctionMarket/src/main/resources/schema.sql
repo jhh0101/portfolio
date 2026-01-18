@@ -45,7 +45,7 @@ CREATE TABLE categories (
                             category      VARCHAR(50) NOT NULL, -- 카테고리 이름 (예: 가전, 의류)
                             parent_id     BIGINT NULL,           -- 부모 카테고리 ID (대분류일 경우 NULL)
                             path          VARCHAR(100) NULL,  -- 경로 저장
-                            is_deleted    TINYINT(1) DEFAULT 0,  -- 경로 저장
+                            is_deleted    TINYINT(1) DEFAULT 0,
                             FOREIGN KEY (parent_id) REFERENCES categories(category_id)
 );
 
@@ -57,6 +57,7 @@ CREATE TABLE products (
                           title           VARCHAR(200) NOT NULL,
                           description     TEXT,
                           status          ENUM('ACTIVE', 'SOLD', 'FAILED', 'DELETED') DEFAULT 'ACTIVE', -- ACTIVE, SOLD, FAILED, DELETED
+                          view_count      INT DEFAULT 0,
                           created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
                           FOREIGN KEY (seller_id) REFERENCES users(user_id),
                           FOREIGN KEY (category_id) REFERENCES categories(category_id)

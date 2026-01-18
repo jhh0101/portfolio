@@ -3,6 +3,8 @@ package com.portfolio.auctionmarket.domain.products.controller;
 import com.portfolio.auctionmarket.domain.products.dto.*;
 import com.portfolio.auctionmarket.domain.products.service.ProductService;
 import com.portfolio.auctionmarket.global.response.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,8 +46,8 @@ public class ProductController {
 
     // 상품 상세 조회
     @GetMapping("/{productId}")
-    public ResponseEntity<ApiResponse<ProductDetailAndAuctionResponse>> findProductDetail(@PathVariable Long productId) {
-        ProductDetailAndAuctionResponse response = productService.findProductDetail(productId);
+    public ResponseEntity<ApiResponse<ProductDetailAndAuctionResponse>> findProductDetail(@PathVariable Long productId, HttpServletResponse httpResponse, HttpServletRequest request, @AuthenticationPrincipal Long userId) {
+        ProductDetailAndAuctionResponse response = productService.findProductDetail(productId, request, httpResponse, userId);
         return ResponseEntity.ok(ApiResponse.success("상품 단건 조회", response));
     }
 
