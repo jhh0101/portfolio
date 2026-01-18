@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -63,6 +64,7 @@ public class ProductService {
                 .title(productRequest.getTitle())
                 .description(productRequest.getDescription())
                 .productStatus(ProductStatus.ACTIVE)
+                .image(new ArrayList<>())
                 .build();
 
         Product productSave = productRepository.save(product);
@@ -178,6 +180,9 @@ public class ProductService {
     public List<ProductImageResponse> uploadImages(Long productId, List<MultipartFile> files) {
         List<ProductImageResponse> responses = new ArrayList<>();
 
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND, "상품을 찾을 수 없습니다."));
+
         Integer lastOrder = productImageRepository.findMaxOrderByProductId(productId);
 
         for (int i = 0; i < files.size(); i++) {
@@ -185,7 +190,7 @@ public class ProductService {
             String url = s3Service.uploadFile(files.get(i), "products");
 
             ProductImage img = ProductImage.builder()
-                    .productId(productId)
+                    .product(product)
                     .imageUrl(url)
                     .imageOrder(order) // 여기서 상품별 순번 결정!
                     .build();
@@ -198,6 +203,12 @@ public class ProductService {
         return responses;
     }
 
+    @Transactional(readOnly = true)
+    public List<ProductImageResponse> loadImage(Long productId) {
+        List<ProductImage> productImages = productImageRepository.findByProduct_ProductIdOrderByImageOrderAsc(productId);
+        return productImages.stream().map(ProductImageResponse::from).toList();
+    }
+
     @Transactional
     public void moveToMain(Long imageId) {
         ProductImage image = productImageRepository.findById(imageId)
@@ -206,7 +217,7 @@ public class ProductService {
         Integer oldOrder = image.getImageOrder();
         Integer newOrder = 1;
 
-        productImageRepository.shiftOrders(image.getProductId(), newOrder, oldOrder);
+        productImageRepository.shiftOrders(image.getProduct().getProductId(), newOrder, oldOrder);
 
         image.updateOrder(newOrder);
     }
@@ -218,7 +229,7 @@ public class ProductService {
         s3Service.deleteFile(image.getImageUrl());
         productImageRepository.delete(image);
 
-        List<ProductImage> remainingImages = productImageRepository.findByProductIdOrderByImageOrderAsc(image.getProductId() );
+        List<ProductImage> remainingImages = productImageRepository.findByProduct_ProductIdOrderByImageOrderAsc(image.getProduct().getProductId());
 
         for (int i = 0; i < remainingImages.size(); i++) {
             remainingImages.get(i).updateOrder(i + 1); // 엔티티에 updateOrder 메서드 필요

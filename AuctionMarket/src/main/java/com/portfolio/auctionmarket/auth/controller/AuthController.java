@@ -27,22 +27,17 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<String>> login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
-        try {
-            TokenResponse tokenResponse = authService.login(request);
-            ResponseCookie responseCookie = ResponseCookie.from("refreshToken", tokenResponse.getRefreshToken())
-                    .path("/")
-                    .secure(true)
-                    .httpOnly(true)
-                    .sameSite("Lax")
-                    .maxAge(7 * 24 * 60 * 60)
-                    .build();
+        TokenResponse tokenResponse = authService.login(request);
+        ResponseCookie responseCookie = ResponseCookie.from("refreshToken", tokenResponse.getRefreshToken())
+                .path("/")
+                .secure(true)
+                .httpOnly(true)
+                .sameSite("Lax")
+                .maxAge(7 * 24 * 60 * 60)
+                .build();
 
-            response.setHeader("Set-Cookie", responseCookie.toString());
-            return ResponseEntity.ok(ApiResponse.success("로그인 성공", tokenResponse.getAccessToken()));
-        } catch (Exception e) {
-            log.error("로그인 실패 : " + e.toString());
-            throw new LoginException("로그인에 실패했습니다.");
-        }
+        response.setHeader("Set-Cookie", responseCookie.toString());
+        return ResponseEntity.ok(ApiResponse.success("로그인 성공", tokenResponse.getAccessToken()));
     }
 
     @PostMapping("/logout")

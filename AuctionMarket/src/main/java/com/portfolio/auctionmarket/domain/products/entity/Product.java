@@ -10,6 +10,8 @@ import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -45,6 +47,9 @@ public class Product extends BaseCreatedAt {
 
     @OneToOne(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Auction auction;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductImage> image = new ArrayList<>();
 
     public void updateProduct(Category category, String title, String description, Long startPrice, LocalDateTime startTime, LocalDateTime endTime) {
         this.category = category;

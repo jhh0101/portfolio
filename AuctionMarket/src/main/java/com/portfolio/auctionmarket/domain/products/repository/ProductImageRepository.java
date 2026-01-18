@@ -11,11 +11,11 @@ import java.util.List;
 
 @Repository
 public interface ProductImageRepository extends JpaRepository<ProductImage, Long> {
-    List<ProductImage> findByProductIdOrderByImageOrderAsc(Long productId);
+    List<ProductImage> findByProduct_ProductIdOrderByImageOrderAsc(Long productId);
 
     @Modifying
     @Query("UPDATE ProductImage p SET p.imageOrder = p.imageOrder + 1" +
-            "WHERE p.productId = :productId " +
+            "WHERE p.product.productId = :productId " +
             "AND p.imageOrder >= :newOrder " +
             "AND p.imageOrder < :oldOrder")
     void shiftOrders(@Param("productId") Long productId,
@@ -23,6 +23,6 @@ public interface ProductImageRepository extends JpaRepository<ProductImage, Long
                      @Param("oldOrder") Integer oldOrder);
 
     @Query("SELECT COALESCE(MAX(p.imageOrder), 0) FROM ProductImage p " +
-            "WHERE p.productId = :productId")
+            "WHERE p.product.productId = :productId")
     Integer findMaxOrderByProductId(@Param("productId") Long productId);
 }

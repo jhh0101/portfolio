@@ -1,6 +1,7 @@
 package com.portfolio.auctionmarket.global.s3.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -52,5 +53,25 @@ public class S3Config {
                         .pathStyleAccessEnabled(true)
                         .build())
                 .build();
+    }
+
+    @Bean
+    public CommandLineRunner initS3Bucket(S3Client s3Client) {
+        return args -> {
+            String bucketName = "my-test-bucket"; // application.yml의 값과 일치
+            try {
+                // 1. 버킷이 이미 있는지 확인
+                s3Client.headBucket(b -> b.bucket(bucketName));
+                System.out.println("✅ 로컬스택 S3 버킷 확인됨: " + bucketName);
+            } catch (software.amazon.awssdk.services.s3.model.NoSuchBucketException e) {
+                // 2. 없으면 새로 생성
+                s3Client.createBucket(b -> b.bucket(bucketName));
+                System.out.println("🚀 로컬스택 S3 버킷 생성 완료: " + bucketName);
+            } catch (Exception e) {
+                // 3. 다른 에러 발생 시 로그 출력
+                System.err.println("❌ S3 초기화 실패: " + e.getMessage());
+                e.printStackTrace();
+            }
+        };
     }
 }

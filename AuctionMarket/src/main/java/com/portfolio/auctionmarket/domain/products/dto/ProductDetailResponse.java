@@ -19,6 +19,7 @@ public class ProductDetailResponse {
     private Long productId;
     private String seller;
     private String category;
+    private Long categoryId;
     private String title;
     private String description;
     private ProductStatus productStatus;
@@ -31,6 +32,7 @@ public class ProductDetailResponse {
                 .productId(entity.getProductId())
                 .seller(entity.getSeller().getNickname())
                 .category(entity.getCategory().getCategory())
+                .categoryId(entity.getCategory().getCategoryId())
                 .title(entity.getTitle())
                 .description(entity.getDescription())
                 .productStatus(entity.getProductStatus())
