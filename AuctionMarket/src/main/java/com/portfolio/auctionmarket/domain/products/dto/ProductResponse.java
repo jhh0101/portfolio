@@ -32,7 +32,7 @@ public class ProductResponse {
                 .filter(img -> img.getImageOrder().equals(1))
                 .map(ProductImage::getImageUrl)
                 .findFirst()
-                .orElse("/images/default.jpg");
+                .orElse("https://picsum.photos/400/300");
 
         return ProductResponse.builder()
                 .productId(entity.getProductId())

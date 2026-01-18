@@ -67,7 +67,12 @@ public class ProductQueryRepository {
         return StringUtils.hasText(title) ? product.title.contains(title) : null;
     }
     private BooleanExpression pathStartWith(String path) {
-        return StringUtils.hasText(path) ? product.category.path.startsWith(path + "/") : null;
+        if (!StringUtils.hasText(path)) {
+            return null;
+        }
+
+        return product.category.path.eq(path)
+                .or(product.category.path.startsWith(path + "/"));
     }
 
     private BooleanExpression statusFilter(Long userId) {
