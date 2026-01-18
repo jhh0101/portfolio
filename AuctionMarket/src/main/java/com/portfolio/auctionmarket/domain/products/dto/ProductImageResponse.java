@@ -22,7 +22,7 @@ public class ProductImageResponse {
 
         return ProductImageResponse.builder()
                 .imageId(entity.getImageId())
-                .productId(entity.getProductId())
+                .productId(entity.getProduct().getProductId())
                 .imageUrl(entity.getImageUrl())
                 .imageOrder(entity.getImageOrder())
                 .build();

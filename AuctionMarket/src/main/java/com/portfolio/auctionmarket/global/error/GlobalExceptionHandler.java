@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
         log.error("CustomException: {} - {}", e.getErrorCode().getCode(), e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.error(e.getErrorCode().getCode(), e.getMessage()));
+                .body(ApiResponse.error(e.getErrorCode().getCode(), e.getErrorCode().getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

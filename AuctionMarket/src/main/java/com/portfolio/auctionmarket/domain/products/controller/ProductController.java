@@ -83,6 +83,12 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success("이미지 업로드", response));
     }
 
+    @GetMapping("/{id}/images")
+    public ResponseEntity<ApiResponse<List<ProductImageResponse>>> loadImages(@PathVariable("id") Long productId){
+        List<ProductImageResponse> responses = productService.loadImage(productId);
+        return ResponseEntity.ok(ApiResponse.success("이미지 로드", responses));
+    }
+
     @PatchMapping("/{id}/images")
     public ResponseEntity<ApiResponse<Void>> moveToMain(@PathVariable("id") Long id) {
         productService.moveToMain(id);
