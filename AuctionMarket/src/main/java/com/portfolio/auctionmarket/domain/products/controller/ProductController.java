@@ -39,7 +39,7 @@ public class ProductController {
     // 상품 전체 리스트 조회
     @GetMapping
     public ResponseEntity<ApiResponse<Page<ProductAndAuctionResponse>>> productList(ProductListCondition condition,
-                                                                                    @PageableDefault(size = 10) Pageable pageable) {
+                                                                                    @PageableDefault(size = 12) Pageable pageable) {
         Page<ProductAndAuctionResponse> responses = productService.productList(condition, pageable);
         return ResponseEntity.ok(ApiResponse.success("상품 리스트 조회", responses));
     }
