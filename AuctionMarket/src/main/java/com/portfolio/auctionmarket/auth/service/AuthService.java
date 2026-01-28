@@ -8,7 +8,9 @@ import com.portfolio.auctionmarket.global.config.JwtProperties;
 import com.portfolio.auctionmarket.global.error.CustomException;
 import com.portfolio.auctionmarket.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.Nullable;
 import org.springframework.boot.web.error.Error;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProperties jwtProperties;
     private final RefreshTokenService refreshTokenService;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
     public TokenResponse login(LoginRequest request) {
@@ -51,8 +54,15 @@ public class AuthService {
         jwtService.validateToken(refreshToken);
 
         Long userId = refreshTokenService.getUserIdByToken(refreshToken);
+
         if (userId == null) {
             throw new CustomException(ErrorCode.TOKEN_NOT_FOUND);
+        }
+
+        String redisRefreshToken = redisTemplate.opsForValue().get("refresh:user:" + userId);
+
+        if (redisRefreshToken == null || !redisRefreshToken.equals(refreshToken)) {
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
 
         User user = userRepository.findById(userId)
