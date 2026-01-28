@@ -113,7 +113,6 @@ public class BidService {
         if (!bid.getAuction().getAuctionId().equals(auctionId)) {
             throw new CustomException(ErrorCode.BAD_REQUEST, "경매 정보가 올바르지 않습니다.");
         }
-
         // 포인트 환불
         bid.getBidder().addPoint(bid.getBidPrice());
 

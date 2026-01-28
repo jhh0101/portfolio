@@ -22,6 +22,14 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
 
     List<Bid> findAllByAuctionOrderByBidPriceDesc(Auction auction);
 
+    @Query(value = "SELECT b.bidId AS bidId, u.nickname AS nickname, b.bidPrice AS bidPrice " +
+            "FROM Bid b " +
+            "LEFT JOIN User u ON b.bidder.userId = u.userId " +
+            "WHERE b.auction.auctionId = :auctionId",
+
+            countQuery = "SELECT COUNT(*) FROM Bid b WHERE b.auction.auctionId = :auctionId")
+    Page<BidResponse> findAllByAuction_AuctionId(@Param("auctionId") Long auctionId, Pageable pageable);
+
     @Query(value = "SELECT b.bid_id AS bidId, u.nickname AS nickname, b.bid_price AS bidPrice " +
             "FROM bids b " +
             "LEFT JOIN users u ON b.bidder_id = u.user_id " +
@@ -29,5 +37,5 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
 
             countQuery = "SELECT COUNT(*) FROM bids b WHERE b.auction_id = :auctionId",
             nativeQuery = true)
-    Page<BidResponse> findAllByAuction_AuctionId(@Param("auctionId") Long auctionId, Pageable pageable);
+    Page<BidResponse> findAllByAuction_AuctionIdToSeller(@Param("auctionId") Long auctionId, Pageable pageable);
 }
