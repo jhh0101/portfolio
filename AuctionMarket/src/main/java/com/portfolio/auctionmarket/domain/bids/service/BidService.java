@@ -3,9 +3,10 @@ package com.portfolio.auctionmarket.domain.bids.service;
 import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
 import com.portfolio.auctionmarket.domain.auctions.entity.AuctionStatus;
 import com.portfolio.auctionmarket.domain.auctions.repository.AuctionRepository;
+import com.portfolio.auctionmarket.domain.bids.dto.BidResponse;
 import com.portfolio.auctionmarket.domain.bids.dto.BidResultResponse;
 import com.portfolio.auctionmarket.domain.bids.dto.BidRequest;
-import com.portfolio.auctionmarket.domain.bids.dto.BidResponse;
+import com.portfolio.auctionmarket.domain.bids.dto.BidResponseImpl;
 import com.portfolio.auctionmarket.domain.bids.entity.Bid;
 import com.portfolio.auctionmarket.domain.bids.entity.BidStatus;
 import com.portfolio.auctionmarket.domain.bids.repository.BidRepository;
@@ -63,7 +64,7 @@ public class BidService {
         } else {
             Bid lastBidOpt = lastBid.get();
             if (lastBidOpt.getBidder().getUserId().equals(userId)) {
-                throw new CustomException(ErrorCode.BAD_REQUEST, "이미 입찰중입니다.");
+                throw new CustomException(ErrorCode.ALREADY_HIGHEST_BIDDER, "이미 입찰중입니다.");
             }
 
             if (auction.getCurrentPrice() >= request.getBidPrice()) {
@@ -94,9 +95,9 @@ public class BidService {
     }
 
     @Transactional(readOnly = true)
-    public Page<BidResponse> findBid(Long auctionId, Pageable pageable) {
-        Page<Bid> bids = bidRepository.findAllByAuction_AuctionId(auctionId, pageable);
-        return bids.map(BidResponse::from);
+    public Page<BidResponseImpl> findBid(Long auctionId, Pageable pageable) {
+        Page<BidResponse> bids = bidRepository.findAllByAuction_AuctionId(auctionId, pageable);
+        return bids.map(BidResponseImpl::from);
     }
 
     // 입찰 취소(비즈니스 관점에선 필요 없음)

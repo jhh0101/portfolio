@@ -58,6 +58,7 @@ public enum ErrorCode {
     BID_PRICE_TOO_LOW("B002", "입찰가는 현재가보다 높아야 합니다"),
     SELF_BID_NOT_ALLOWED("B003", "자신의 상품에는 입찰할 수 없습니다"),
     NOT_ENOUGH_POINTS("B004", "포인트가 부족합니다"),
+    ALREADY_HIGHEST_BIDDER("B005", "이미 입찰 중 입니다."),
 
     // Orders
     ORDER_NOT_FOUND("ORDER001", "주문 내역을 찾을 수 없습니다"),
