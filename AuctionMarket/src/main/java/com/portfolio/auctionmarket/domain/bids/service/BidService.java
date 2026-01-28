@@ -113,6 +113,14 @@ public class BidService {
         if (!bid.getAuction().getAuctionId().equals(auctionId)) {
             throw new CustomException(ErrorCode.BAD_REQUEST, "경매 정보가 올바르지 않습니다.");
         }
+
+        Bid currentTopBid = bidRepository.findTopByAuctionOrderByBidPriceDesc(bid.getAuction())
+                .orElseThrow(() -> new CustomException(ErrorCode.BID_NOT_FOUND, "활성화된 입찰 내역이 없습니다."));
+
+        if (!currentTopBid.getBidder().getUserId().equals(userId)){
+            throw new CustomException(ErrorCode.BID_NOT_FOUND);
+        }
+
         // 포인트 환불
         bid.getBidder().addPoint(bid.getBidPrice());
 
@@ -129,13 +137,14 @@ public class BidService {
             User bidder = lastBidder.getBidder();
             if (bidder.getPoint() >= lastBidder.getBidPrice()) {
                 bid.getAuction().updateCurrentPrice(lastBidder.getBidPrice());
-                Bid bidAdd = Bid.builder()
-                        .bidder(lastBidder.getBidder())
-                        .bidPrice(lastBidder.getBidPrice())
-                        .status(BidStatus.ACTIVE)
-                        .auction(lastBidder.getAuction())
-                        .build();
-                bidRepository.save(bidAdd);
+//                Bid bidAdd = Bid.builder()
+//                        .bidder(lastBidder.getBidder())
+//                        .bidPrice(lastBidder.getBidPrice())
+//                        .status(BidStatus.ACTIVE)
+//                        .auction(lastBidder.getAuction())
+//                        .build();
+                bidder.subPoint(lastBidder.getBidPrice());
+//                bidRepository.save(bidAdd);
                 bidFound = true;
                 break;
             } else {
