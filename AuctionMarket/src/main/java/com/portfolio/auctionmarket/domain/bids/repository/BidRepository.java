@@ -22,7 +22,7 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
     List<Bid> findAllByAuctionOrderByBidPriceDesc(Auction auction);
 
     @Query(value = "SELECT b.bid_id AS bidId, b.nickname, b.bid_price AS bidPrice FROM bids b " +
-            "LEFT JOIN user u " +
+            "LEFT JOIN users u " +
             "ON b.bidder_id = a.user_id " +
             "WHERE b.auction_id = :auctionId",
             countQuery = "SELECT COUNT(*) FROM bids b WHERE b.auction_id = :auctionId",

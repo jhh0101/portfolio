@@ -18,21 +18,6 @@ public class RefreshTokenService {
 
     private static final String REFRESH_TOKEN_PREFIX = "refresh:";
 
-    public void saveRefreshToken(Long userId, String token) {
-        String key = REFRESH_TOKEN_PREFIX + userId;
-        redisTemplate.opsForValue().set(
-                key,
-                token,
-                refreshTokenExpiration,
-                TimeUnit.MILLISECONDS
-        );
-    }
-
-    public String getRefreshToken(Long userId) {
-        String key = REFRESH_TOKEN_PREFIX + userId;
-        return redisTemplate.opsForValue().get(key);
-    }
-
     public void saveRefreshTokenBidirectional(Long userId, String token) {
         String userKey = REFRESH_TOKEN_PREFIX + "user:" + userId;
         String tokenKey = REFRESH_TOKEN_PREFIX + "token:" + token;
@@ -53,7 +38,7 @@ public class RefreshTokenService {
     }
 
     public void deleteRefreshToken(Long userId) {
-        String userKey = REFRESH_TOKEN_PREFIX + "userId:" + userId;
+        String userKey = REFRESH_TOKEN_PREFIX + "user:" + userId;
         String token = redisTemplate.opsForValue().get(userKey);
 
         if (token != null) {
