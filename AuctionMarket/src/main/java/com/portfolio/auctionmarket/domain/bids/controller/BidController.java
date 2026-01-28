@@ -2,7 +2,7 @@ package com.portfolio.auctionmarket.domain.bids.controller;
 
 import com.portfolio.auctionmarket.domain.bids.dto.BidResultResponse;
 import com.portfolio.auctionmarket.domain.bids.dto.BidRequest;
-import com.portfolio.auctionmarket.domain.bids.dto.BidResponse;
+import com.portfolio.auctionmarket.domain.bids.dto.BidResponseImpl;
 import com.portfolio.auctionmarket.domain.bids.service.BidService;
 import com.portfolio.auctionmarket.global.response.ApiResponse;
 import jakarta.validation.Valid;
@@ -31,9 +31,9 @@ public class BidController {
     }
 
     @GetMapping("/{auctionId}/bid")
-    public ResponseEntity<ApiResponse<Page<BidResponse>>> findBidList(@PathVariable Long auctionId,
-                                                                      @PageableDefault(sort = "bidId", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<BidResponse> responses = bidService.findBid(auctionId, pageable);
+    public ResponseEntity<ApiResponse<Page<BidResponseImpl>>> findBidList(@PathVariable Long auctionId,
+                                                                          @PageableDefault(sort = "bidId", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<BidResponseImpl> responses = bidService.findBid(auctionId, pageable);
         return ResponseEntity.ok(ApiResponse.success("입찰인 리스트 조회", responses));
     }
 

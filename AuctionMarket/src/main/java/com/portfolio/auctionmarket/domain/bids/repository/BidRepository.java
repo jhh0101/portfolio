@@ -1,6 +1,7 @@
 package com.portfolio.auctionmarket.domain.bids.repository;
 
 import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
+import com.portfolio.auctionmarket.domain.bids.dto.BidResponse;
 import com.portfolio.auctionmarket.domain.bids.entity.Bid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,11 +22,12 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
 
     List<Bid> findAllByAuctionOrderByBidPriceDesc(Auction auction);
 
-    @Query(value = "SELECT b.bid_id AS bidId, b.nickname, b.bid_price AS bidPrice FROM bids b " +
-            "LEFT JOIN users u " +
-            "ON b.bidder_id = a.user_id " +
+    @Query(value = "SELECT b.bid_id AS bidId, u.nickname AS nickname, b.bid_price AS bidPrice " +
+            "FROM bids b " +
+            "LEFT JOIN users u ON b.bidder_id = u.user_id " +
             "WHERE b.auction_id = :auctionId",
+
             countQuery = "SELECT COUNT(*) FROM bids b WHERE b.auction_id = :auctionId",
             nativeQuery = true)
-    Page<Bid> findAllByAuction_AuctionId(@Param("auctionId") Long auctionId, Pageable pageable);
+    Page<BidResponse> findAllByAuction_AuctionId(@Param("auctionId") Long auctionId, Pageable pageable);
 }
