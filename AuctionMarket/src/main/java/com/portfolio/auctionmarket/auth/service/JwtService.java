@@ -67,6 +67,11 @@ public class JwtService {
         return claims.get("role", String.class);
     }
 
+    public String getNicknameFromToken(String token) {
+        Claims claims = parseToken(token);
+        return claims.get("nickname", String.class);
+    }
+    
     public boolean validateToken(String token) {
         try {
             parseToken(token);
