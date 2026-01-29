@@ -24,7 +24,7 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
 
     Optional<Bid> findTopByAuctionOrderByBidPriceDesc(Auction auction);
 
-    @Query(value = "SELECT b.bidId AS bidId, u.nickname AS nickname, b.bidPrice AS bidPrice " +
+    @Query(value = "SELECT b.bidId AS bidId, b.auction.auctionId AS auctionId, u.nickname AS nickname, b.bidPrice AS bidPrice " +
             "FROM Bid b " +
             "LEFT JOIN User u ON b.bidder.userId = u.userId " +
             "WHERE b.auction.auctionId = :auctionId",
