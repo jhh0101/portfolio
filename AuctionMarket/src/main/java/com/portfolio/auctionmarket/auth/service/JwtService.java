@@ -24,7 +24,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateAccessToken(Long userId, String email, String role) {
+    public String generateAccessToken(Long userId, String email, String nickname, String role) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtProperties.getAccessTokenExpiration());
 
@@ -32,6 +32,7 @@ public class JwtService {
                 .subject(String.valueOf(userId))
                 .claim("email", email)
                 .claim("role", role)
+                .claim("nickname", nickname)
                 .claim("type", "access")
                 .issuedAt(now)
                 .expiration(expiryDate)
@@ -65,6 +66,11 @@ public class JwtService {
     public String getRoleFromToken(String token) {
         Claims claims = parseToken(token);
         return claims.get("role", String.class);
+    }
+
+    public String getNicknameFromToken(String token) {
+        Claims claims = parseToken(token);
+        return claims.get("nickname", String.class);
     }
 
     public boolean validateToken(String token) {
