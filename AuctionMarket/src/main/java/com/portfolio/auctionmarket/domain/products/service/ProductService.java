@@ -28,6 +28,7 @@ import org.redisson.api.RScoredSortedSet;
 import org.redisson.api.RedissonClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -206,6 +207,11 @@ public class ProductService {
         if (bidRepository.existsByAuction(product.getAuction())) {
             throw new CustomException(ErrorCode.CANNOT_DELETE_AFTER_BID, "입찰한 상품은 삭제할 수 없습니다.");
         }
+
+        for (ProductImage img : product.getImage()) {
+            s3Service.deleteFile(img.getImageUrl()); // S3 삭제 로직
+        }
+
         product.getAuction().changeStatus(AuctionStatus.CANCELED);
         productRepository.delete(product);
 

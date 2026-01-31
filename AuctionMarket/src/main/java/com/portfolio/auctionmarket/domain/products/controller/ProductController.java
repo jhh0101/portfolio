@@ -74,7 +74,7 @@ public class ProductController {
     public ResponseEntity<ApiResponse<Void>> deleteProduct(@AuthenticationPrincipal Long userId,
                                                            @PathVariable Long productId) {
         productService.deleteProduct(userId, productId);
-        return ResponseEntity.ok(ApiResponse.success("상품 삭제", null));
+        return ResponseEntity.ok(ApiResponse.success("상품 & 이미지 삭제", null));
     }
 
     // 이미지 메서드
@@ -97,7 +97,7 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success("이미지 메인 변경", null));
     }
 
-    @DeleteMapping("/{id}/images")
+    @DeleteMapping("/{id}/image")
     public ResponseEntity<ApiResponse<Void>> deleteImage(@PathVariable("id") Long imageId) {
         productService.deleteImage(imageId);
         return ResponseEntity.ok(ApiResponse.success("이미지 삭제", null));
