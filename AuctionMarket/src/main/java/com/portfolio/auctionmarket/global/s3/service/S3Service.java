@@ -9,6 +9,8 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Service
@@ -49,15 +51,15 @@ public class S3Service {
     public void deleteFile(String fileUrl) {
 
         String key = extractKeyFromUrl(fileUrl); // URL에서 S3 Key(폴더명+파일명)만 추출하는 메서드
-
+        String decodedKey = URLDecoder.decode(key, StandardCharsets.UTF_8);
         try {
             DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
                     .bucket(bucket)
-                    .key(key)
+                    .key(decodedKey)
                     .build();
 
             s3Client.deleteObject(deleteObjectRequest);
-            System.out.println("S3 파일 삭제 완료: " + key);
+            System.out.println("S3 파일 삭제 완료: " + decodedKey);
         } catch (Exception e) {
             throw new RuntimeException("S3 파일 삭제 중 오류가 발생했습니다.", e);
         }
