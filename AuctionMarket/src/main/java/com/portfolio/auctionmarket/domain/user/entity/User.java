@@ -1,5 +1,6 @@
 package com.portfolio.auctionmarket.domain.user.entity;
 
+import com.portfolio.auctionmarket.domain.user.dto.UserNewPasswordRequest;
 import com.portfolio.auctionmarket.domain.user.dto.UserUpdateRequest;
 import com.portfolio.auctionmarket.global.base.Base;
 import com.portfolio.auctionmarket.global.error.CustomException;
@@ -88,6 +89,10 @@ public class User extends Base {
     public void updateUser(UserUpdateRequest request) {
         this.phone = request.getPhone();
         this.nickname = request.getNickname();
+    }
+
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
     }
 
     public void updateRole(Role role){

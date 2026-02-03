@@ -122,4 +122,21 @@ public class UserService {
 
         return UserProfileResponse.from(user);
     }
+
+    @Transactional
+    public void updatePassword(Long userId, UserNewPasswordRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND, "사용자를 찾을 수 없습니다."));
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new CustomException(ErrorCode.PASSWORD_MISMATCH, "현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        if (!request.getNewPassword().equals(request.getConfirmPassword())){
+            throw new CustomException(ErrorCode.PASSWORD_MISMATCH, "변경할 비밀번호와 일치하지 않습니다.");
+        }
+
+        user.updatePassword(passwordEncoder.encode(request.getNewPassword()));
+    }
+
 }

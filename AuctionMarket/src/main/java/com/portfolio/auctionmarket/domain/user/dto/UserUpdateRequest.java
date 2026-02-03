@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserUpdateRequest {
 
-    @NotBlank(message = "사용자 닉네임을 입력해주세요.")
+    @NotBlank(message = "사용자 닉네임을 입력해 주세요.")
     @Size(min = 5, max = 20, message = "닉네임은 5~20자 입니다.")
     private String nickname;
 
     @NotBlank(message = "전화번호를 입력해주세요.")
-    @Pattern(regexp = "^010\\d{8}$", message = "전화번호는 숫자만 입력해주세요.")
+    @Pattern(regexp = "^010\\d{8}$", message = "전화번호는 숫자만 입력해 주세요.")
     private String phone;
 
 }
