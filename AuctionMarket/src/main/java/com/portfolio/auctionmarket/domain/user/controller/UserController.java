@@ -61,4 +61,10 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success("회원 수정", response));
     }
 
+    @PatchMapping("/{userId}/new-password")
+    public ResponseEntity<ApiResponse<Void>> updatePassword(@PathVariable Long userId, @Valid @RequestBody UserNewPasswordRequest request) {
+        userService.updatePassword(userId, request);
+        return ResponseEntity.ok(ApiResponse.success("비밀번호 변경 성공", null));
+    }
+
 }
