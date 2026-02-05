@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/withdrawn")
-    public ResponseEntity<ApiResponse<UserDeleteResponse>> withdrawn(@PathVariable Long userId, @RequestBody UserWithdrawnRequest request) {
+    public ResponseEntity<ApiResponse<UserDeleteResponse>> withdrawn(@AuthenticationPrincipal Long userId, @RequestBody UserWithdrawnRequest request) {
         UserDeleteResponse response = userService.withdrawn(userId, request);
         return ResponseEntity.ok(ApiResponse.success("회원 탈퇴", response));
     }
@@ -49,20 +49,20 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success("회원 리스트 조회", responses));
     }
 
-    @GetMapping("/{userId}/profile")
+    @GetMapping("/my/profile")
     public ResponseEntity<ApiResponse<UserProfileResponse>> profile(@AuthenticationPrincipal Long userId) {
         UserProfileResponse response = userService.profile(userId);
         return ResponseEntity.ok(ApiResponse.success("프로필 조회", response));
     }
 
-    @PatchMapping("/{userId}/profile")
-    public ResponseEntity<ApiResponse<UserProfileResponse>> updateUser(@PathVariable Long userId,@Valid @RequestBody UserUpdateRequest request) {
+    @PatchMapping("/my/profile/edit")
+    public ResponseEntity<ApiResponse<UserProfileResponse>> updateUser(@AuthenticationPrincipal Long userId,@Valid @RequestBody UserUpdateRequest request) {
         UserProfileResponse response = userService.updateUser(userId, request);
         return ResponseEntity.ok(ApiResponse.success("회원 수정", response));
     }
 
-    @PatchMapping("/{userId}/new-password")
-    public ResponseEntity<ApiResponse<Void>> updatePassword(@PathVariable Long userId, @Valid @RequestBody UserNewPasswordRequest request) {
+    @PatchMapping("/new-password")
+    public ResponseEntity<ApiResponse<Void>> updatePassword(@AuthenticationPrincipal Long userId, @Valid @RequestBody UserNewPasswordRequest request) {
         userService.updatePassword(userId, request);
         return ResponseEntity.ok(ApiResponse.success("비밀번호 변경 성공", null));
     }

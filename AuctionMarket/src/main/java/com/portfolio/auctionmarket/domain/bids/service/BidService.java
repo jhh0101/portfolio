@@ -3,12 +3,10 @@ package com.portfolio.auctionmarket.domain.bids.service;
 import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
 import com.portfolio.auctionmarket.domain.auctions.entity.AuctionStatus;
 import com.portfolio.auctionmarket.domain.auctions.repository.AuctionRepository;
-import com.portfolio.auctionmarket.domain.bids.dto.BidResponse;
-import com.portfolio.auctionmarket.domain.bids.dto.BidResultResponse;
-import com.portfolio.auctionmarket.domain.bids.dto.BidRequest;
-import com.portfolio.auctionmarket.domain.bids.dto.BidResponseImpl;
+import com.portfolio.auctionmarket.domain.bids.dto.*;
 import com.portfolio.auctionmarket.domain.bids.entity.Bid;
 import com.portfolio.auctionmarket.domain.bids.entity.BidStatus;
+import com.portfolio.auctionmarket.domain.bids.repository.BidQueryRepository;
 import com.portfolio.auctionmarket.domain.bids.repository.BidRepository;
 import com.portfolio.auctionmarket.domain.user.entity.User;
 import com.portfolio.auctionmarket.domain.user.repository.UserRepository;
@@ -28,6 +26,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BidService {
     private final BidRepository bidRepository;
+    private final BidQueryRepository bidQueryRepository;
     private final UserRepository userRepository;
     private final AuctionRepository auctionRepository;
 
@@ -137,14 +136,7 @@ public class BidService {
             User bidder = lastBidder.getBidder();
             if (bidder.getPoint() >= lastBidder.getBidPrice()) {
                 bid.getAuction().updateCurrentPrice(lastBidder.getBidPrice());
-//                Bid bidAdd = Bid.builder()
-//                        .bidder(lastBidder.getBidder())
-//                        .bidPrice(lastBidder.getBidPrice())
-//                        .status(BidStatus.ACTIVE)
-//                        .auction(lastBidder.getAuction())
-//                        .build();
                 bidder.subPoint(lastBidder.getBidPrice());
-//                bidRepository.save(bidAdd);
                 bidFound = true;
                 break;
             } else {
@@ -156,6 +148,12 @@ public class BidService {
         }
 
         return BidResultResponse.from(bid);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BidHistoryResponse> findBidHistory(Long userId, Pageable pageable) {
+        Page<BidHistoryResponse> responses = bidQueryRepository.findBidHistory(userId, pageable);
+        return responses;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.portfolio.auctionmarket.domain.bids.controller;
 
+import com.portfolio.auctionmarket.domain.bids.dto.BidHistoryResponse;
 import com.portfolio.auctionmarket.domain.bids.dto.BidResultResponse;
 import com.portfolio.auctionmarket.domain.bids.dto.BidRequest;
 import com.portfolio.auctionmarket.domain.bids.dto.BidResponseImpl;
@@ -43,6 +44,13 @@ public class BidController {
                                                                     @PathVariable Long auctionId) {
         BidResultResponse response = bidService.cancelBid(userId, bidId, auctionId);
         return ResponseEntity.ok(ApiResponse.success("입찰 취소", response));
+    }
+
+    @GetMapping("/my/bid")
+    public ResponseEntity<ApiResponse<Page<BidHistoryResponse>>> findBidHistory(@AuthenticationPrincipal Long userId,
+                                                                          @PageableDefault(size = 5) Pageable pageable){
+        Page<BidHistoryResponse> responses = bidService.findBidHistory(userId, pageable);
+        return ResponseEntity.ok(ApiResponse.success("입찰 상품 리스트 출력", responses));
     }
 }
 
