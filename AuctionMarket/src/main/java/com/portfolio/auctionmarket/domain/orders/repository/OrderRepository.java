@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    @EntityGraph(attributePaths = {"auction", "auction.product"})
+    @EntityGraph(attributePaths = {"auction", "auction.product", "auction.product.image"})
     Page<Order> findAllByBuyer_UserId(Long userId, Pageable pageable);
 
     Order findAllByAuction_AuctionId(Long auctionAuctionId);
