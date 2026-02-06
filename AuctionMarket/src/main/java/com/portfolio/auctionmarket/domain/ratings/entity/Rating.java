@@ -50,8 +50,4 @@ public class Rating extends BaseCreatedAt {
         this.comment = request.getComment();
     }
 
-    public void deleteRating() {
-        this.score = 0;
-        this.comment = null;
-    }
 }

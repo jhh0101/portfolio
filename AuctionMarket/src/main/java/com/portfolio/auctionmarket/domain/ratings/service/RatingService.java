@@ -105,12 +105,10 @@ public class RatingService {
             throw new CustomException(ErrorCode.BAD_REQUEST, "삭제 권한이 없습니다.");
         }
 
-        rating.deleteRating();
+        ratingRepository.delete(rating);
 
         Double ratingAvg = ratingQueryRepository.avgRating(rating.getToUser().getUserId());
         rating.getToUser().updateRating(ratingAvg);
-
-        ratingRepository.delete(rating);
 
         return RatingDeleteResponse.from(rating);
     }
