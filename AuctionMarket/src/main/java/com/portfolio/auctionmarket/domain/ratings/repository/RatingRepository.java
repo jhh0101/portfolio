@@ -14,4 +14,6 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
 
     @EntityGraph(attributePaths = {"toUser", "fromUser", "order"})
     Page<Rating> findAllByToUser_UserId(Long toUserUserId, Pageable pageable);
+
+    Rating findByOrder_OrderId(Long orderId);
 }

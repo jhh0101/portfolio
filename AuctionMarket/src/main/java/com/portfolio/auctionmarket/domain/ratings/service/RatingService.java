@@ -2,6 +2,7 @@ package com.portfolio.auctionmarket.domain.ratings.service;
 
 import com.portfolio.auctionmarket.domain.orders.entity.Order;
 import com.portfolio.auctionmarket.domain.orders.repository.OrderQueryRepository;
+import com.portfolio.auctionmarket.domain.orders.repository.OrderRepository;
 import com.portfolio.auctionmarket.domain.ratings.dto.RatingDeleteResponse;
 import com.portfolio.auctionmarket.domain.ratings.dto.RatingRequest;
 import com.portfolio.auctionmarket.domain.ratings.dto.RatingResponse;
@@ -60,6 +61,15 @@ public class RatingService {
         ratingSave.getToUser().updateRating(ratingAvg);
 
         return RatingResponse.from(ratingSave);
+    }
+
+    @Transactional(readOnly = true)
+    public RatingResponse findRating(Long orderId) {
+        Rating rating = ratingRepository.findByOrder_OrderId(orderId);
+        if(rating == null) {
+            return null;
+        }
+        return RatingResponse.from(rating);
     }
 
     @Transactional
