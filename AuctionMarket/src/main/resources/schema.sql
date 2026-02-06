@@ -113,7 +113,7 @@ CREATE TABLE seller_ratings (
                                 to_user_id      BIGINT NOT NULL, -- 평가 받는 판매자
                                 from_user_id    BIGINT NOT NULL, -- 평가 하는 구매자
                                 order_id        BIGINT NOT NULL,
-                                score           INT NOT NULL CHECK (score BETWEEN 1 AND 5),
+                                score           INT NOT NULL CHECK (score BETWEEN 0 AND 5),
                                 comment         VARCHAR(100) NULL,
                                 status          ENUM('NORMAL', 'DELETED') DEFAULT 'NORMAL',
                                 created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,

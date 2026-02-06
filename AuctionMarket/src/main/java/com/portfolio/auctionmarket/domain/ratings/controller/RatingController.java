@@ -32,6 +32,12 @@ public class RatingController {
         return ResponseEntity.ok(ApiResponse.success("판매자 평가 등록", response));
     }
 
+    @GetMapping("/{orderId}/one")
+    public ResponseEntity<ApiResponse<RatingResponse>> findRating(@PathVariable Long orderId) {
+        RatingResponse response = ratingService.findRating(orderId);
+        return ResponseEntity.ok(ApiResponse.success("판매자 평가 조회", response));
+    }
+
     @PatchMapping("/{orderId}/update/{ratingId}")
     public ResponseEntity<ApiResponse<RatingResponse>> updateRating(@AuthenticationPrincipal Long userId,
                                                                     @PathVariable Long orderId,
@@ -50,7 +56,7 @@ public class RatingController {
         return ResponseEntity.ok(ApiResponse.success("판매자 평가 삭제", response));
     }
 
-    @GetMapping("/{toUserId}")
+    @GetMapping("/{toUserId}/list")
     public ResponseEntity<ApiResponse<Page<RatingResponse>>> findRatingList(@PathVariable Long toUserId,
                                                                             @PageableDefault(size = 10, sort = "order.id", direction = Sort.Direction.ASC) Pageable pageable) {
         Page<RatingResponse> responses = ratingService.findRatingList(toUserId, pageable);
