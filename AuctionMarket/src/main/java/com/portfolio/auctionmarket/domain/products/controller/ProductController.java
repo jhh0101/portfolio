@@ -55,7 +55,7 @@ public class ProductController {
     @GetMapping("/my-product")
     public ResponseEntity<ApiResponse<Page<ProductAndAuctionResponse>>> myProductList(@AuthenticationPrincipal Long userId,
                                                                                       ProductListCondition condition,
-                                                                                      @PageableDefault(size = 10) Pageable pageable) {
+                                                                                      @PageableDefault(size = 5) Pageable pageable) {
         Page<ProductAndAuctionResponse> responses = productService.myProductList(userId, condition, pageable);
         return ResponseEntity.ok(ApiResponse.success("상품 리스트 조회", responses));
     }

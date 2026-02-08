@@ -1,6 +1,7 @@
 package com.portfolio.auctionmarket.domain.bids.repository;
 
 import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
+import com.portfolio.auctionmarket.domain.auctions.entity.AuctionStatus;
 import com.portfolio.auctionmarket.domain.bids.dto.BidResponse;
 import com.portfolio.auctionmarket.domain.bids.entity.Bid;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,14 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
     List<Bid> findAllByAuctionOrderByBidPriceDesc(Auction auction);
 
     Optional<Bid> findTopByAuctionOrderByBidPriceDesc(Auction auction);
+
+    @Query("SELECT COUNT(b) " +
+            "FROM Bid b " +
+            "JOIN b.auction a " +
+            "WHERE a.currentPrice = b.bidPrice " +
+            "AND a.status = 'PROCEEDING' " +
+            "AND b.bidder.userId = :bidderId")
+    Long bidCount(@Param("bidderId") Long bidderId);
 
     @Query(value = "SELECT b.bidId AS bidId, b.auction.auctionId AS auctionId, u.nickname AS nickname, b.bidPrice AS bidPrice " +
             "FROM Bid b " +
