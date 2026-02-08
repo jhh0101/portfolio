@@ -1,6 +1,9 @@
 package com.portfolio.auctionmarket.domain.user.service;
 
 import com.portfolio.auctionmarket.auth.service.RefreshTokenService;
+import com.portfolio.auctionmarket.domain.bids.entity.Bid;
+import com.portfolio.auctionmarket.domain.bids.repository.BidRepository;
+import com.portfolio.auctionmarket.domain.products.repository.ProductRepository;
 import com.portfolio.auctionmarket.domain.user.dto.*;
 import com.portfolio.auctionmarket.domain.user.dto.UserResponse;
 import com.portfolio.auctionmarket.domain.user.dto.UserSingupRequest;
@@ -28,12 +31,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BidRepository bidRepository;
+    private final ProductRepository productRepository;
     private final UserQueryRepository userQueryRepository;
     private final RefreshTokenService refreshTokenService;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public UserResponse signup(UserSingupRequest request){
+    public UserResponse signup(UserSingupRequest request) {
         userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
             if (UserStatus.SUSPENDED.equals(user.getStatus())) {
                 throw new CustomException(ErrorCode.SUSPENDED_USER, "정지된 사용자입니다.");
@@ -44,16 +49,16 @@ public class UserService {
             throw new CustomException(ErrorCode.DUPLICATE_NICKNAME, "이미 사용 중인 닉네임입니다.");
         }
         User user = User.builder()
-            .email(request.getEmail())
-            .username(request.getUsername())
-            .nickname(request.getNickname())
-            .phone(request.getPhone())
-            .password(passwordEncoder.encode(request.getPassword()))
-            .point(0L)
-            .avgRating(0.0)
-            .status(UserStatus.NORMAL)
-            .role(Role.USER)
-            .build();
+                .email(request.getEmail())
+                .username(request.getUsername())
+                .nickname(request.getNickname())
+                .phone(request.getPhone())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .point(0L)
+                .avgRating(0.0)
+                .status(UserStatus.NORMAL)
+                .role(Role.USER)
+                .build();
 
         User saveUser = userRepository.save(user);
         log.info("User created: userId={}, email={}, nickname={}", saveUser.getUserId(), saveUser.getEmail(), saveUser.getNickname());
@@ -68,6 +73,13 @@ public class UserService {
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CustomException(ErrorCode.PASSWORD_MISMATCH, "비밀번호가 일치하지 않습니다.");
+        }
+
+        Long bidCount = bidRepository.bidCount(userId);
+        Long productCount = productRepository.productCount(userId);
+
+        if (bidCount + productCount > 0) {
+            throw new CustomException(ErrorCode.CANNOT_WITHDRAW_WHILE_TRADING, "현재 진행 중인 거래가 있습니다.");
         }
 
         refreshTokenService.deleteRefreshToken(userId);
@@ -132,11 +144,22 @@ public class UserService {
             throw new CustomException(ErrorCode.PASSWORD_MISMATCH, "현재 비밀번호가 일치하지 않습니다.");
         }
 
-        if (!request.getNewPassword().equals(request.getConfirmPassword())){
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
             throw new CustomException(ErrorCode.PASSWORD_MISMATCH, "변경할 비밀번호와 일치하지 않습니다.");
         }
 
         user.updatePassword(passwordEncoder.encode(request.getNewPassword()));
     }
 
+    @Transactional(readOnly = true)
+    public WithdrawalStatusResponse withdrawalStatus(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND, "사용자를 찾을 수 없습니다."));
+
+        Long bidCount = bidRepository.bidCount(userId);
+
+        Long productCount = productRepository.productCount(userId);
+
+        return WithdrawalStatusResponse.from(user, bidCount, productCount);
+    }
 }

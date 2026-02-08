@@ -26,4 +26,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query("UPDATE Product p SET p.viewCount = p.viewCount + 1 WHERE p.productId = :productId")
     Integer viewCount(@Param("productId") Long productId);
+
+    @Query("SELECT COUNT(p) " +
+            "FROM Product p " +
+            "JOIN p.auction a " +
+            "WHERE a.status = 'PROCEEDING' " +
+            "AND p.seller.userId = :sellerId")
+    Long productCount(@Param("sellerId") Long sellerId);
 }

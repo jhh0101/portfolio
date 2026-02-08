@@ -31,7 +31,7 @@ public class UserController {
                 .body(ApiResponse.success("회원가입 성공", userResponse));
     }
 
-    @PostMapping("/{userId}/withdrawn")
+    @PostMapping("/withdrawn")
     public ResponseEntity<ApiResponse<UserDeleteResponse>> withdrawn(@AuthenticationPrincipal Long userId, @RequestBody UserWithdrawnRequest request) {
         UserDeleteResponse response = userService.withdrawn(userId, request);
         return ResponseEntity.ok(ApiResponse.success("회원 탈퇴", response));
@@ -65,6 +65,12 @@ public class UserController {
     public ResponseEntity<ApiResponse<Void>> updatePassword(@AuthenticationPrincipal Long userId, @Valid @RequestBody UserNewPasswordRequest request) {
         userService.updatePassword(userId, request);
         return ResponseEntity.ok(ApiResponse.success("비밀번호 변경 성공", null));
+    }
+
+    @GetMapping("/withdrawal-status")
+    public ResponseEntity<ApiResponse<WithdrawalStatusResponse>> withdrawalStatus(@AuthenticationPrincipal Long userId) {
+        WithdrawalStatusResponse response = userService.withdrawalStatus(userId);
+        return ResponseEntity.ok(ApiResponse.success("탈퇴 조건 조회", response));
     }
 
 }
