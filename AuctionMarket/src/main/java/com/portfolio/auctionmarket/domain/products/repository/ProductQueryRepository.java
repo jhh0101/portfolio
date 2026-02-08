@@ -79,7 +79,7 @@ public class ProductQueryRepository {
         if (userId == null) {
             return null;
         }
-        return product.productStatus.in(ProductStatus.SOLD, ProductStatus.FAILED);
+        return product.productStatus.in(ProductStatus.ACTIVE, ProductStatus.SOLD, ProductStatus.FAILED);
     }
 
     private OrderSpecifier<?> orderSpecifier(String sort) {

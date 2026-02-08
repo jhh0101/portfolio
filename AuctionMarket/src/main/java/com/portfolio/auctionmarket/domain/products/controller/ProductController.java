@@ -57,7 +57,7 @@ public class ProductController {
                                                                                       ProductListCondition condition,
                                                                                       @PageableDefault(size = 5) Pageable pageable) {
         Page<ProductAndAuctionResponse> responses = productService.myProductList(userId, condition, pageable);
-        return ResponseEntity.ok(ApiResponse.success("상품 리스트 조회", responses));
+        return ResponseEntity.ok(ApiResponse.success("나의 상품 리스트 조회", responses));
     }
 
     // 상품 상세 수정

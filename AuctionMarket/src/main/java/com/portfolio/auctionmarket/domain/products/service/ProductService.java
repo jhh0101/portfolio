@@ -153,6 +153,10 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Page<ProductAndAuctionResponse> myProductList(Long userId, ProductListCondition condition, Pageable pageable) {
+        if (userId == null) {
+            throw new CustomException(ErrorCode.EXPIRED_TOKEN, "토큰이 만료되었습니다.");
+        }
+
         Page<Product> auctions = productQueryRepository.productList(userId, condition, pageable);
 
         return auctions.map(ProductAndAuctionResponse::from);
