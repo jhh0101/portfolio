@@ -43,10 +43,7 @@ public class BidService {
         Auction auction = auctionRepository.findByIdWithPessimisticLock(auctionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.AUCTION_NOT_FOUND));
 
-        // 경매 상태 체크
-        if (!AuctionStatus.PROCEEDING.equals(auction.getStatus()) || LocalDateTime.now().isAfter(auction.getEndTime())) {
-            throw new CustomException(ErrorCode.BAD_REQUEST, "현재 진행중인 경매가 아닙니다.");
-        }
+        auction.validateBiddingTime();
 
         // 본인 경매 입찰 금지
         if (auction.getProduct().getSeller().getUserId().equals(userId)) {

@@ -53,6 +53,7 @@ public enum ErrorCode {
     // Auction
     AUCTION_NOT_FOUND("A001", "경매를 찾을 수 없습니다"),
     AUCTION_ENDED("A002", "이미 종료된 경매입니다"),
+    INVALID_AUCTION_TIME("A003", "지금은 경매 시간이 아닙니다"),
 
     // Bids
     BID_NOT_FOUND("B001", "입찰 내역을 찾을 수 없습니다"),
