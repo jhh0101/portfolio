@@ -1,6 +1,8 @@
 package com.portfolio.auctionmarket.domain.auctions.entity;
 
 import com.portfolio.auctionmarket.domain.products.entity.Product;
+import com.portfolio.auctionmarket.global.error.CustomException;
+import com.portfolio.auctionmarket.global.error.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -51,6 +53,16 @@ public class Auction {
         this.currentPrice = startPrice;
         this.startTime = startTime;
         this.endTime = endTime;
+    }
+
+    public void validateBiddingTime() {
+        LocalDateTime now = LocalDateTime.now();
+
+        if (!AuctionStatus.PROCEEDING.equals(this.status) ||
+                now.isAfter(this.endTime) ||
+                now.isBefore(this.startTime)) {
+            throw new CustomException(ErrorCode.INVALID_AUCTION_TIME);
+        }
     }
 
     public void changeStatus(AuctionStatus status) {
