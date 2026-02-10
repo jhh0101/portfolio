@@ -1,5 +1,6 @@
 package com.portfolio.auctionmarket.domain.orders.controller;
 
+import com.portfolio.auctionmarket.auth.dto.SecurityUser;
 import com.portfolio.auctionmarket.domain.orders.dto.OrderResponse;
 import com.portfolio.auctionmarket.domain.orders.service.OrderService;
 import com.portfolio.auctionmarket.global.response.ApiResponse;
@@ -25,10 +26,10 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping("/me")
-    public ResponseEntity<ApiResponse<Page<OrderResponse>>> findOrder(@AuthenticationPrincipal Long userId,
+    public ResponseEntity<ApiResponse<Page<OrderResponse>>> findOrder(@AuthenticationPrincipal SecurityUser user,
                                                                       @PageableDefault(size = 10, sort = "orderId", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<OrderResponse> responses = orderService.findOrder(userId, pageable);
-        log.info("[Order] 사용자 {}의 낙찰 리스트 조회 요청 (page: {})", userId, pageable.getPageNumber());
+        Page<OrderResponse> responses = orderService.findOrder(user.getUserId(), pageable);
+        log.info("[Order] 사용자 {}의 낙찰 리스트 조회 요청 (page: {})", user.getUserId(), pageable.getPageNumber());
         return ResponseEntity.ok(ApiResponse.success("낙찰 리스트 조회", responses));
     }
 

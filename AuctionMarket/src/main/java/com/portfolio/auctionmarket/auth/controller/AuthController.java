@@ -2,6 +2,7 @@ package com.portfolio.auctionmarket.auth.controller;
 
 import com.portfolio.auctionmarket.auth.dto.LoginRequest;
 import com.portfolio.auctionmarket.auth.dto.RefreshTokenRequest;
+import com.portfolio.auctionmarket.auth.dto.SecurityUser;
 import com.portfolio.auctionmarket.auth.dto.TokenResponse;
 import com.portfolio.auctionmarket.auth.service.AuthService;
 import com.portfolio.auctionmarket.global.error.LoginException;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -39,8 +41,8 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<String>> logout(@AuthenticationPrincipal Long userId) {
-        authService.logout(userId);
+    public ResponseEntity<ApiResponse<String>> logout(@AuthenticationPrincipal SecurityUser user) {
+        authService.logout(user.getUserId());
         return ResponseEntity.ok(ApiResponse.success("로그아웃 성공"));
     }
 

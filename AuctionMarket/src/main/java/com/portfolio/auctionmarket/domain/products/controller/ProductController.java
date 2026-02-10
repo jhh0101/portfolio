@@ -1,5 +1,6 @@
 package com.portfolio.auctionmarket.domain.products.controller;
 
+import com.portfolio.auctionmarket.auth.dto.SecurityUser;
 import com.portfolio.auctionmarket.domain.products.dto.*;
 import com.portfolio.auctionmarket.domain.products.service.ProductService;
 import com.portfolio.auctionmarket.global.response.ApiResponse;
@@ -31,8 +32,8 @@ public class ProductController {
     // 상품 추가
     @PostMapping
     public ResponseEntity<ApiResponse<ProductResponse>> addProduct(@Valid @RequestBody ProductAndAuctionRequest request,
-                                                                   @AuthenticationPrincipal Long userId) {
-        ProductResponse response = productService.addProduct(userId, request.getProductRequest(), request.getAuctionRequest());
+                                                                   @AuthenticationPrincipal SecurityUser user) {
+        ProductResponse response = productService.addProduct(user.getUserId(), request.getProductRequest(), request.getAuctionRequest());
         return ResponseEntity.ok(ApiResponse.success("상품 등록", response));
     }
 
@@ -53,27 +54,27 @@ public class ProductController {
 
     // 판매자(자신) 상품 리스트 조회
     @GetMapping("/my-product")
-    public ResponseEntity<ApiResponse<Page<ProductAndAuctionResponse>>> myProductList(@AuthenticationPrincipal Long userId,
+    public ResponseEntity<ApiResponse<Page<ProductAndAuctionResponse>>> myProductList(@AuthenticationPrincipal SecurityUser user,
                                                                                       ProductListCondition condition,
                                                                                       @PageableDefault(size = 5) Pageable pageable) {
-        Page<ProductAndAuctionResponse> responses = productService.myProductList(userId, condition, pageable);
+        Page<ProductAndAuctionResponse> responses = productService.myProductList(user.getUserId(), condition, pageable);
         return ResponseEntity.ok(ApiResponse.success("나의 상품 리스트 조회", responses));
     }
 
     // 상품 상세 수정
     @PatchMapping("/{productId}")
-    public ResponseEntity<ApiResponse<ProductDetailAndAuctionResponse>> updateProduct(@AuthenticationPrincipal Long userId,
+    public ResponseEntity<ApiResponse<ProductDetailAndAuctionResponse>> updateProduct(@AuthenticationPrincipal SecurityUser user,
                                                                                       @PathVariable Long productId,
                                                                                       @Valid @RequestBody ProductAndAuctionRequest request) {
-        ProductDetailAndAuctionResponse response = productService.updateProductDetail(userId, productId, request.getProductRequest(), request.getAuctionRequest());
+        ProductDetailAndAuctionResponse response = productService.updateProductDetail(user.getUserId(), productId, request.getProductRequest(), request.getAuctionRequest());
         return ResponseEntity.ok(ApiResponse.success("상품 상세 수정", response));
     }
 
     // 상품 삭제
     @DeleteMapping("/{productId}")
-    public ResponseEntity<ApiResponse<Void>> deleteProduct(@AuthenticationPrincipal Long userId,
+    public ResponseEntity<ApiResponse<Void>> deleteProduct(@AuthenticationPrincipal SecurityUser user,
                                                            @PathVariable Long productId) {
-        productService.deleteProduct(userId, productId);
+        productService.deleteProduct(user.getUserId(), productId);
         return ResponseEntity.ok(ApiResponse.success("상품 & 이미지 삭제", null));
     }
 
