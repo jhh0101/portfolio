@@ -2,6 +2,7 @@ package com.portfolio.auctionmarket.domain.user.repository;
 
 
 import com.portfolio.auctionmarket.domain.user.dto.UserListCondition;
+import com.portfolio.auctionmarket.domain.user.entity.Role;
 import com.portfolio.auctionmarket.domain.user.entity.User;
 import com.portfolio.auctionmarket.domain.user.entity.UserStatus;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -28,9 +29,11 @@ public class UserQueryRepository {
         List<User> content = jpaQueryFactory
                 .selectFrom(user)
                 .where(
+                        user.role.ne(Role.ADMIN),
                         emailContain(condition.email()),
                         nicknameContain(condition.nickname()),
-                        statusContain(condition.status())
+                        statusContain(condition.status()),
+                        roleContain(condition.role())
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -57,5 +60,8 @@ public class UserQueryRepository {
     }
     private BooleanExpression statusContain(UserStatus status) {
         return status != null ? user.status.eq(status) : null;
+    }
+    private BooleanExpression roleContain(Role role) {
+        return role != null ? user.role.eq(role) : null;
     }
 }
