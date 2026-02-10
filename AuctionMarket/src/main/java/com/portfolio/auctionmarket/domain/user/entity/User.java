@@ -78,9 +78,6 @@ public class User extends Base {
 
     public void  suspend(Long userId, String suspensionReason) {
         this.nickname = "정지된 사용자" + userId;
-        this.password = null;
-        this.point = 0L;
-        this.avgRating = 0.0;
         this.suspensionReason = suspensionReason;
         this.status = UserStatus.SUSPENDED;
         this.role = Role.USER;
