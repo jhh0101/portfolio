@@ -1,5 +1,6 @@
 package com.portfolio.auctionmarket.domain.sellers.controller;
 
+import com.portfolio.auctionmarket.auth.dto.SecurityUser;
 import com.portfolio.auctionmarket.domain.sellers.dto.SellerApplyRequest;
 import com.portfolio.auctionmarket.domain.sellers.dto.SellerRejectRequest;
 import com.portfolio.auctionmarket.domain.sellers.dto.SellerResponse;
@@ -18,16 +19,16 @@ public class SellerController {
     private final SellerService sellerService;
 
     @PostMapping("/me/seller")
-    public ResponseEntity<ApiResponse<SellerResponse>> sellerApply(@AuthenticationPrincipal Long userId,
+    public ResponseEntity<ApiResponse<SellerResponse>> sellerApply(@AuthenticationPrincipal SecurityUser user,
                                                                    @Valid @RequestBody SellerApplyRequest request) {
-        SellerResponse response = sellerService.sellerApply(userId, request);
+        SellerResponse response = sellerService.sellerApply(user.getUserId(), request);
         return ResponseEntity.ok(ApiResponse.success("판매자 등록 신청", response));
     }
 
     @PatchMapping("/{sellerId}/cancel")
-    public ResponseEntity<ApiResponse<SellerResponse>> sellerCancel(@AuthenticationPrincipal Long userId,
+    public ResponseEntity<ApiResponse<SellerResponse>> sellerCancel(@AuthenticationPrincipal SecurityUser user,
                                                                    @PathVariable Long sellerId) {
-        SellerResponse response = sellerService.sellerCancel(sellerId, userId);
+        SellerResponse response = sellerService.sellerCancel(sellerId, user.getUserId());
         return ResponseEntity.ok(ApiResponse.success("판매자 등록 취소", response));
     }
 

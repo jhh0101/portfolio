@@ -1,6 +1,7 @@
 package com.portfolio.auctionmarket.auth.filter;
 
 import com.portfolio.auctionmarket.auth.service.JwtService;
+import com.portfolio.auctionmarket.domain.user.service.UserService;
 import com.portfolio.auctionmarket.global.error.CustomException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,7 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -19,10 +23,12 @@ import java.io.IOException;
 import java.util.List;
 
 @Slf4j
+@Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -38,9 +44,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     String role = jwtService.getRoleFromToken(token);
                     String nickname = jwtService.getNicknameFromToken(token);
 
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(
-                                    userId,
+                                    userDetails,
                                     null,
                                     List.of(new SimpleGrantedAuthority("ROLE_" + role))
                             );

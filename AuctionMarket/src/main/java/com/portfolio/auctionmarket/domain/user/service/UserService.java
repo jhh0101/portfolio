@@ -1,5 +1,6 @@
 package com.portfolio.auctionmarket.domain.user.service;
 
+import com.portfolio.auctionmarket.auth.dto.SecurityUser;
 import com.portfolio.auctionmarket.auth.service.RefreshTokenService;
 import com.portfolio.auctionmarket.domain.bids.entity.Bid;
 import com.portfolio.auctionmarket.domain.bids.repository.BidRepository;
@@ -21,6 +22,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final BidRepository bidRepository;
@@ -161,5 +165,17 @@ public class UserService {
         Long productCount = productRepository.productCount(userId);
 
         return WithdrawalStatusResponse.from(user, bidCount, productCount);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND, "사용자를 찾을 수 없습니다."));
+
+        if (!user.getStatus().equals(UserStatus.NORMAL)) {
+            throw new CustomException(ErrorCode.SUSPENDED_USER, "정지된 사용자입니다.");
+        }
+
+        return new SecurityUser(user);
     }
 }
