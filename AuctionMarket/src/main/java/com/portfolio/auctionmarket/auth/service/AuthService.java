@@ -3,6 +3,7 @@ package com.portfolio.auctionmarket.auth.service;
 import com.portfolio.auctionmarket.auth.dto.LoginRequest;
 import com.portfolio.auctionmarket.auth.dto.TokenResponse;
 import com.portfolio.auctionmarket.domain.user.entity.User;
+import com.portfolio.auctionmarket.domain.user.entity.UserStatus;
 import com.portfolio.auctionmarket.domain.user.repository.UserRepository;
 import com.portfolio.auctionmarket.global.config.JwtProperties;
 import com.portfolio.auctionmarket.global.error.CustomException;
@@ -35,6 +36,10 @@ public class AuthService {
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CustomException(ErrorCode.INVALID_CREDENTIALS);
+        }
+
+        if (user.getStatus().equals(UserStatus.SUSPENDED)) {
+            throw new CustomException(ErrorCode.SUSPENDED_USER, "정지된 사용자 입니다.");
         }
 
         String accessToken = jwtService.generateAccessToken(user.getUserId(), user.getEmail(), user.getNickname(), user.getRole().name());
