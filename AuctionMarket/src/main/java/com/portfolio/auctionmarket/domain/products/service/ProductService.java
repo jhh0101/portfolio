@@ -213,7 +213,7 @@ public class ProductService {
         }
 
         for (ProductImage img : product.getImage()) {
-            s3Service.deleteFile(img.getImageUrl()); // S3 삭제 로직
+            s3Service.deleteFile(img.getImageUrl());
         }
 
         product.getAuction().changeStatus(AuctionStatus.CANCELED);

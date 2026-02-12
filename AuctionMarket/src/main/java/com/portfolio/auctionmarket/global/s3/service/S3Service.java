@@ -5,13 +5,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class S3Service {
@@ -65,8 +66,45 @@ public class S3Service {
         }
     }
 
+    public void deleteFiles(List<String> imageUrls) {
+        if (imageUrls == null || imageUrls.isEmpty()) {
+            return;
+        }
+
+        List<ObjectIdentifier> keys = imageUrls.stream()
+                .map(url -> {
+                    String key = extractKeyFromUrl(url);
+                    String decodedKey = URLDecoder.decode(key, StandardCharsets.UTF_8);
+                    return ObjectIdentifier.builder().key(decodedKey).build();
+                })
+                .collect(Collectors.toList());
+
+        Delete delete = Delete.builder()
+                .objects(keys)
+                .quiet(false)
+                .build();
+
+        DeleteObjectsRequest deleteObjectsRequest = DeleteObjectsRequest.builder()
+                .bucket(bucket)
+                .delete(delete)
+                .build();
+
+        try {
+            DeleteObjectsResponse response = s3Client.deleteObjects(deleteObjectsRequest);
+
+            System.out.println("S3 일괄 삭제 완료: " + response.deleted().size() + "개 파일");
+
+            if (!response.errors().isEmpty()) {
+                response.errors().forEach(error ->
+                        System.err.println("삭제 실패: " + error.key() + " - " + error.message())
+                );
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("S3 파일 일괄 삭제 중 오류가 발생했습니다.", e);
+        }
+    }
+
     private String extractKeyFromUrl(String fileUrl) {
-        // 버킷명 뒤의 경로만 남기도록 로직 작성 (프로젝트 설정에 따라 다름)
         return fileUrl.substring(fileUrl.lastIndexOf(bucket) + bucket.length() + 1);
     }
 }

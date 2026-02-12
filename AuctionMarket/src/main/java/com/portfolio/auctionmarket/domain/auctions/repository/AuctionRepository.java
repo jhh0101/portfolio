@@ -1,6 +1,7 @@
 package com.portfolio.auctionmarket.domain.auctions.repository;
 
 import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
+import com.portfolio.auctionmarket.domain.products.entity.Product;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
