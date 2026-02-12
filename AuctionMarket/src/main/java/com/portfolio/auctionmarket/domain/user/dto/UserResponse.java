@@ -32,6 +32,9 @@ public class UserResponse {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime updatedAt;
+
     public static UserResponse from(User user){
         String formatPhone = MaskingUtil.formatPhone(user.getPhone());
 
@@ -46,6 +49,7 @@ public class UserResponse {
                 .point(user.getPoint())
                 .avgRating(String.format("%.1f", user.getAvgRating()))
                 .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
                 .build();
     }
 }
