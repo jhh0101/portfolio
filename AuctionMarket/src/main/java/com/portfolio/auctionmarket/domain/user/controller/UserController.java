@@ -38,18 +38,6 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success("회원 탈퇴", response));
     }
 
-    @PostMapping("/{userId}/suspend")
-    public ResponseEntity<ApiResponse<UserDeleteResponse>> suspend(@PathVariable Long userId, @RequestBody UserSuspensionRequest request) {
-        UserDeleteResponse response = userService.suspend(userId, request);
-        return ResponseEntity.ok(ApiResponse.success("회원 정지", response));
-    }
-
-    @GetMapping("/list")
-    public ResponseEntity<ApiResponse<Page<UserResponse>>> userList(UserListCondition condition, Pageable pageable) {
-        Page<UserResponse> responses = userService.userList(condition, pageable);
-        return ResponseEntity.ok(ApiResponse.success("회원 리스트 조회", responses));
-    }
-
     @GetMapping("/my/profile")
     public ResponseEntity<ApiResponse<UserProfileResponse>> profile(@AuthenticationPrincipal SecurityUser user) {
         UserProfileResponse response = userService.profile(user.getUserId());
@@ -72,12 +60,6 @@ public class UserController {
     public ResponseEntity<ApiResponse<WithdrawalStatusResponse>> withdrawalStatus(@AuthenticationPrincipal SecurityUser user) {
         WithdrawalStatusResponse response = userService.withdrawalStatus(user.getUserId());
         return ResponseEntity.ok(ApiResponse.success("탈퇴 조건 조회", response));
-    }
-
-    @GetMapping("/suspension-status/{userId}")
-    public ResponseEntity<ApiResponse<WithdrawalStatusResponse>> suspensionStatus(@PathVariable Long userId) {
-        WithdrawalStatusResponse response = userService.withdrawalStatus(userId);
-        return ResponseEntity.ok(ApiResponse.success("정지 회원의 상태 조회", response));
     }
 
 }
