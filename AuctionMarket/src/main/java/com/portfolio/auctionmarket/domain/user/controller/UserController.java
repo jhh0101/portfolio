@@ -74,4 +74,10 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success("탈퇴 조건 조회", response));
     }
 
+    @GetMapping("/suspension-status/{userId}")
+    public ResponseEntity<ApiResponse<WithdrawalStatusResponse>> suspensionStatus(@PathVariable Long userId) {
+        WithdrawalStatusResponse response = userService.withdrawalStatus(userId);
+        return ResponseEntity.ok(ApiResponse.success("정지 회원의 상태 조회", response));
+    }
+
 }

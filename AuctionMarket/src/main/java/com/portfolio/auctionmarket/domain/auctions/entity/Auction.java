@@ -1,5 +1,6 @@
 package com.portfolio.auctionmarket.domain.auctions.entity;
 
+import com.portfolio.auctionmarket.domain.bids.entity.Bid;
 import com.portfolio.auctionmarket.domain.products.entity.Product;
 import com.portfolio.auctionmarket.global.error.CustomException;
 import com.portfolio.auctionmarket.global.error.ErrorCode;
@@ -9,6 +10,8 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -43,6 +46,9 @@ public class Auction {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private AuctionStatus status;
+
+    @OneToMany(mappedBy = "auction", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Bid> bids = new ArrayList<>();
 
     public void updateCurrentPrice(Long currentPrice) {
         this.currentPrice = currentPrice;

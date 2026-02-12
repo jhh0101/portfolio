@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -33,4 +34,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "WHERE a.status = 'PROCEEDING' " +
             "AND p.seller.userId = :sellerId")
     Long productCount(@Param("sellerId") Long sellerId);
+
+    List<Product> findAllBySeller_UserId(Long userId);
+
+    void deleteAllBySeller_UserId(Long userId);
 }

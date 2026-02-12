@@ -99,6 +99,13 @@ public class BidService {
     // 입찰 취소(비즈니스 관점에선 필요 없음)
     @Transactional
     public BidResultResponse cancelBid(Long userId, Long bidId, Long auctionId) {
+        Auction auction = auctionRepository.findByIdWithPessimisticLock(auctionId)
+                .orElseThrow(() -> new CustomException(ErrorCode.AUCTION_NOT_FOUND));
+
+        if (auction.getStatus() != AuctionStatus.PROCEEDING) {
+            return null;
+        }
+
         Bid bid = bidRepository.findById(bidId)
                 .orElseThrow(() -> new CustomException(ErrorCode.BID_NOT_FOUND));
 
@@ -131,6 +138,9 @@ public class BidService {
         // 입찰자 포인트 검사 & 최고입찰자 데이터 삽입
         for (Bid lastBidder : bidList) {
             User bidder = lastBidder.getBidder();
+            if (bidder.getUserId().equals(userId)) {
+                continue;
+            }
             if (bidder.getPoint() >= lastBidder.getBidPrice()) {
                 bid.getAuction().updateCurrentPrice(lastBidder.getBidPrice());
                 bidder.subPoint(lastBidder.getBidPrice());

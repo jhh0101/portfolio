@@ -29,14 +29,17 @@ public class AuctionService {
 
     @Transactional
     public Optional<OrderResponse> finishAuction(Long auctionId) {
-        Auction auction = auctionRepository.findById(auctionId)
+        Auction auction = auctionRepository.findByIdWithPessimisticLock(auctionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.AUCTION_NOT_FOUND, "옥션을 찾을 수 없습니다."));
 
         if (auction.getStatus() != AuctionStatus.PROCEEDING) {
             return Optional.empty();
         }
 
+        auction.changeStatus(AuctionStatus.ENDED);
+
         Optional<Bid> topBid = bidRepository.findTopByAuctionOrderByBidIdDesc(auction);
+
         if (topBid.isPresent()) {
             Bid winnerBid = topBid.get();
             Order order = Order.builder()
@@ -52,7 +55,6 @@ public class AuctionService {
             auction.getProduct().changeStatus(ProductStatus.FAILED);
             log.info("경매 유찰 완료 (입찰자 없음) - ID: {}", auctionId);
         }
-        auction.changeStatus(AuctionStatus.ENDED);
 
         return Optional.empty();
     }
