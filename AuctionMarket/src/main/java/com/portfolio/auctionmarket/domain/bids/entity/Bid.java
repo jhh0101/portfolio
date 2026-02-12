@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "bids")
-@SQLRestriction("status != 'INVALID' AND status != 'CANCELED'")
 @AttributeOverride(name = "createdAt", column = @Column(name = "bid_time",updatable = false))
 public class Bid extends BaseCreatedAt {
 

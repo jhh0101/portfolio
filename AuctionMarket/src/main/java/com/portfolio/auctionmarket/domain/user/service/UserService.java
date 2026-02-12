@@ -6,6 +6,7 @@ import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
 import com.portfolio.auctionmarket.domain.auctions.entity.AuctionStatus;
 import com.portfolio.auctionmarket.domain.auctions.repository.AuctionRepository;
 import com.portfolio.auctionmarket.domain.bids.entity.Bid;
+import com.portfolio.auctionmarket.domain.bids.entity.BidStatus;
 import com.portfolio.auctionmarket.domain.bids.repository.BidRepository;
 import com.portfolio.auctionmarket.domain.bids.service.BidService;
 import com.portfolio.auctionmarket.domain.products.entity.Product;
@@ -132,7 +133,7 @@ public class UserService implements UserDetailsService {
             Auction auction = userBid.getAuction();
             if (userBid.getAuction().getStatus() == AuctionStatus.PROCEEDING) {
 
-                Bid currentTopBid = bidRepository.findTopByAuctionOrderByBidPriceDesc(auction)
+                Bid currentTopBid = bidRepository.findTopByStatusAndAuctionOrderByBidPriceDesc(BidStatus.ACTIVE, auction)
                         .orElse(null);
 
                 if (currentTopBid != null && currentTopBid.getBidder().getUserId().equals(userId)) {

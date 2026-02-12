@@ -51,7 +51,7 @@ public class BidService {
         }
 
         // 입찰가 체크
-        Optional<Bid> lastBid = bidRepository.findTopByAuctionOrderByBidIdDesc(auction);
+        Optional<Bid> lastBid = bidRepository.findTopByStatusAndAuctionOrderByBidIdDesc(BidStatus.ACTIVE, auction);
 
         if (lastBid.isEmpty()) {
             if (auction.getStartPrice() > request.getBidPrice()) {
@@ -68,7 +68,7 @@ public class BidService {
             }
         }
 
-        bidRepository.findTopByAuctionOrderByBidIdDesc(auction)
+        bidRepository.findTopByStatusAndAuctionOrderByBidIdDesc(BidStatus.ACTIVE, auction)
                 .ifPresent(lastBidder -> {
                     User bidder = lastBidder.getBidder();
                     bidder.addPoint(lastBidder.getBidPrice());
@@ -117,7 +117,7 @@ public class BidService {
             throw new CustomException(ErrorCode.BAD_REQUEST, "경매 정보가 올바르지 않습니다.");
         }
 
-        Bid currentTopBid = bidRepository.findTopByAuctionOrderByBidPriceDesc(bid.getAuction())
+        Bid currentTopBid = bidRepository.findTopByStatusAndAuctionOrderByBidPriceDesc(BidStatus.ACTIVE, bid.getAuction())
                 .orElseThrow(() -> new CustomException(ErrorCode.BID_NOT_FOUND, "활성화된 입찰 내역이 없습니다."));
 
         if (!currentTopBid.getBidder().getUserId().equals(userId)){
@@ -131,7 +131,7 @@ public class BidService {
         bid.cancelBid();
 
         // 입찰자 리스트
-        List<Bid> bidList = bidRepository.findAllByAuctionOrderByBidPriceDesc(bid.getAuction());
+        List<Bid> bidList = bidRepository.findAllByStatusAndAuctionOrderByBidPriceDesc(BidStatus.ACTIVE, bid.getAuction());
 
         boolean bidFound = false;
 
@@ -159,7 +159,7 @@ public class BidService {
 
     @Transactional(readOnly = true)
     public Page<BidHistoryResponse> findBidHistory(Long userId, Pageable pageable) {
-        Page<BidHistoryResponse> responses = bidQueryRepository.findBidHistory(userId, pageable);
+        Page<BidHistoryResponse> responses = bidQueryRepository.findBidHistoryPage(userId, pageable);
         return responses;
     }
 

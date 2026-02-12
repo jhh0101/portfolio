@@ -4,6 +4,7 @@ import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
 import com.portfolio.auctionmarket.domain.auctions.entity.AuctionStatus;
 import com.portfolio.auctionmarket.domain.auctions.repository.AuctionRepository;
 import com.portfolio.auctionmarket.domain.bids.entity.Bid;
+import com.portfolio.auctionmarket.domain.bids.entity.BidStatus;
 import com.portfolio.auctionmarket.domain.bids.repository.BidRepository;
 import com.portfolio.auctionmarket.domain.orders.dto.OrderResponse;
 import com.portfolio.auctionmarket.domain.orders.entity.Order;
@@ -38,7 +39,7 @@ public class AuctionService {
 
         auction.changeStatus(AuctionStatus.ENDED);
 
-        Optional<Bid> topBid = bidRepository.findTopByAuctionOrderByBidIdDesc(auction);
+        Optional<Bid> topBid = bidRepository.findTopByStatusAndAuctionOrderByBidIdDesc(BidStatus.ACTIVE, auction);
 
         if (topBid.isPresent()) {
             Bid winnerBid = topBid.get();

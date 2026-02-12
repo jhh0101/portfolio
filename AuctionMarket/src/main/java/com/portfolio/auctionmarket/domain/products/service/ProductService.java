@@ -4,6 +4,7 @@ import com.portfolio.auctionmarket.domain.auctions.dto.AuctionRequest;
 import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
 import com.portfolio.auctionmarket.domain.auctions.entity.AuctionStatus;
 import com.portfolio.auctionmarket.domain.auctions.repository.AuctionRepository;
+import com.portfolio.auctionmarket.domain.bids.entity.BidStatus;
 import com.portfolio.auctionmarket.domain.bids.repository.BidRepository;
 import com.portfolio.auctionmarket.domain.categories.entity.Category;
 import com.portfolio.auctionmarket.domain.categories.repository.CategoryRepository;
@@ -172,7 +173,7 @@ public class ProductService {
             throw new CustomException(ErrorCode.BAD_REQUEST, "사용자가 일치하지 않습니다.");
         }
 
-        if (bidRepository.existsByAuction(product.getAuction())) {
+        if (bidRepository.existsByStatusAndAuction(BidStatus.ACTIVE, product.getAuction())) {
             throw new CustomException(ErrorCode.CANNOT_MODIFY_AFTER_BID, "입찰한 상품은 수정할 수 없습니다.");
         }
 
@@ -208,7 +209,7 @@ public class ProductService {
             throw new CustomException(ErrorCode.BAD_REQUEST, "사용자가 일치하지 않습니다.");
         }
 
-        if (bidRepository.existsByAuction(product.getAuction())) {
+        if (bidRepository.existsByStatusAndAuction(BidStatus.ACTIVE, product.getAuction())) {
             throw new CustomException(ErrorCode.CANNOT_DELETE_AFTER_BID, "입찰한 상품은 삭제할 수 없습니다.");
         }
 
