@@ -5,6 +5,10 @@ import com.portfolio.auctionmarket.domain.bids.dto.BidHistoryResponse;
 import com.portfolio.auctionmarket.domain.bids.dto.BidResponseImpl;
 import com.portfolio.auctionmarket.domain.bids.service.BidAdminService;
 import com.portfolio.auctionmarket.domain.bids.service.BidService;
+import com.portfolio.auctionmarket.domain.products.dto.ProductAndAuctionResponse;
+import com.portfolio.auctionmarket.domain.products.dto.ProductListCondition;
+import com.portfolio.auctionmarket.domain.products.service.ProductAdminService;
+import com.portfolio.auctionmarket.domain.products.service.ProductService;
 import com.portfolio.auctionmarket.domain.user.dto.*;
 import com.portfolio.auctionmarket.domain.user.service.UserAdminService;
 import com.portfolio.auctionmarket.domain.user.service.UserService;
@@ -16,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -27,6 +32,7 @@ public class AdminController {
     private final UserAdminService userAdminService;
     private final UserService userService;
     private final BidAdminService bidAdminService;
+    private final ProductAdminService productAdminService;
 
     @PostMapping("/{userId}/suspend")
     public ResponseEntity<ApiResponse<UserDeleteResponse>> suspend(@PathVariable Long userId, @RequestBody UserSuspensionRequest request) {
@@ -65,6 +71,14 @@ public class AdminController {
                                                                                @PageableDefault(size = 10) Pageable pageable){
         Slice<BidResponseImpl> responses = bidAdminService.findUserBidList(userId, auctionId, pageable);
         return ResponseEntity.ok(ApiResponse.success("입찰 상품 리스트 출력", responses));
+    }
+
+    @GetMapping("/{userId}/product")
+    public ResponseEntity<ApiResponse<Slice<ProductAndAuctionResponse>>> myProductList(@PathVariable Long userId,
+                                                                                      ProductListCondition condition,
+                                                                                      @PageableDefault(size = 5) Pageable pageable) {
+        Slice<ProductAndAuctionResponse> responses = productAdminService.userProductList(userId, condition, pageable);
+        return ResponseEntity.ok(ApiResponse.success("나의 상품 리스트 조회", responses));
     }
 
 }
