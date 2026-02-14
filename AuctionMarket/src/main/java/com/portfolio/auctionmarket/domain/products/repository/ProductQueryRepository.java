@@ -11,6 +11,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -58,6 +60,35 @@ public class ProductQueryRepository {
                 );
 
         return PageableExecutionUtils.getPage(content, pageable, count::fetchOne);
+    }
+
+    public Slice<Product> adminProductList(Long userId, ProductListCondition condition, Pageable pageable) {
+
+        int pageSize = pageable.getPageSize();
+
+        List<Product> content = jpaQueryFactory
+                .selectFrom(product)
+                .innerJoin(product.seller, user).fetchJoin()
+                .innerJoin(product.auction, auction).fetchJoin()
+                .leftJoin(product.category, category1).fetchJoin()
+                .where(
+                        isMyAuction(userId),
+                        titleContain(condition.title()),
+                        pathStartWith(condition.path()),
+                        statusFilter(userId)
+                )
+                .offset(pageable.getOffset())
+                .limit(pageSize + 1)
+                .orderBy(orderSpecifier(condition.sort()))
+                .fetch();
+
+        boolean hasNext = false;
+        if (content.size() > pageSize) {
+            content.remove(pageSize);
+            hasNext = true;
+        }
+
+        return new SliceImpl<>(content, pageable, hasNext);
     }
 
     private BooleanExpression isMyAuction(Long userId) {
