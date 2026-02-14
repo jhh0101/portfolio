@@ -5,6 +5,8 @@ import com.portfolio.auctionmarket.domain.bids.dto.BidHistoryResponse;
 import com.portfolio.auctionmarket.domain.bids.dto.BidResponseImpl;
 import com.portfolio.auctionmarket.domain.bids.service.BidAdminService;
 import com.portfolio.auctionmarket.domain.bids.service.BidService;
+import com.portfolio.auctionmarket.domain.orders.dto.OrderResponse;
+import com.portfolio.auctionmarket.domain.orders.service.OrderAdminService;
 import com.portfolio.auctionmarket.domain.products.dto.ProductAndAuctionResponse;
 import com.portfolio.auctionmarket.domain.products.dto.ProductListCondition;
 import com.portfolio.auctionmarket.domain.products.service.ProductAdminService;
@@ -18,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,6 +36,7 @@ public class AdminController {
     private final UserService userService;
     private final BidAdminService bidAdminService;
     private final ProductAdminService productAdminService;
+    private final OrderAdminService orderAdminService;
 
     @PostMapping("/{userId}/suspend")
     public ResponseEntity<ApiResponse<UserDeleteResponse>> suspend(@PathVariable Long userId, @RequestBody UserSuspensionRequest request) {
@@ -79,6 +83,14 @@ public class AdminController {
                                                                                       @PageableDefault(size = 5) Pageable pageable) {
         Slice<ProductAndAuctionResponse> responses = productAdminService.userProductList(userId, condition, pageable);
         return ResponseEntity.ok(ApiResponse.success("나의 상품 리스트 조회", responses));
+    }
+
+    @GetMapping("/{userId}/order")
+    public ResponseEntity<ApiResponse<Slice<OrderResponse>>> findOrder(@PathVariable Long userId,
+                                                                      @PageableDefault(size = 10, sort = "orderId", direction = Sort.Direction.DESC) Pageable pageable) {
+        Slice<OrderResponse> responses = orderAdminService.findOrder(userId, pageable);
+        log.info("[Order] 사용자 {}의 낙찰 리스트 조회 요청 (page: {})", userId, pageable.getPageNumber());
+        return ResponseEntity.ok(ApiResponse.success("낙찰 리스트 조회", responses));
     }
 
 }
