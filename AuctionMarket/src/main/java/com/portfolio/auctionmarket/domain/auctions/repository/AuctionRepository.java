@@ -15,6 +15,9 @@ import java.util.Optional;
 public interface AuctionRepository extends JpaRepository<Auction, Long> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT a FROM Auction a WHERE a.auctionId = :auctionId")
+    @Query("SELECT a FROM Auction a " +
+            "JOIN FETCH a.product p " +
+            "JOIN FETCH p.seller s " +
+            "WHERE a.auctionId = :auctionId")
     Optional<Auction> findByIdWithPessimisticLock(@Param("auctionId") Long auctionId);
 }

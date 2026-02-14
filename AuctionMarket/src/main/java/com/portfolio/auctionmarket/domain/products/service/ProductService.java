@@ -130,12 +130,9 @@ public class ProductService {
 
         boolean isNotSeller = (userId == null) || !product.getSeller().getUserId().equals(userId);
 
-        // 2. 조회수 증가 조건 체크 (이미 본 적이 없고, 판매자 본인이 아닐 때)
         if (!isViewed && isNotSeller) {
-            // DB 조회수 증가 쿼리 실행
             productRepository.viewCount(productId);
 
-            // 3. 쿠키 갱신 또는 생성
             if (viewCookie != null) {
                 viewCookie.setValue(viewCookie.getValue() + "_[" + productId + "]");
             } else {
@@ -143,8 +140,8 @@ public class ProductService {
             }
 
             viewCookie.setPath("/");
-            viewCookie.setMaxAge(60 * 60 * 24); // 24시간 유지
-            viewCookie.setHttpOnly(true); // 보안 설정
+            viewCookie.setMaxAge(60 * 60 * 24);
+            viewCookie.setHttpOnly(true);
             response.addCookie(viewCookie);
         }
 
