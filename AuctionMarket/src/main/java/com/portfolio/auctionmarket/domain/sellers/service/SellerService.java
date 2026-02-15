@@ -53,6 +53,14 @@ public class SellerService {
         return SellerResponse.from(seller);
     }
 
+    @Transactional(readOnly = true)
+    public SellerResponse sellerDetails(Long userId) {
+        Seller seller = sellerRepository.findByUser_UserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        return SellerResponse.from(seller);
+    }
+
     @Transactional
     public SellerResponse sellerCancel(Long sellerId, Long userId){
         Seller seller = sellerRepository.findById(sellerId)

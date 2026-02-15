@@ -55,10 +55,10 @@ public class Seller extends BaseCreatedAt {
     }
 
     public void cancelSeller() {
-        this.storeName = null;
-        this.bankName = null;
-        this.accountNumber = null;
-        this.accountHolder = null;
+        this.storeName = "";
+        this.bankName = "";
+        this.accountNumber = "";
+        this.accountHolder = "";
         this.status = SellerStatus.CANCELED;
         this.rejectReason = "사용자에 의한 신청 취소";
 

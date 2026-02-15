@@ -25,6 +25,12 @@ public class SellerController {
         return ResponseEntity.ok(ApiResponse.success("판매자 등록 신청", response));
     }
 
+    @GetMapping("/seller/apply")
+    public ResponseEntity<ApiResponse<SellerResponse>> sellerDetails(@AuthenticationPrincipal SecurityUser user) {
+        SellerResponse response = sellerService.sellerDetails(user.getUserId());
+        return ResponseEntity.ok(ApiResponse.success("판매자 신청 내용 조회", response));
+    }
+
     @PatchMapping("/{sellerId}/cancel")
     public ResponseEntity<ApiResponse<SellerResponse>> sellerCancel(@AuthenticationPrincipal SecurityUser user,
                                                                    @PathVariable Long sellerId) {
