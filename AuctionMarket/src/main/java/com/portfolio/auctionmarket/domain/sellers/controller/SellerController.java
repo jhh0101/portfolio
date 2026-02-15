@@ -31,6 +31,14 @@ public class SellerController {
         return ResponseEntity.ok(ApiResponse.success("판매자 신청 내용 조회", response));
     }
 
+    @PatchMapping("/{sellerId}/modify")
+    public ResponseEntity<ApiResponse<SellerResponse>> applyModify(@AuthenticationPrincipal SecurityUser user,
+                                                                   @PathVariable Long sellerId,
+                                                                   @Valid @RequestBody SellerApplyRequest request) {
+        SellerResponse response = sellerService.applyModify(user.getUserId(), sellerId, request);
+        return ResponseEntity.ok(ApiResponse.success("판매자 등록 수정", response));
+    }
+
     @PatchMapping("/{sellerId}/cancel")
     public ResponseEntity<ApiResponse<SellerResponse>> sellerCancel(@AuthenticationPrincipal SecurityUser user,
                                                                    @PathVariable Long sellerId) {
