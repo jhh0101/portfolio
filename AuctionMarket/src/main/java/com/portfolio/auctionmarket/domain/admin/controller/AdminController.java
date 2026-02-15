@@ -59,14 +59,14 @@ public class AdminController {
     @GetMapping("/suspension-reason/{userId}")
     public ResponseEntity<ApiResponse<UserSuspendReasonResponse>> suspensionReason(@PathVariable Long userId) {
         UserSuspendReasonResponse response = userAdminService.suspendReason(userId);
-        return ResponseEntity.ok(ApiResponse.success("정지 회원의 상태 조회", response));
+        return ResponseEntity.ok(ApiResponse.success("정지 회원의 정지 사유 조회", response));
     }
 
     @GetMapping("/{userId}/bid")
     public ResponseEntity<ApiResponse<Slice<BidHistoryResponse>>> findBidHistory(@PathVariable Long userId,
                                                                                  @PageableDefault(size = 10) Pageable pageable){
         Slice<BidHistoryResponse> responses = bidAdminService.findBidHistory(userId, pageable);
-        return ResponseEntity.ok(ApiResponse.success("입찰 상품 리스트 출력", responses));
+        return ResponseEntity.ok(ApiResponse.success("사용자의 입찰 상품 리스트 출력", responses));
     }
 
     @GetMapping("/{auctionId}/bid-list/{userId}")
@@ -74,7 +74,7 @@ public class AdminController {
                                                                                @PathVariable Long auctionId,
                                                                                @PageableDefault(size = 10) Pageable pageable){
         Slice<BidResponseImpl> responses = bidAdminService.findUserBidList(userId, auctionId, pageable);
-        return ResponseEntity.ok(ApiResponse.success("입찰 상품 리스트 출력", responses));
+        return ResponseEntity.ok(ApiResponse.success("사용자의 입찰 리스트 출력", responses));
     }
 
     @GetMapping("/{userId}/product")
@@ -82,7 +82,7 @@ public class AdminController {
                                                                                       ProductListCondition condition,
                                                                                       @PageableDefault(size = 5) Pageable pageable) {
         Slice<ProductAndAuctionResponse> responses = productAdminService.userProductList(userId, condition, pageable);
-        return ResponseEntity.ok(ApiResponse.success("나의 상품 리스트 조회", responses));
+        return ResponseEntity.ok(ApiResponse.success("사용자의 상품 리스트 조회", responses));
     }
 
     @GetMapping("/{userId}/order")

@@ -1,6 +1,7 @@
 package com.portfolio.auctionmarket.domain.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.portfolio.auctionmarket.domain.sellers.entity.Seller;
 import com.portfolio.auctionmarket.domain.user.entity.Role;
 import com.portfolio.auctionmarket.domain.sellers.entity.SellerStatus;
 import com.portfolio.auctionmarket.domain.user.entity.User;
@@ -37,6 +38,8 @@ public class UserResponse {
 
     public static UserResponse from(User user){
         String formatPhone = MaskingUtil.formatPhone(user.getPhone());
+        Seller seller = user.getSeller();
+        SellerStatus sellerStatus = (seller != null) ? seller.getStatus() : SellerStatus.NONE;
 
         return UserResponse.builder()
                 .userId(user.getUserId())
@@ -48,6 +51,7 @@ public class UserResponse {
                 .userStatus(user.getStatus())
                 .point(user.getPoint())
                 .avgRating(String.format("%.1f", user.getAvgRating()))
+                .sellerStatus(sellerStatus)
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .build();

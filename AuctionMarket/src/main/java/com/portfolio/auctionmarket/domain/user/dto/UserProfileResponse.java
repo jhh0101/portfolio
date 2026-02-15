@@ -1,6 +1,7 @@
 package com.portfolio.auctionmarket.domain.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.portfolio.auctionmarket.domain.sellers.entity.Seller;
 import com.portfolio.auctionmarket.domain.user.entity.Role;
 import com.portfolio.auctionmarket.domain.sellers.entity.SellerStatus;
 import com.portfolio.auctionmarket.domain.user.entity.User;
@@ -25,6 +26,7 @@ public class UserProfileResponse {
     private Role role;
     private Long point;
     private String avgRating;
+    private SellerStatus sellerStatus;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
@@ -34,6 +36,8 @@ public class UserProfileResponse {
 
     public static UserProfileResponse from(User user){
         String formatPhone = MaskingUtil.formatPhone(user.getPhone());
+        Seller seller = user.getSeller();
+        SellerStatus sellerStatus = (seller != null) ? seller.getStatus() : SellerStatus.NONE;
 
         return UserProfileResponse.builder()
                 .userId(user.getUserId())
@@ -44,6 +48,7 @@ public class UserProfileResponse {
                 .role(user.getRole())
                 .point(user.getPoint())
                 .avgRating(String.format("%.1f", user.getAvgRating()))
+                .sellerStatus(sellerStatus)
                 .createdAt(user.getCreatedAt())
                 .createdAt(user.getUpdatedAt())
                 .build();

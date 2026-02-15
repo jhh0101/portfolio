@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class SellerController {
     private final SellerService sellerService;
 
-    @PostMapping("/me/seller")
+    @PostMapping("/seller/apply")
     public ResponseEntity<ApiResponse<SellerResponse>> sellerApply(@AuthenticationPrincipal SecurityUser user,
                                                                    @Valid @RequestBody SellerApplyRequest request) {
         SellerResponse response = sellerService.sellerApply(user.getUserId(), request);

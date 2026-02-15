@@ -1,5 +1,6 @@
 package com.portfolio.auctionmarket.domain.user.entity;
 
+import com.portfolio.auctionmarket.domain.sellers.entity.Seller;
 import com.portfolio.auctionmarket.domain.user.dto.UserNewPasswordRequest;
 import com.portfolio.auctionmarket.domain.user.dto.UserUpdateRequest;
 import com.portfolio.auctionmarket.global.base.Base;
@@ -51,6 +52,9 @@ public class User extends Base {
 
     @Column(name = "suspension_reason")
     private String suspensionReason;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private Seller seller;
 
     public void subPoint(Long point) {
         if (this.point < point) {
