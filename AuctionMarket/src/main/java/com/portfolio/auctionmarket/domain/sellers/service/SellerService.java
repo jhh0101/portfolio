@@ -62,6 +62,20 @@ public class SellerService {
     }
 
     @Transactional
+    public SellerResponse applyModify(Long userId, Long sellerId, SellerApplyRequest request) {
+        Seller seller = sellerRepository.findById(sellerId)
+                .orElseThrow(() -> new CustomException(ErrorCode.SELLER_NOT_FOUND));
+
+        if (!userId.equals(seller.getUser().getUserId())) {
+            throw new CustomException(ErrorCode.BAD_REQUEST, "사용자 정보가 일치하지 않습니다.");
+        }
+
+        seller.updateApply(seller.getUser(), request);
+
+        return SellerResponse.from(seller);
+    }
+
+    @Transactional
     public SellerResponse sellerCancel(Long sellerId, Long userId){
         Seller seller = sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new CustomException(ErrorCode.SELLER_NOT_FOUND));
