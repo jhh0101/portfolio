@@ -11,10 +11,15 @@ import com.portfolio.auctionmarket.domain.products.dto.ProductAndAuctionResponse
 import com.portfolio.auctionmarket.domain.products.dto.ProductListCondition;
 import com.portfolio.auctionmarket.domain.products.service.ProductAdminService;
 import com.portfolio.auctionmarket.domain.products.service.ProductService;
+import com.portfolio.auctionmarket.domain.sellers.dto.SellerApplyListResponse;
+import com.portfolio.auctionmarket.domain.sellers.dto.SellerRejectRequest;
+import com.portfolio.auctionmarket.domain.sellers.dto.SellerResponse;
+import com.portfolio.auctionmarket.domain.sellers.service.SellerAdminService;
 import com.portfolio.auctionmarket.domain.user.dto.*;
 import com.portfolio.auctionmarket.domain.user.service.UserAdminService;
 import com.portfolio.auctionmarket.domain.user.service.UserService;
 import com.portfolio.auctionmarket.global.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -37,6 +42,7 @@ public class AdminController {
     private final BidAdminService bidAdminService;
     private final ProductAdminService productAdminService;
     private final OrderAdminService orderAdminService;
+    private final SellerAdminService sellerAdminService;
 
     @PostMapping("/{userId}/suspend")
     public ResponseEntity<ApiResponse<UserDeleteResponse>> suspend(@PathVariable Long userId, @RequestBody UserSuspensionRequest request) {
@@ -91,6 +97,26 @@ public class AdminController {
         Slice<OrderResponse> responses = orderAdminService.findOrder(userId, pageable);
         log.info("[Order] 사용자 {}의 낙찰 리스트 조회 요청 (page: {})", userId, pageable.getPageNumber());
         return ResponseEntity.ok(ApiResponse.success("낙찰 리스트 조회", responses));
+    }
+
+    // 판매자 신청 관련
+    @GetMapping("/apply/list")
+    public ResponseEntity<ApiResponse<Page<SellerApplyListResponse>>> sellerList(@PageableDefault(size = 10, sort = "sellerId", direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<SellerApplyListResponse> response = sellerAdminService.sellerList(pageable);
+        return ResponseEntity.ok(ApiResponse.success("판매 신청자 리스트 조회", response));
+    }
+
+    @PatchMapping("/{sellerId}/approve")
+    public ResponseEntity<ApiResponse<SellerResponse>> sellerApprove(@PathVariable Long sellerId) {
+        SellerResponse response = sellerAdminService.approveSeller(sellerId);
+        return ResponseEntity.ok(ApiResponse.success("판매자 등록 승인", response));
+    }
+
+    @PatchMapping("/{sellerId}/reject")
+    public ResponseEntity<ApiResponse<SellerResponse>> sellerReject(@PathVariable Long sellerId,
+                                                                    @Valid @RequestBody SellerRejectRequest request) {
+        SellerResponse response = sellerAdminService.rejectSeller(sellerId, request);
+        return ResponseEntity.ok(ApiResponse.success("판매자 등록 거절", response));
     }
 
 }

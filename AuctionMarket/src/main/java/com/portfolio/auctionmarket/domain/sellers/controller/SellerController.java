@@ -46,16 +46,5 @@ public class SellerController {
         return ResponseEntity.ok(ApiResponse.success("판매자 등록 취소", response));
     }
 
-    @PatchMapping("/{sellerId}/approve")
-    public ResponseEntity<ApiResponse<SellerResponse>> sellerApprove(@PathVariable Long sellerId) {
-        SellerResponse response = sellerService.approveSeller(sellerId);
-        return ResponseEntity.ok(ApiResponse.success("판매자 등록 승인", response));
-    }
 
-    @PatchMapping("/{sellerId}/reject")
-    public ResponseEntity<ApiResponse<SellerResponse>> sellerReject(@PathVariable Long sellerId,
-                                                                    @Valid @RequestBody SellerRejectRequest request) {
-        SellerResponse response = sellerService.rejectSeller(sellerId, request);
-        return ResponseEntity.ok(ApiResponse.success("판매자 등록 거절", response));
-    }
 }
