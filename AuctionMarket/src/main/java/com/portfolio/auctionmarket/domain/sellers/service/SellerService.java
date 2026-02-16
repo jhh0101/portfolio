@@ -93,34 +93,6 @@ public class SellerService {
         return SellerResponse.from(seller);
     }
 
-    @Transactional
-    public SellerResponse approveSeller(Long sellerId) {
-        Seller seller = sellerRepository.findById(sellerId)
-                .orElseThrow(() -> new CustomException(ErrorCode.SELLER_NOT_FOUND, "판매자를 찾을 수 없습니다."));
 
-        if (seller.getStatus() != SellerStatus.PENDING) {
-            throw new CustomException(ErrorCode.BAD_REQUEST,
-                    "현재 상태(" + seller.getStatus() + ")에서는 승인할 수 없습니다.");
-        }
-
-        seller.approveSeller();
-
-        return SellerResponse.from(seller);
-    }
-
-    @Transactional
-    public SellerResponse rejectSeller(Long sellerId, SellerRejectRequest request) {
-        Seller seller = sellerRepository.findById(sellerId)
-                .orElseThrow(() -> new CustomException(ErrorCode.SELLER_NOT_FOUND, "판매자를 찾을 수 없습니다."));
-
-        if (seller.getStatus() != SellerStatus.PENDING) {
-            throw new CustomException(ErrorCode.BAD_REQUEST,
-                    "현재 상태(" + seller.getStatus() + ")에서는 거절할 수 없습니다.");
-        }
-
-        seller.rejectSeller(request.getRejectReason());
-
-        return SellerResponse.from(seller);
-    }
 
 }
