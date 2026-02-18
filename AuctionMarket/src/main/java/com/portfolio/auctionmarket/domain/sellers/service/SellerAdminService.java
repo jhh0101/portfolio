@@ -56,4 +56,12 @@ public class SellerAdminService {
 
         return SellerResponse.from(seller);
     }
+
+    @Transactional(readOnly = true)
+    public SellerResponse sellerDetails(Long sellerId) {
+        Seller seller = sellerRepository.findById(sellerId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        return SellerResponse.from(seller);
+    }
 }

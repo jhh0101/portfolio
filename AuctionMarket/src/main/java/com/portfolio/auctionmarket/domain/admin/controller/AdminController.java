@@ -15,6 +15,7 @@ import com.portfolio.auctionmarket.domain.sellers.dto.SellerApplyListResponse;
 import com.portfolio.auctionmarket.domain.sellers.dto.SellerRejectRequest;
 import com.portfolio.auctionmarket.domain.sellers.dto.SellerResponse;
 import com.portfolio.auctionmarket.domain.sellers.service.SellerAdminService;
+import com.portfolio.auctionmarket.domain.sellers.service.SellerService;
 import com.portfolio.auctionmarket.domain.user.dto.*;
 import com.portfolio.auctionmarket.domain.user.service.UserAdminService;
 import com.portfolio.auctionmarket.domain.user.service.UserService;
@@ -117,6 +118,12 @@ public class AdminController {
                                                                     @Valid @RequestBody SellerRejectRequest request) {
         SellerResponse response = sellerAdminService.rejectSeller(sellerId, request);
         return ResponseEntity.ok(ApiResponse.success("판매자 등록 거절", response));
+    }
+
+    @GetMapping("/seller/{sellerId}/apply")
+    public ResponseEntity<ApiResponse<SellerResponse>> sellerDetails(@PathVariable Long sellerId) {
+        SellerResponse response = sellerAdminService.sellerDetails(sellerId);
+        return ResponseEntity.ok(ApiResponse.success("판매자 신청 내용 조회", response));
     }
 
 }
