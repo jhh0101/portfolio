@@ -1,5 +1,6 @@
 package com.portfolio.auctionmarket.domain.sellers.service;
 
+import com.portfolio.auctionmarket.domain.sellers.dto.RejectReasonResponse;
 import com.portfolio.auctionmarket.domain.sellers.dto.SellerApplyRequest;
 import com.portfolio.auctionmarket.domain.sellers.dto.SellerRejectRequest;
 import com.portfolio.auctionmarket.domain.sellers.dto.SellerResponse;
@@ -76,7 +77,7 @@ public class SellerService {
     }
 
     @Transactional
-    public SellerResponse sellerCancel(Long sellerId, Long userId){
+    public SellerResponse sellerCancel(Long sellerId, Long userId) {
         Seller seller = sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new CustomException(ErrorCode.SELLER_NOT_FOUND));
 
@@ -93,6 +94,11 @@ public class SellerService {
         return SellerResponse.from(seller);
     }
 
+    @Transactional(readOnly = true)
+    public RejectReasonResponse rejectReason(Long userId) {
+        Seller seller = sellerRepository.findByUser_UserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.SELLER_NOT_FOUND));
 
-
+        return RejectReasonResponse.from(seller);
+    }
 }
