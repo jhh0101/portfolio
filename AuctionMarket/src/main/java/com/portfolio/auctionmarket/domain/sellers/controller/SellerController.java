@@ -1,6 +1,7 @@
 package com.portfolio.auctionmarket.domain.sellers.controller;
 
 import com.portfolio.auctionmarket.auth.dto.SecurityUser;
+import com.portfolio.auctionmarket.domain.sellers.dto.RejectReasonResponse;
 import com.portfolio.auctionmarket.domain.sellers.dto.SellerApplyRequest;
 import com.portfolio.auctionmarket.domain.sellers.dto.SellerRejectRequest;
 import com.portfolio.auctionmarket.domain.sellers.dto.SellerResponse;
@@ -44,6 +45,12 @@ public class SellerController {
                                                                    @PathVariable Long sellerId) {
         SellerResponse response = sellerService.sellerCancel(sellerId, user.getUserId());
         return ResponseEntity.ok(ApiResponse.success("판매자 등록 취소", response));
+    }
+
+    @GetMapping("/reject/reason")
+    public ResponseEntity<ApiResponse<RejectReasonResponse>> rejectReason(@AuthenticationPrincipal SecurityUser user) {
+        RejectReasonResponse response = sellerService.rejectReason(user.getUserId());
+        return ResponseEntity.ok(ApiResponse.success("신청 거절 사유 조회", response));
     }
 
 
