@@ -15,6 +15,8 @@ import com.portfolio.auctionmarket.domain.products.entity.ProductStatus;
 import com.portfolio.auctionmarket.domain.products.repository.ProductImageRepository;
 import com.portfolio.auctionmarket.domain.products.repository.ProductQueryRepository;
 import com.portfolio.auctionmarket.domain.products.repository.ProductRepository;
+import com.portfolio.auctionmarket.domain.ratings.entity.Rating;
+import com.portfolio.auctionmarket.domain.ratings.repository.RatingRepository;
 import com.portfolio.auctionmarket.domain.user.entity.User;
 import com.portfolio.auctionmarket.domain.user.repository.UserRepository;
 import com.portfolio.auctionmarket.global.error.CustomException;
@@ -112,6 +114,8 @@ public class ProductService {
         Product product = productRepository.findWithAuctionById(productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND, "상품을 찾을 수 없습니다."));
 
+        User user = userRepository.findById(product.getSeller().getUserId()).orElse(null);
+
         Cookie[] cookies = request.getCookies();
         boolean isViewed = false;
         Cookie viewCookie = null;
@@ -146,7 +150,7 @@ public class ProductService {
         }
 
 
-        return ProductDetailAndAuctionResponse.from(product);
+        return ProductDetailAndAuctionResponse.from(product, user);
     }
 
     @Transactional(readOnly = true)

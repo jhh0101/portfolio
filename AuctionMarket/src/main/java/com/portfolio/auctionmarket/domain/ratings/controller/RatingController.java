@@ -59,7 +59,7 @@ public class RatingController {
 
     @GetMapping("/{toUserId}/list")
     public ResponseEntity<ApiResponse<Page<RatingResponse>>> findRatingList(@PathVariable Long toUserId,
-                                                                            @PageableDefault(size = 10, sort = "order.id", direction = Sort.Direction.ASC) Pageable pageable) {
+                                                                            @PageableDefault(size = 10, sort = "order.orderId", direction = Sort.Direction.ASC) Pageable pageable) {
         Page<RatingResponse> responses = ratingService.findRatingList(toUserId, pageable);
         return ResponseEntity.ok(ApiResponse.success("판매자 평가 리스트 조회", responses));
     }
