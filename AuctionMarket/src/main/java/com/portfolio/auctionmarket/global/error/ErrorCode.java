@@ -69,6 +69,9 @@ public enum ErrorCode {
     // Rating
     RATING_NOT_FOUND("RATING001", "평가를 찾을 수 없습니다"),
 
+    // Toss
+    PAYMENT_NOT_DONE("TOSS001", "결제 승인 실패: 상태가 DONE이 아닙니다."),
+
     // Common
     BAD_REQUEST("C002", "잘못된 요청입니다"),
     RESOURCE_NOT_FOUND("C003", "리소스를 찾을 수 없습니다");
