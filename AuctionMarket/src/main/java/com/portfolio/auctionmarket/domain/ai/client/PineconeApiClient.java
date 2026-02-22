@@ -40,15 +40,14 @@ public class PineconeApiClient {
     }
 
     public Mono<Void> upsert(String id, List<Double> values, String content) {
-        // 🛠️ 파인콘이 요구하는 정확한 데이터 구조
         Map<String, Object> vector = Map.of(
-                "id", id,                      // 벡터의 고유 ID (문자열)
-                "values", values,              // 임베딩 된 숫자 리스트
-                "metadata", Map.of("text", content) // 실제 경매 규칙 텍스트
+                "id", id,
+                "values", values,
+                "metadata", Map.of("text", content)
         );
 
         Map<String, Object> requestBody = Map.of(
-                "vectors", List.of(vector) // 반드시 'vectors'라는 키에 리스트로 담아야 함
+                "vectors", List.of(vector)
         );
 
         return webClient.post()

@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,23 +26,29 @@ public class GroqApiClient {
         this.groqWebClient = webClient;
     }
 
-    public Flux<AiResponse> askGroqWithContext(String context, String userMessage) {
+    public Flux<AiResponse> askGroqWithContext(String context, String userMessage, List<Map<String, Object>> history) {
         log.info("파인콘에서 찾은 지식: {}", context);
         log.info("사용자가 한 질문: {}", userMessage);
 
-        // ⭐️ 핵심: 시스템 프롬프트에 파인콘에서 찾은 'context'를 주입합니다!
         String systemPrompt = "너는 경매장 홈페이지의 친절한 상담원이야. "
                 + "반드시 아래 제공된 [경매장 규칙]을 바탕으로 대답해. "
                 + "규칙에 없는 내용이라면 지어내지 말고 '해당 내용은 확인이 필요합니다'라고 정중히 대답해.\n\n"
                 + "[경매장 규칙]:\n" + context;
 
+        List<Map<String, Object>> messages = new ArrayList<>();
+
+        messages.add(Map.of("role", "system", "content", systemPrompt));
+
+        if (history != null && !history.isEmpty()) {
+            messages.addAll(history);
+        }
+
+        messages.add(Map.of("role", "user", "content", userMessage));
+
         try {
             Map<String, Object> requestBody = Map.of(
                     "model", "llama-3.3-70b-versatile",
-                    "messages", List.of(
-                            Map.of("role", "system", "content", systemPrompt),
-                            Map.of("role", "user", "content", userMessage)
-                    ),
+                    "messages", messages,
                     "stream", true
             );
 
