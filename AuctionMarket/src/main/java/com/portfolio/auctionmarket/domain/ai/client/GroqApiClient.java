@@ -25,14 +25,21 @@ public class GroqApiClient {
         this.groqWebClient = webClient;
     }
 
-    public Flux<AiResponse> askGroq(String userMessage) {
-        log.info("사용자가 질문 전송 : {}", userMessage);
+    public Flux<AiResponse> askGroqWithContext(String context, String userMessage) {
+        log.info("파인콘에서 찾은 지식: {}", context);
+        log.info("사용자가 한 질문: {}", userMessage);
+
+        // ⭐️ 핵심: 시스템 프롬프트에 파인콘에서 찾은 'context'를 주입합니다!
+        String systemPrompt = "너는 경매장 홈페이지의 친절한 상담원이야. "
+                + "반드시 아래 제공된 [경매장 규칙]을 바탕으로 대답해. "
+                + "규칙에 없는 내용이라면 지어내지 말고 '해당 내용은 확인이 필요합니다'라고 정중히 대답해.\n\n"
+                + "[경매장 규칙]:\n" + context;
 
         try {
             Map<String, Object> requestBody = Map.of(
                     "model", "llama-3.3-70b-versatile",
                     "messages", List.of(
-                            Map.of("role", "system", "content", "너는 경매장 홈페이지의 친절한 상담원이야. 짧고 정확, 정중하게 한국어 존댓말로 대답해야 해."),
+                            Map.of("role", "system", "content", systemPrompt),
                             Map.of("role", "user", "content", userMessage)
                     ),
                     "stream", true
@@ -41,27 +48,23 @@ public class GroqApiClient {
             return groqWebClient.post()
                     .bodyValue(requestBody)
                     .retrieve()
-                    .bodyToFlux(String.class) // ⭐️ 1. 일단 무조건 날것의 문자열(String)로 다 받습니다!
-                    .filter(data -> !data.trim().equals("[DONE]")) // ⭐️ 2. 범인 검거! "[DONE]"이 오면 통과시키지 않고 버립니다.
+                    .bodyToFlux(String.class)
+                    .filter(data -> !data.trim().equals("[DONE]"))
                     .map(data -> {
                         try {
-                            // 3. "[DONE]"이 아닌 정상적인 JSON 문자열만 GroqResponse 객체로 수동 변환합니다.
                             GroqResponse response = objectMapper.readValue(data, GroqResponse.class);
                             return AiResponse.from(response.extractContent());
                         } catch (Exception e) {
-                            log.error("JSON 파싱 에러 발생 데이터: {}", data);
                             return AiResponse.from("");
                         }
                     })
-                    .doOnNext(aiResponse -> log.info("전송 중인 조각 : {}", aiResponse.getAnswer()))
                     .onErrorResume(e -> {
                         log.error("스트리밍 중 에러 발생: {}", e.getMessage());
                         return Flux.just(AiResponse.from("서비스 연결이 원활하지 않습니다."));
                     });
-        } catch (WebClientResponseException e) {
-            log.error("Groq API 에러 발생! 상태코드: {}, 응답본문: {}", e.getStatusCode(), e.getResponseBodyAsString());
-            throw e;
+        } catch (Exception e) {
+            log.error("Groq API 에러 발생!", e);
+            throw new RuntimeException(e);
         }
     }
-
 }
