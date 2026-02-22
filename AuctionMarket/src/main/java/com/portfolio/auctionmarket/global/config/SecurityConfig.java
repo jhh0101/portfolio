@@ -43,7 +43,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", // Swagger 문서 관련
                                 "/api/auth/**", "/api/user/signup", "/api/user/verify", // 로그인, 회원가입 관련
-                                "/api/user/reset-password"
+                                "/api/user/reset-password", "/api/groq/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/category").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/product/**").permitAll()
