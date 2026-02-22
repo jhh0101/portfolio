@@ -34,8 +34,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
     // ai
-    implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
-    implementation 'org.springframework.ai:spring-ai-redis-spring-boot-starter'
+//    implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
+//    implementation 'org.springframework.ai:spring-ai-redis-spring-boot-starter'
 
     // redis
     implementation 'org.redisson:redisson:3.42.0'

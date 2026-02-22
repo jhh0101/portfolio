@@ -35,3 +35,7 @@ cors:
 payment:
   toss:
     secret_key: ${TOSS_SECRET_KEY}
+
+groq:
+  api-key: ${GROQ_API_KEY}
+  url: ${GROQ_API_URL}
