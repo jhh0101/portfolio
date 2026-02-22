@@ -12,7 +12,6 @@ import java.util.List;
 @Slf4j
 @Component
 public class LocalEmbeddingClient {
-    // API 호출 없이 로컬 CPU에서 숫자로 변환합니다.
     private final EmbeddingModel model = new AllMiniLmL6V2QuantizedEmbeddingModel();
 
     public Mono<List<Double>> getEmbedding(String text) {
