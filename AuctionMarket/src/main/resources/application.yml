@@ -39,3 +39,7 @@ payment:
 groq:
   api-key: ${GROQ_API_KEY}
   url: ${GROQ_API_URL}
+
+pinecone:
+  api-key: ${PINECONE_API_KEY}
+  url: ${PINECONE_API_URL}
