@@ -6,6 +6,7 @@ import dev.langchain4j.model.embedding.onnx.allminilml6v2q.AllMiniLmL6V2Quantize
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.List;
 
@@ -20,6 +21,8 @@ public class LocalEmbeddingClient {
             return embedding.vectorAsList().stream()
                     .map(Float::doubleValue)
                     .toList();
-        }).doOnNext(res -> log.info("✅ 로컬 엔진 임베딩 성공! 차원: {}", res.size()));
+        })
+        .subscribeOn(Schedulers.boundedElastic())
+        .doOnNext(res -> log.info("✅ 로컬 엔진 임베딩 성공! 차원: {}", res.size()));
     }
 }
