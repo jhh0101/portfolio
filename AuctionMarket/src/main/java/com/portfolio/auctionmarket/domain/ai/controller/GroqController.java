@@ -16,6 +16,6 @@ public class GroqController {
 
     @PostMapping(value = "/chat/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<AiResponse> chatAI(@RequestBody AiRequest request) {
-        return aiService.askAuctionBot(request.getQuestion());
+        return aiService.askAuctionBot(request.getSessionId(), request.getQuestion());
     }
 }
