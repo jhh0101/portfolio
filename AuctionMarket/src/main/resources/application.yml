@@ -24,6 +24,11 @@ spring:
       hibernate:
         format_sql: true
 
+  # 가상 스레드(성능 up / synchronized, ThreadLocal 사용 시 문제 발생)
+  threads:
+    virtual:
+      enabled: true
+
 # JWT
 jwt:
   access-token-expiration: 900000
@@ -43,3 +48,8 @@ groq:
 pinecone:
   api-key: ${PINECONE_API_KEY}
   url: ${PINECONE_API_URL}
+
+langfuse:
+  public-key: ${LANGFUSE_PUBLIC_KEY}
+  secret-key: ${LANGFUSE_SECRET_KEY}
+  url: ${LANGFUSE_BASE_URL}
