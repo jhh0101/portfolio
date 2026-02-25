@@ -1,5 +1,6 @@
 package com.portfolio.auctionmarket.domain.ai.client;
 
+import com.portfolio.auctionmarket.domain.ai.dto.SimilarityResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -13,8 +14,6 @@ import java.util.*;
 @Component
 public class PineconeApiClient {
     private final WebClient webClient;
-
-    private static final double CACHE_THRESHOLD = 0.93;
 
     public PineconeApiClient(@Qualifier("pineconeWebClient") WebClient webClient) {
         this.webClient = webClient;
@@ -49,13 +48,11 @@ public class PineconeApiClient {
                         }
                     }
 
-                    String finalContext = contextBuilder.toString();
-                    log.info("✨ 정제된 파인콘 지식:\n{}", finalContext); // 디버깅용 로그 (나중에 지우셔도 됩니다)
-                    return finalContext;
+                    return contextBuilder.toString();
                 })
                 .onErrorResume(e -> {
                     log.error("pinecone 검색 중 에러 {}", e.getMessage());
-                    return Mono.just(""); // 에러 시 빈 문자열 반환으로 400 에러 연쇄 작용 방지
+                    return Mono.just("");
                 });
     }
 
@@ -78,7 +75,7 @@ public class PineconeApiClient {
                 .doOnSuccess(v -> log.info("🚀 파인콘 지식 저장 완료! ID: {}", id));
     }
 
-    public Mono<String> checkSemanticCache(List<Double> vector) {
+    public Mono<SimilarityResult> checkSemanticCache(List<Double> vector) {
         Map<String, Object> requestBody = Map.of(
                 "vector", vector,
                 "topK", 1,
@@ -91,27 +88,13 @@ public class PineconeApiClient {
                 .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(JsonNode.class)
-                .flatMap(json -> {
+                .map(json -> {
                     JsonNode matches = json.path("matches");
-                    if (matches.isArray() && !matches.isEmpty()) {
-                        JsonNode bestMatch = matches.get(0);
-                        log.info("🔍 파인콘 캐시 원본 데이터: {}", bestMatch.toString());
-                        double score = bestMatch.path("score").asDouble();
+                    JsonNode bestMatch = matches.get(0);
+                    Double score = bestMatch.path("score").asDouble();
+                    String answer = bestMatch.path("metadata").asString("");
 
-                        if (score >= CACHE_THRESHOLD) {
-                            String cachedAnswer = bestMatch.path("metadata").path("answer").asString("");
-                            log.info("[Cache] 유사도 : {}", score);
-                            return Mono.just(cachedAnswer);
-                        } else {
-                            log.info("[Cache] 유사도 미달 : {}", score);
-                        }
-                    }
-
-                    return Mono.empty();
-                })
-                .onErrorResume(e -> {
-                    log.info("파인콘 캐시 조회 중 에러 : {}", e.getMessage());
-                    return Mono.empty();
+                    return new SimilarityResult(answer, score);
                 });
     }
 
