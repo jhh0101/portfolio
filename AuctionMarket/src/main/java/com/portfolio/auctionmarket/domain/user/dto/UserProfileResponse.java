@@ -23,6 +23,8 @@ public class UserProfileResponse {
     private String username;
     private String phone;
     private String nickname;
+    private String baseAddress;
+    private String detailAddress;
     private Role role;
     private Long point;
     private String avgRating;
@@ -39,18 +41,22 @@ public class UserProfileResponse {
         Seller seller = user.getSeller();
         SellerStatus sellerStatus = (seller != null) ? seller.getStatus() : SellerStatus.NONE;
 
+        String detailAddress = user.getDetailAddress() != null ? user.getDetailAddress() : "";
+
         return UserProfileResponse.builder()
                 .userId(user.getUserId())
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .phone(formatPhone)
                 .nickname(user.getNickname())
+                .baseAddress(user.getBaseAddress())
+                .detailAddress(detailAddress)
                 .role(user.getRole())
                 .point(user.getPoint())
                 .avgRating(String.format("%.1f", user.getAvgRating()))
                 .sellerStatus(sellerStatus)
                 .createdAt(user.getCreatedAt())
-                .createdAt(user.getUpdatedAt())
+                .updatedAt(user.getUpdatedAt())
                 .build();
     }
 }

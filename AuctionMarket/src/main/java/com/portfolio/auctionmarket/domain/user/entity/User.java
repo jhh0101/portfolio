@@ -33,6 +33,12 @@ public class User extends Base {
     @Column(name = "nickname", unique = true)
     private String nickname;
 
+    @Column(name = "base_address")
+    private String baseAddress;
+
+    @Column(name = "detail_address")
+    private String detailAddress;
+
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -73,6 +79,8 @@ public class User extends Base {
         this.phone = maskedPhone;
         this.nickname = "탈퇴된 사용자" + userId;
         this.password = null;
+        this.baseAddress = null;
+        this.detailAddress = null;
         this.point = 0L;
         this.avgRating = 0.0;
         this.suspensionReason = null;

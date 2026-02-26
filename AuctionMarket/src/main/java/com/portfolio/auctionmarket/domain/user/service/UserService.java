@@ -74,6 +74,8 @@ public class UserService implements UserDetailsService {
                 .email(request.getEmail())
                 .username(request.getUsername())
                 .nickname(request.getNickname())
+                .baseAddress(request.getBaseAddress())
+                .detailAddress(request.getDetailAddress())
                 .phone(request.getPhone())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .point(0L)
