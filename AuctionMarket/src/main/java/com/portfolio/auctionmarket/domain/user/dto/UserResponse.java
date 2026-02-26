@@ -24,6 +24,8 @@ public class UserResponse {
     private String username;
     private String phone;
     private String nickname;
+    private String baseAddress;
+    private String detailAddress;
     private Role role;
     private SellerStatus sellerStatus;
     private UserStatus userStatus;
@@ -47,6 +49,8 @@ public class UserResponse {
                 .username(user.getUsername())
                 .phone(formatPhone)
                 .nickname(user.getNickname())
+                .baseAddress(user.getBaseAddress())
+                .detailAddress(user.getDetailAddress())
                 .role(user.getRole())
                 .userStatus(user.getStatus())
                 .point(user.getPoint())

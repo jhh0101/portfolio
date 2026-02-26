@@ -20,4 +20,8 @@ public class UserUpdateRequest {
     @Pattern(regexp = "^010\\d{8}$", message = "전화번호는 숫자만 입력해 주세요.")
     private String phone;
 
+    @NotBlank(message = "집 주소를 입력해주세요.")
+    private String baseAddress;
+    private String detailAddress;
+
 }
