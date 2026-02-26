@@ -15,9 +15,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 public class SellerAdminService {
+    private static final Set<Long> PROTECTED_USER_IDS = Set.of(1L, 2L, 3L, 4L);
 
     private final SellerRepository sellerRepository;
 
@@ -29,6 +32,8 @@ public class SellerAdminService {
 
     @Transactional
     public SellerResponse approveSeller(Long sellerId) {
+        validateUserProtection(sellerId);
+        
         Seller seller = sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new CustomException(ErrorCode.SELLER_NOT_FOUND, "판매자를 찾을 수 없습니다."));
 
@@ -59,9 +64,16 @@ public class SellerAdminService {
 
     @Transactional(readOnly = true)
     public SellerResponse sellerDetails(Long sellerId) {
+
         Seller seller = sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return SellerResponse.from(seller);
+    }
+
+    private void validateUserProtection(Long userId) {
+        if (PROTECTED_USER_IDS.contains(userId)) {
+            throw new CustomException(ErrorCode.PROTECT_DEFAULT_USERS);
+        }
     }
 }
