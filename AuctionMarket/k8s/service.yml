@@ -17,6 +17,22 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: redis             # application.yml의 host: redis와 매칭
+spec:
+  selector:
+    app: redis-app        # deployment.yml의 label과 매칭
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+      nodePort: 30379     # 로컬에서 접속할 포트
+  type: NodePort
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
   name: backend-service
 spec:
   selector:

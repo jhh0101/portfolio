@@ -16,6 +16,10 @@ spec:
         - name: mysql
           image: mysql:8.0  # 도커 이미지
           env:              # 환경 변수 (비밀번호 설정)
+            - name: MYSQL_USER
+              value: "portfolio_user"
+            - name: MYSQL_PASSWORD
+              value: "portfolio_pass123"
             - name: MYSQL_ROOT_PASSWORD
               value: "1234"
             - name: MYSQL_DATABASE
