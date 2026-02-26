@@ -16,15 +16,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class SellerService {
+    private static final Set<Long> PROTECTED_USER_IDS = Set.of(1L, 2L, 3L, 4L);
+
     private final SellerRepository sellerRepository;
     private final UserRepository userRepository;
 
     @Transactional
     public SellerResponse sellerApply(Long userId, SellerApplyRequest request) {
+        validateUserProtection(userId);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND, "사용자를 찾을 수 없습니다."));
@@ -100,5 +104,11 @@ public class SellerService {
                 .orElseThrow(() -> new CustomException(ErrorCode.SELLER_NOT_FOUND));
 
         return RejectReasonResponse.from(seller);
+    }
+
+    private void validateUserProtection(Long userId) {
+        if (PROTECTED_USER_IDS.contains(userId)) {
+            throw new CustomException(ErrorCode.PROTECT_DEFAULT_USERS);
+        }
     }
 }

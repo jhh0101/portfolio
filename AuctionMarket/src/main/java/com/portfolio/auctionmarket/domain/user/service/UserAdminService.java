@@ -29,25 +29,27 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserAdminService {
+    private static final Set<Long> PROTECTED_USER_IDS = Set.of(1L, 2L, 3L, 4L);
 
     private final UserRepository userRepository;
     private final BidRepository bidRepository;
     private final BidService bidService;
-    ;
     private final ProductRepository productRepository;
     private final UserQueryRepository userQueryRepository;
     private final RefreshTokenService refreshTokenService;
-    private final PasswordEncoder passwordEncoder;
     private final S3Service s3Service;
     private final RedissonClient redissonClient;
 
     @Transactional
     public UserDeleteResponse suspend(Long userId, UserSuspensionRequest request) {
+        validateUserProtection(userId);
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND, "사용자를 찾을 수 없습니다."));
 
@@ -118,5 +120,11 @@ public class UserAdminService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND, "사용자를 찾을 수 없습니다."));
 
         return UserSuspendReasonResponse.from(user);
+    }
+
+    private void validateUserProtection(Long userId) {
+        if (PROTECTED_USER_IDS.contains(userId)) {
+            throw new CustomException(ErrorCode.PROTECT_DEFAULT_USERS);
+        }
     }
 }
