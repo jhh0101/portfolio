@@ -3,10 +3,10 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 -- 1. 유저 데이터
 INSERT INTO `users` VALUES
-(1,'admin01@gmail.com','$2a$10$B/6VXqHCQUxzlg.BfrVFBO7BSsgJSfsOGzI/jHkbR1noLOkiSv/06','admin01','admin01','OO OO구 OO로OOO길 O (OO동)','','01001010101','ADMIN',1000000000,0,'NORMAL',NULL,'2026-02-26 20:29:36','2026-02-26 11:32:27'),
-(2,'seller01@gmail.com','$2a$10$1pjHCfTrJFx9TEVbqWwNc.EUeMsGPA.iVmi1RvzGJkaJccJ4cPgJm','seller01','seller01','OO OO구 OO로OOO길 O (OO동)','','01011223344','SELLER',1000000000,0,'NORMAL',NULL,'2026-02-26 20:30:35','2026-02-26 11:32:27'),
-(3,'user01@gmail.com','$2a$10$tDoeOxJ3.yNiE4cFD9bGeu6YqkTlpUzdSH4yQgqCZiZM56DFUFnnS','user01','user01','OO OO구 OO로OOO길 O (OO동)','','01011112222','USER',1000000000,0,'NORMAL',NULL,'2026-02-26 20:31:08','2026-02-26 11:32:27'),
-(4,'user02@gmail.com','$2a$10$YoJpIg2/uxS7APbjhuuyl.jWBDcNKV4AJO4oPgaMki6AY8sJMFiLm','user02','user02','OO OO구 OO로OOO길 O (OO동)','','01001234567','USER',1000000000,0,'NORMAL',NULL,'2026-02-26 20:31:47','2026-02-26 11:32:32');
+(1,'admin01@gmail.com','$2a$12$oPMf.z28Sw/SidrqVRsmY.kqPlcT6aNHb3SQWBLX309vU7nUsRtE2','admin01','admin01','OO OO구 OO로OOO길 O (OO동)','','01001010101','ADMIN',1000000000,0,'NORMAL',NULL,'2026-02-26 20:29:36','2026-02-26 11:32:27'),
+(2,'seller01@gmail.com','$2a$12$oPMf.z28Sw/SidrqVRsmY.kqPlcT6aNHb3SQWBLX309vU7nUsRtE2','seller01','seller01','OO OO구 OO로OOO길 O (OO동)','','01011223344','SELLER',1000000000,0,'NORMAL',NULL,'2026-02-26 20:30:35','2026-02-26 11:32:27'),
+(3,'user01@gmail.com','$2a$12$oPMf.z28Sw/SidrqVRsmY.kqPlcT6aNHb3SQWBLX309vU7nUsRtE2','user01','user01','OO OO구 OO로OOO길 O (OO동)','','01011112222','USER',1000000000,0,'NORMAL',NULL,'2026-02-26 20:31:08','2026-02-26 11:32:27'),
+(4,'user02@gmail.com','$2a$12$oPMf.z28Sw/SidrqVRsmY.kqPlcT6aNHb3SQWBLX309vU7nUsRtE2','user02','user02','OO OO구 OO로OOO길 O (OO동)','','01001234567','USER',1000000000,0,'NORMAL',NULL,'2026-02-26 20:31:47','2026-02-26 11:32:32');
 -- 2. 카테고리 데이터 (컬럼명을 엔티티와 맞추기 위해 'category'로 수정)
 INSERT INTO `categories` (`category_id`, `category`, `parent_id`, `path`, `is_deleted`) VALUES
 (1, '가전/디지털', NULL, '1', 0),
