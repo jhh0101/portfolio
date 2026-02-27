@@ -51,6 +51,7 @@ public class Product extends BaseCreatedAt {
     @OneToOne(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Auction auction;
 
+    @Builder.Default
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductImage> image = new ArrayList<>();
 
