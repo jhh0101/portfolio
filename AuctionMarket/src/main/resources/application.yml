@@ -5,14 +5,7 @@ spring:
   application:
     name: AuctionMarket
   profiles:
-    active: local  # 기본값: local (배포 시 prod로 변경)
-
-  sql:
-    init:
-      mode: always
-      encoding: UTF-8
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    active: local
 
   # JPA
   jpa:
