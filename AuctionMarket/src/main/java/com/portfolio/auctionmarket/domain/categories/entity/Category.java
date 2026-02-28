@@ -28,6 +28,9 @@ public class Category {
     @Column(name = "path")
     private String path;
 
+    @Column(name = "is_deleted")
+    private String isDeleted;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Category parent;
