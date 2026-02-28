@@ -38,7 +38,7 @@ public class Rating extends BaseCreatedAt {
     @Column(name = "score", nullable = false)
     private Integer score;
 
-    @Column(name = "comment", length = 100)
+    @Column(name = "rating_comment", length = 100)
     private String comment;
 
     @Column(name = "status")
