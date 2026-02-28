@@ -1,14 +1,11 @@
--- 외래 키 제약 조건 잠시 해제 (데이터 입력 순서 및 정합성 보장)
-SET FOREIGN_KEY_CHECKS = 0;
-
 -- 1. 유저 데이터
-INSERT INTO `users` VALUES
+INSERT INTO users VALUES
 (1,'admin01@gmail.com','$2a$12$oPMf.z28Sw/SidrqVRsmY.kqPlcT6aNHb3SQWBLX309vU7nUsRtE2','admin01','admin01','OO OO구 OO로OOO길 O (OO동)','','01001010101','ADMIN',1000000000,0,'NORMAL',NULL,'2026-02-26 20:29:36','2026-02-26 11:32:27'),
 (2,'seller01@gmail.com','$2a$12$oPMf.z28Sw/SidrqVRsmY.kqPlcT6aNHb3SQWBLX309vU7nUsRtE2','seller01','seller01','OO OO구 OO로OOO길 O (OO동)','','01011223344','SELLER',1000000000,0,'NORMAL',NULL,'2026-02-26 20:30:35','2026-02-26 11:32:27'),
 (3,'user01@gmail.com','$2a$12$oPMf.z28Sw/SidrqVRsmY.kqPlcT6aNHb3SQWBLX309vU7nUsRtE2','user01','user01','OO OO구 OO로OOO길 O (OO동)','','01011112222','USER',1000000000,0,'NORMAL',NULL,'2026-02-26 20:31:08','2026-02-26 11:32:27'),
 (4,'user02@gmail.com','$2a$12$oPMf.z28Sw/SidrqVRsmY.kqPlcT6aNHb3SQWBLX309vU7nUsRtE2','user02','user02','OO OO구 OO로OOO길 O (OO동)','','01001234567','USER',1000000000,0,'NORMAL',NULL,'2026-02-26 20:31:47','2026-02-26 11:32:32');
 -- 2. 카테고리 데이터 (컬럼명을 엔티티와 맞추기 위해 'category'로 수정)
-INSERT INTO `categories` (`category_id`, `category`, `parent_id`, `path`, `is_deleted`) VALUES
+INSERT INTO categories (category_id, category, parent_id, path, is_deleted) VALUES
 (1, '가전/디지털', NULL, '1', 0),
 (2, 'PC/노트북', 1, '1/2', 0),
 (3, 'ASUS 노트북', 2, '1/2/3', 0),
@@ -74,7 +71,7 @@ INSERT INTO `categories` (`category_id`, `category`, `parent_id`, `path`, `is_de
 (63, 'RC카/드론', 59, '59/63', 0);
 
 -- 3. 상품 데이터
-INSERT INTO `products` (`product_id`, `seller_id`, `category_id`, `title`, `description`, `status`, `view_count`, `created_at`) VALUES
+INSERT INTO products (product_id, seller_id, category_id, title, description, status, view_count, created_at) VALUES
 (2, 2, 4, '애플 맥북 프로 16인치 M3 Max', '작년 말에 구매한 미개봉 새상품입니다.\n영상 편집용으로 구매했다가 데스크탑을 쓰게 되어 내놓습니다.\n\n- 칩셋: M3 Max (14코어 CPU, 30코어 GPU)\n- 메모리: 36GB\n- 저장장치: 1TB SSD\n- 색상: 스페이스 블랙\n\n직거래는 OO역 근처에서 가능하며, 택배 거래 시 꼼꼼하게 포장해 드립니다.', 'ACTIVE', 85, '2026-02-20 10:15:00'),
 (3, 2, 23, '롤렉스 서브마리너 데이트 흑콤', '2023년 성골 스탬핑 롤렉스 서브마리너 흑콤(126613LN) 모델입니다.\n\n실착 횟수 5회 미만으로 미세한 생활 기스 외에는 상태 최상입니다.\n풀박스(보증서, 여분 코, 영수증 등) 모두 보유 중입니다.\n\n고가 물품인 만큼 직거래 위주로 진행하며, 정품 감정 원하시면 동행 가능합니다.', 'ACTIVE', 320, '2026-02-21 14:30:00'),
 (4, 2, 34, '나이키 에어 조던 1 레트로 하이 OG 시카고 2022', '조던 1 로스트 앤 파운드 (시카고) 270 사이즈입니다.\n\n크림에서 구매 후 랩핑해서 보관만 해둔 새상품입니다.\n박스 상태 좋고, 크림 보증서 및 택 모두 그대로 붙어있습니다.\n소장용으로 가지고 있다가 눈물을 머금고 방출합니다.', 'ACTIVE', 45, '2026-02-22 09:00:00'),
@@ -106,7 +103,7 @@ INSERT INTO `products` (`product_id`, `seller_id`, `category_id`, `title`, `desc
 (30, 2, 3, 'ASUS ROG 제피러스 G14 게이밍 노트북', '라이젠 9, RTX 4060 탑재. 가볍고 성능 좋은 고성능 노트북입니다.', 'ACTIVE', 53, '2026-02-26 23:30:00');
 
 -- 4. 상품 이미지 데이터 추가 (각 상품당 2~3개씩 랜덤 이미지 배정)
-INSERT INTO `product_images` (`image_id`, `product_id`, `image_url`, `image_order`) VALUES
+INSERT INTO product_images (image_id, product_id, image_url, image_order) VALUES
 -- Product 1 (LG 워시콤보)
 (1, 1, 'https://picsum.photos/400/300?random=1', 1),
 (2, 1, 'https://picsum.photos/400/300?random=2', 2),
@@ -229,7 +226,7 @@ INSERT INTO `product_images` (`image_id`, `product_id`, `image_url`, `image_orde
 (90, 30, 'https://picsum.photos/400/300?random=90', 3);
 
 -- 5. 경매 데이터 추가 (진행 중인 경매 위주로 세팅)
-INSERT INTO `auctions` (`auction_id`, `product_id`, `start_price`, `current_price`, `start_time`, `end_time`, `status`) VALUES
+INSERT INTO auctions (auction_id, product_id, start_price, current_price, start_time, end_time, status) VALUES
 (2, 2, 3500000, 3650000, '2026-02-20 10:15:00', '2026-03-20 10:15:00', 'PROCEEDING'),
 (3, 3, 14000000, 15500000, '2026-02-21 14:30:00', '2026-03-21 14:30:00', 'PROCEEDING'),
 (4, 4, 250000, 250000, '2026-02-22 09:00:00', '2026-03-22 09:00:00', 'PROCEEDING'),
@@ -261,7 +258,7 @@ INSERT INTO `auctions` (`auction_id`, `product_id`, `start_price`, `current_pric
 (30, 30, 1550000, 1550000, '2026-02-26 00:00:00', '2026-03-22 23:59:59', 'PROCEEDING');
 
 
-INSERT INTO `bids` (`auction_id`, `bidder_id`, `bid_price`, `bid_time`, `status`) VALUES
+INSERT INTO bids (auction_id, bidder_id, bid_price, bid_time, status) VALUES
 -- Auction 2 (맥북: 시작 350만 -> 현재 365만)
 (2, 3, 3550000, '2026-02-21 11:00:00', 'ACTIVE'),
 (2, 4, 3600000, '2026-02-22 15:30:00', 'ACTIVE'),
@@ -293,14 +290,11 @@ INSERT INTO `bids` (`auction_id`, `bidder_id`, `bid_price`, `bid_time`, `status`
 (12, 4, 280000, '2026-02-09 20:00:00', 'ACTIVE');
 
 -- 낙찰(Orders) 데이터 추가 (결제 완료 상태)
-INSERT INTO `orders` (`order_id`, `auction_id`, `buyer_id`, `final_price`, `payment_status`, `created_at`) VALUES
+INSERT INTO orders (order_id, auction_id, buyer_id, final_price, payment_status, created_at) VALUES
 (1, 11, 3, 230000, 'COMPLETED', '2026-01-20 12:05:00'),
 (2, 12, 4, 280000, 'COMPLETED', '2026-02-10 12:10:00');
 
 -- 판매자 리뷰(Seller Ratings) 데이터 추가
-INSERT INTO `seller_ratings` (`rating_id`, `to_user_id`, `from_user_id`, `order_id`, `score`, `comment`, `status`, `created_at`) VALUES
+INSERT INTO seller_ratings (rating_id, to_user_id, from_user_id, order_id, score, comment, status, created_at) VALUES
 (1, 2, 3, 1, 5, '배송도 빠르고 물건도 확실합니다! 쿨거래 감사합니다.', 'NORMAL', '2026-01-23 14:00:00'),
 (2, 2, 4, 2, 4, '포장이 살짝 아쉬웠지만 기기 상태는 좋습니다. 잘 쓸게요.', 'NORMAL', '2026-02-14 11:30:00');
-
--- 외래 키 제약 조건 재활성화
-SET FOREIGN_KEY_CHECKS = 1;
