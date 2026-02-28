@@ -47,6 +47,7 @@ public class Auction {
     @Enumerated(EnumType.STRING)
     private AuctionStatus status;
 
+    @Builder.Default
     @OneToMany(mappedBy = "auction", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Bid> bids = new ArrayList<>();
 

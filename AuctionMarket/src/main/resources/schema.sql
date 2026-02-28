@@ -15,6 +15,8 @@ CREATE TABLE users (
                        password           VARCHAR(255) NULL,
                        nickname           VARCHAR(20) NOT NULL UNIQUE,
                        username           VARCHAR(20) NOT NULL,
+                       base_address       VARCHAR(255) NOT NULL,
+                       detail_address     VARCHAR(10) NULL,
                        phone              VARCHAR(15) NOT NULL UNIQUE,
                        role               ENUM('USER', 'SELLER', 'ADMIN') DEFAULT 'USER', -- USER, SELLER, ADMIN
                        point              BIGINT NOT NULL DEFAULT 0, -- 가상 화폐
@@ -78,8 +80,6 @@ CREATE TABLE auctions (
                           product_id      BIGINT NOT NULL UNIQUE, -- 상품 하나당 경매 하나
                           start_price     BIGINT NOT NULL,
                           current_price   BIGINT NOT NULL, -- 입찰 들어올 때마다 갱신
-                          start_price     INT NOT NULL,
-                          current_price   INT NOT NULL, -- 입찰 들어올 때마다 갱신
                           start_time      DATETIME NOT NULL,
                           end_time        DATETIME NOT NULL,
                           status          VARCHAR(20) DEFAULT 'PROCEEDING', -- PROCEEDING, ENDED, CANCELED
@@ -91,7 +91,6 @@ CREATE TABLE bids (
                       bid_id          BIGINT AUTO_INCREMENT PRIMARY KEY,
                       auction_id      BIGINT NOT NULL,
                       bidder_id       BIGINT NOT NULL, -- 입찰자
-                      bid_price       INT NOT NULL,
                       bid_price       BIGINT NOT NULL,
                       bid_time        DATETIME DEFAULT CURRENT_TIMESTAMP,
                       status          ENUM('ACTIVE', 'INVALID', 'CANCELED') DEFAULT 'ACTIVE',
@@ -105,8 +104,7 @@ CREATE TABLE orders (
                         auction_id      BIGINT NOT NULL,
                         buyer_id        BIGINT NOT NULL,
                         final_price     BIGINT NOT NULL,
-                        final_price     INT NOT NULL,
-                        payment_status  VARCHAR(20) DEFAULT 'WAITING', -- WAITING, COMPLETED
+                        payment_status  VARCHAR(20) DEFAULT 'COMPLETED',
                         created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
                         FOREIGN KEY (auction_id) REFERENCES auctions(auction_id),
                         FOREIGN KEY (buyer_id) REFERENCES users(user_id)
