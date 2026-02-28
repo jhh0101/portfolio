@@ -16,6 +16,7 @@ COPY build/libs/*.jar app.jar
 
 
 ENTRYPOINT ["java", \
+  "-Dspring.profiles.active=prod", \
   "-XX:+UseContainerSupport", \
   "-XX:MaxRAMPercentage=75.0", \
   "-jar", \
