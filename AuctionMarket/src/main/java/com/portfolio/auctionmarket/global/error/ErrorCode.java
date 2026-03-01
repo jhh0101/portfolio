@@ -63,6 +63,7 @@ public enum ErrorCode {
     SELF_BID_NOT_ALLOWED("B003", "자신의 상품에는 입찰할 수 없습니다"),
     NOT_ENOUGH_POINTS("B004", "포인트가 부족합니다"),
     ALREADY_HIGHEST_BIDDER("B005", "이미 입찰 중 입니다."),
+    BID_CANCEL_RESTRICTED("B006", "입찰 후 10분이 지났거나 경매 마감 10분 전에는 취소가 불가능합니다"),
 
     // Orders
     ORDER_NOT_FOUND("ORDER001", "주문 내역을 찾을 수 없습니다"),
