@@ -1,12 +1,9 @@
 spring:
-  sql:
-    init:
-      mode: always
-      encoding: UTF-8
   datasource:
-    url: jdbc:mysql://localhost:30000/portfolio?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
-    username: root
-    password: 1234
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: ${ORACLE_URL}
+    username: ${ORACLE_USERNAME}
+    password: ${ORACLE_PASSWORD}
 
   data:
     redis:
@@ -17,13 +14,13 @@ spring:
 cloud:
   aws:
     s3:
-      bucket: my-test-bucket
-      endpoint: http://localhost:4566 # 실제 S3 대신 로컬스택 주소 지정
+      bucket: ${ORACLE_BUCKET}
+      endpoint: ${ORACLE_ENDPOINT}
     region:
-      static: us-east-1
+      static: ${ORACLE_REGION}
     credentials:
-      access-key: test  # LocalStack은 아무 값이나 넣어도 작동합니다.
-      secret-key: test
+      access-key: ${ORACLE_ACCESS_KEY_ID}
+      secret-key: ${ORACLE_SECRET_ACCESS_KEY}
 
 jwt:
   secret: MySecureJwtSecretKey1234567890ABCDEFGHIJKLMNOP
