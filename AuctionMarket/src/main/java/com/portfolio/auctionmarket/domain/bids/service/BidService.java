@@ -124,6 +124,12 @@ public class BidService {
             throw new CustomException(ErrorCode.BID_NOT_FOUND);
         }
 
+        LocalDateTime now = LocalDateTime.now();
+
+        if (now.isAfter(bid.getCreatedAt().plusMinutes(10)) || now.isAfter(auction.getEndTime().minusMinutes(10))) {
+            throw new CustomException(ErrorCode.BID_CANCEL_RESTRICTED);
+        }
+
         // 포인트 환불
         bid.getBidder().addPoint(bid.getBidPrice());
 
