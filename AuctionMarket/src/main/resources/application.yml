@@ -5,7 +5,7 @@ spring:
   application:
     name: AuctionMarket
   profiles:
-    active: prod
+    active: local
 
   # JPA
   jpa:
