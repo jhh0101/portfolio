@@ -5,10 +5,12 @@ import com.portfolio.auctionmarket.domain.auctions.entity.QAuction;
 import com.portfolio.auctionmarket.domain.bids.dto.BidHistoryResponse;
 import com.portfolio.auctionmarket.domain.bids.entity.BidStatus;
 import com.portfolio.auctionmarket.domain.bids.entity.QBid;
+import com.portfolio.auctionmarket.domain.categories.entity.QCategory;
 import com.portfolio.auctionmarket.domain.products.dto.ProductAndAuctionResponse;
 import com.portfolio.auctionmarket.domain.products.dto.ProductResponse;
 import com.portfolio.auctionmarket.domain.products.entity.QProduct;
 import com.portfolio.auctionmarket.domain.products.entity.QProductImage;
+import com.portfolio.auctionmarket.domain.user.entity.QUser;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPAExpressions;
@@ -26,6 +28,8 @@ public class BidQueryRepository {
     QBid bid = QBid.bid;
     QAuction auction = QAuction.auction;
     QProduct product = QProduct.product;
+    QUser user = QUser.user;
+    QCategory category = QCategory.category1;
     QProductImage productImage = QProductImage.productImage;
 
     private final JPAQueryFactory jpaQueryFactory;
@@ -64,9 +68,24 @@ public class BidQueryRepository {
                 .from(bid)
                 .join(bid.auction, auction)
                 .join(auction.product, product)
+                .join(product.seller, user)
+                .join(product.category, category)
                 .where(bid.bidder.userId.eq(userId),
                         bid.status.eq(BidStatus.ACTIVE))
-                .groupBy(auction.auctionId)
+                .groupBy(
+                        product.productId,
+                        user.nickname,
+                        category.category,
+                        product.title,
+                        product.productStatus,
+                        product.createdAt,
+                        auction.auctionId,
+                        auction.startPrice,
+                        auction.currentPrice,
+                        auction.startTime,
+                        auction.endTime,
+                        auction.status
+                )
 
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -125,8 +144,23 @@ public class BidQueryRepository {
                 .from(bid)
                 .join(bid.auction, auction)
                 .join(auction.product, product)
+                .join(product.seller, user)
+                .join(product.category, category)
                 .where(bid.bidder.userId.eq(userId))
-                .groupBy(auction.auctionId)
+                .groupBy(
+                        product.productId,
+                        user.nickname,
+                        category.category,
+                        product.title,
+                        product.productStatus,
+                        product.createdAt,
+                        auction.auctionId,
+                        auction.startPrice,
+                        auction.currentPrice,
+                        auction.startTime,
+                        auction.endTime,
+                        auction.status
+                )
 
                 .offset(pageable.getOffset())
                 .limit(pageSize + 1)
