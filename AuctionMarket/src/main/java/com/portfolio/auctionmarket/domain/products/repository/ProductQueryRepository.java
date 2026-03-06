@@ -1,6 +1,7 @@
 package com.portfolio.auctionmarket.domain.products.repository;
 
 
+import com.portfolio.auctionmarket.domain.auctions.entity.AuctionStatus;
 import com.portfolio.auctionmarket.domain.products.dto.ProductListCondition;
 import com.portfolio.auctionmarket.domain.products.entity.Product;
 import com.portfolio.auctionmarket.domain.products.entity.ProductStatus;
@@ -41,7 +42,9 @@ public class ProductQueryRepository {
                         isMyAuction(userId),
                         titleContain(condition.title()),
                         pathStartWith(condition.path()),
-                        statusFilter(userId)
+                        statusFilter(userId),
+                        auction.status.eq(AuctionStatus.PROCEEDING),
+                        product.productStatus.eq(ProductStatus.ACTIVE)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -51,12 +54,16 @@ public class ProductQueryRepository {
         JPAQuery<Long> count = jpaQueryFactory
                 .select(product.count())
                 .from(product)
+                .innerJoin(product.seller, user)
+                .innerJoin(product.auction, auction)
                 .leftJoin(product.category, category1)
                 .where(
                         isMyAuction(userId),
                         titleContain(condition.title()),
                         pathStartWith(condition.path()),
-                        statusFilter(userId)
+                        statusFilter(userId),
+                        auction.status.eq(AuctionStatus.PROCEEDING),
+                        product.productStatus.eq(ProductStatus.ACTIVE)
                 );
 
         return PageableExecutionUtils.getPage(content, pageable, count::fetchOne);
