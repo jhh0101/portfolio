@@ -1,18 +1,20 @@
 package com.portfolio.auctionmarket.domain.products.repository;
 
-import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
-import com.portfolio.auctionmarket.domain.products.dto.ProductDetailAndAuctionResponse;
+import com.portfolio.auctionmarket.domain.auctions.entity.AuctionStatus;
 import com.portfolio.auctionmarket.domain.products.entity.Product;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.portfolio.auctionmarket.domain.products.entity.ProductStatus;
+import org.springframework.data.jpa.repository.QueryHints;
+import jakarta.persistence.QueryHint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -38,4 +40,33 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllBySeller_UserId(Long userId);
 
     void deleteAllBySeller_UserId(Long userId);
+
+    @QueryHints(value = {
+            @QueryHint(name = "org.hibernate.fetchSize", value = "100"),
+            @QueryHint(name = "org.hibernate.readOnly", value = "true")
+    })
+    @Query("SELECT p FROM Product p " +
+            "JOIN FETCH p.auction a " +
+            "WHERE p.productStatus = :status")
+    Stream<Product> findAllByProductStatus(@Param("status") ProductStatus status);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("UPDATE Product p SET p.productStatus = :status " +
+            "WHERE p.productStatus = :activeStatus " +
+            "AND p.auction.status = :auctionStatus AND p.auction.endTime <= :now " +
+            "AND EXISTS (SELECT 1 FROM Bid b WHERE b.auction.auctionId = p.auction.auctionId)")
+    void updateProductStatusSold(@Param("now") LocalDateTime now,
+                                 @Param("status") ProductStatus status,
+                                 @Param("activeStatus") ProductStatus activeStatus,
+                                 @Param("auctionStatus") AuctionStatus auctionStatus);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("UPDATE Product p SET p.productStatus = :status " +
+            "WHERE p.productStatus = :activeStatus " +
+            "AND p.auction.status = :auctionStatus AND p.auction.endTime <= :now " +
+            "AND NOT EXISTS (SELECT 1 FROM Bid b WHERE b.auction.auctionId = p.auction.auctionId)")
+    void updateProductStatusFailed(@Param("now") LocalDateTime now,
+                                 @Param("status") ProductStatus status,
+                                 @Param("activeStatus") ProductStatus activeStatus,
+                                 @Param("auctionStatus") AuctionStatus auctionStatus);
 }
