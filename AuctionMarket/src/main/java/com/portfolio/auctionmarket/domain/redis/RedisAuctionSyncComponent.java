@@ -29,7 +29,6 @@ public class RedisAuctionSyncComponent {
 
     @Order(1)
     @EventListener(ApplicationReadyEvent.class)
-    @Transactional
     public void updateExpiredAuctions() {
         LocalDateTime now = LocalDateTime.now();
         productRepository.updateProductStatusSold(now, ProductStatus.SOLD, ProductStatus.ACTIVE, AuctionStatus.PROCEEDING);
@@ -40,7 +39,7 @@ public class RedisAuctionSyncComponent {
 
     @Order(2)
     @EventListener(ApplicationReadyEvent.class)
-    @Transactional
+    @Transactional(readOnly = true)
     public void syncExistingDataToRedis() {
 
         RBatch batch = redissonClient.createBatch();
