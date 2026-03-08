@@ -1,14 +1,16 @@
 package com.portfolio.auctionmarket.domain.auctions.repository;
 
 import com.portfolio.auctionmarket.domain.auctions.entity.Auction;
-import com.portfolio.auctionmarket.domain.products.entity.Product;
+import com.portfolio.auctionmarket.domain.auctions.entity.AuctionStatus;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -20,4 +22,12 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
             "JOIN FETCH p.seller s " +
             "WHERE a.auctionId = :auctionId")
     Optional<Auction> findByIdWithPessimisticLock(@Param("auctionId") Long auctionId);
+
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query("UPDATE Auction a SET a.status = :status " +
+            "WHERE a.status = :proceedingStatus " +
+            "AND a.endTime <= :now")
+    void updateAuctionEnded(@Param("now") LocalDateTime now,
+                            @Param("status") AuctionStatus status,
+                            @Param("proceedingStatus") AuctionStatus proceedingStatus);
 }
