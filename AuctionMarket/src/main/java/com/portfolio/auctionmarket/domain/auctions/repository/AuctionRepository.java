@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -24,6 +26,7 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
     Optional<Auction> findByIdWithPessimisticLock(@Param("auctionId") Long auctionId);
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Query("UPDATE Auction a SET a.status = :status " +
             "WHERE a.status = :proceedingStatus " +
             "AND a.endTime <= :now")

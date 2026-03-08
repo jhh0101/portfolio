@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,6 +53,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Stream<Product> findAllByProductStatus(@Param("status") ProductStatus status);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Query("UPDATE Product p SET p.productStatus = :status " +
             "WHERE p.productStatus = :activeStatus " +
             "AND p.auction.status = :auctionStatus AND p.auction.endTime <= :now " +
@@ -61,6 +64,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                                  @Param("auctionStatus") AuctionStatus auctionStatus);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Query("UPDATE Product p SET p.productStatus = :status " +
             "WHERE p.productStatus = :activeStatus " +
             "AND p.auction.status = :auctionStatus AND p.auction.endTime <= :now " +
