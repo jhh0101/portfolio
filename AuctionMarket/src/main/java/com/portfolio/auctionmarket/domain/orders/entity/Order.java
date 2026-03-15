@@ -11,7 +11,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "orders")
+@Table(name = "orders", indexes = {
+        @Index(name = "idx_order_buyer", columnList = "buyer_id"),
+        @Index(name = "idx_order_auction", columnList = "auction_id")
+})
 @Builder
 public class Order extends BaseCreatedAt {
     @Id

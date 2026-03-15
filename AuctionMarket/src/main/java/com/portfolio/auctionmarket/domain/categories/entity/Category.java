@@ -11,7 +11,10 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "categories")
+@Entity
+@Table(name = "categories", indexes = {
+        @Index(name = "idx_category_parent", columnList = "parent_id")
+})
 @SQLDelete(sql = "UPDATE categories SET is_deleted = true WHERE category_id = ?")
 @SQLRestriction("is_deleted = false")
 @Builder
