@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Entity(name = "categories")
 @Table(name = "categories", indexes = {
         @Index(name = "idx_category_parent", columnList = "parent_id")
 })
