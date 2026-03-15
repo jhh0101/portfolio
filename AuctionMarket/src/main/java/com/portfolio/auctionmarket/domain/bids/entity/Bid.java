@@ -15,7 +15,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "bids")
+@Table(name = "bids", indexes = {
+        @Index(name = "idx_bid_auction", columnList = "auction_id"),
+        @Index(name = "idx_bid_bidder", columnList = "bidder_id")
+})
 @AttributeOverride(name = "createdAt", column = @Column(name = "bid_time",updatable = false))
 public class Bid extends BaseCreatedAt {
 
