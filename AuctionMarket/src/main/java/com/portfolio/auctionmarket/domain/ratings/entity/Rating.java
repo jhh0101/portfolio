@@ -15,7 +15,10 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLRestriction("status != 'DELETED'")
 @SQLDelete(sql = "UPDATE seller_ratings SET status = 'DELETED' WHERE rating_id = ?")
 @Entity
-@Table(name = "seller_ratings")
+@Table(name = "seller_ratings", indexes = {
+        @Index(name = "idx_ratings_to_user", columnList = "to_user_id"),
+        @Index(name = "idx_ratings_order", columnList = "order_id")
+})
 @Builder
 public class Rating extends BaseCreatedAt {
     @Id

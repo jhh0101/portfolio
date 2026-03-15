@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "product_images")
+@Table(name = "product_images", indexes = {
+        @Index(name = "idx_product_image_product", columnList = "product_id")
+})
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor

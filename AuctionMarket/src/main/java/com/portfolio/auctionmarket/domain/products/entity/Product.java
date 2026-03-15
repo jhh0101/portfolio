@@ -19,7 +19,10 @@ import java.util.List;
 @Entity
 @SQLRestriction("status != 'DELETED'")
 @SQLDelete(sql = "UPDATE products SET status = 'DELETED' WHERE product_id = ?")
-@Table(name = "products")
+@Table(name = "products", indexes = {
+        @Index(name = "idx_product_seller", columnList = "seller_id"),
+        @Index(name = "idx_product_category", columnList = "category_id")
+})
 @Builder
 public class Product extends BaseCreatedAt {
     @Id
