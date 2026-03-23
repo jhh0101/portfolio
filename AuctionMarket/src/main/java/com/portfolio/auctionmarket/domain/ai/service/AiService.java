@@ -5,6 +5,7 @@ import com.portfolio.auctionmarket.domain.ai.client.LangfuseApiClient;
 import com.portfolio.auctionmarket.domain.ai.client.LocalEmbeddingClient;
 import com.portfolio.auctionmarket.domain.ai.client.PineconeApiClient;
 import com.portfolio.auctionmarket.domain.ai.dto.AiResponse;
+import com.portfolio.auctionmarket.domain.ai.dto.SimilarityResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ import reactor.core.scheduler.Schedulers;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 @Slf4j
 @Service
@@ -41,6 +44,7 @@ public class AiService {
                                 .flatMapMany(vector ->
                                         // 3. 시맨틱 캐시(기존 답변)가 있는지 확인
                                         pineconeApiClient.checkSemanticCache(vector)
+                                                .defaultIfEmpty(new SimilarityResult(null, 0.0))
                                                 .flatMapMany(result -> {
                                                     String answer = result.answer();
                                                     Double score = result.score();
