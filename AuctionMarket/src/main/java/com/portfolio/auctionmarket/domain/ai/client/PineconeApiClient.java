@@ -88,14 +88,18 @@ public class PineconeApiClient {
                 .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(JsonNode.class)
-                .map(json -> {
+                .mapNotNull(json -> {
                     JsonNode matches = json.path("matches");
+                    if (matches.isMissingNode() || matches.isEmpty()) {
+                        return null;
+                    }
                     JsonNode bestMatch = matches.get(0);
                     Double score = bestMatch.path("score").asDouble();
                     String answer = bestMatch.path("metadata").asString("");
 
                     return new SimilarityResult(answer, score);
-                });
+                })
+                .filter(obj -> true);
     }
 
     public Mono<Void> upsertCache(String id, List<Double> values, String question, String answer) {
