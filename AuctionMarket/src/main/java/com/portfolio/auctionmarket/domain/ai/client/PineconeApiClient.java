@@ -95,7 +95,7 @@ public class PineconeApiClient {
                     }
                     JsonNode bestMatch = matches.get(0);
                     Double score = bestMatch.path("score").asDouble();
-                    String answer = bestMatch.path("metadata").asString("");
+                    String answer = bestMatch.path("metadata").path("answer").asText("");
 
                     return new SimilarityResult(answer, score);
                 })
